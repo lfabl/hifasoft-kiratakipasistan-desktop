@@ -1,8 +1,8 @@
-# NİBGAT® | Karala
-Karala projesi NİBGAT® | Çekirdek ekibinin ürettiği ve geliştirdiği bir not sistemidir.
+# HifaSoft | Kira Takip Asistan
+Kira Takip Asistan projesi NİBGAT® | Çekirdek ekibinin HifaSoft yazılım yayıncılık için ürettiği ve geliştirdiği kira takibi sistemidir.
 
 ## Açıklama
-Proje Electron + React + Realm + Apollo içermektedir. Sunucu tarafı RethinkDB - NodeJS - ExpressJS - Apollo Websocket sistemleri kullanılmaktadır.
+Proje Electron + React içermektedir. Sunucu tarafında RethinkDB - NodeJS - ExpressJS sistemleri kullanılmaktadır.
 
 ## Çalıştırma
 #### * yarn desktop || npm run desktop
