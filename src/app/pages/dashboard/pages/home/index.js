@@ -1,17 +1,27 @@
 import React from 'react';
+import injectSheet from 'react-jss';
+import stylesheet from './stylesheet';
+import useGlobalState from '../../../../context';
 
-import {
-    Link
-} from 'react-router-dom';
-
-const Home = () => {
-    return <div>
+const Home = ({
+    classes
+}) => {
+    const [globalState, setGlobalState] = useGlobalState();
+    return <div
+        className={classes.container}
+    >
         Home Page
-        <Link
-            to="/dashboard/login"
+        <div
+            onClick={() => {
+                setGlobalState({
+                    user: {
+                        loginData: undefined
+                    }
+                });
+            }}
         >
-            <div>Çıkış Yap</div>
-        </Link>
+            Çıkış Yap
+        </div>
     </div>;
 };
-export default Home;
+export default injectSheet(stylesheet)(Home);

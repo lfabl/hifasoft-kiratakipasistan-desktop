@@ -26,7 +26,13 @@ const Login = ({
         colors
     } = globalState.theme;
     const login = () => {
-        history.push("/dashboard/home");
+        setGlobalState({
+            user: {
+                loginData: {
+                    "id": "kimlik"
+                }
+            }
+        });
     };
     return <div
         className={classes.container}

@@ -8,6 +8,7 @@ export const styleMain = {
         backgroundImage: "url(/assets/images/bg.png)",
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
+        backgroundSize: "cover",
         display: "table",
         height: "100%",
         width: "100%"
