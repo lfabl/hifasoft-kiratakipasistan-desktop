@@ -14,16 +14,46 @@ import {
 import {
     Link
 } from 'react-router-dom';
+import forgetPassword from "../../../../server/fetchs/forgetPassword";
 
 const ForgotPassword = ({
     classes,
     history
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [loading, setLoading] = useState(false);
     const [eMail, setEMail] = useState("");
     const {
         colors
     } = globalState.theme;
+
+    const forgetPasswordUser = async () => {
+        if (eMail === "") {
+            console.log({
+                errorMessage: "Lütfen bir eMail giriniz."
+            })
+        }
+        else {
+            const forgetPasswordResult = await forgetPassword({
+                mail: eMail,
+            });
+            console.log(forgetPasswordResult)
+            if (forgetPasswordResult.code === 200) {
+                console.log({
+                    modalVisible: true,
+                    eMail: ""
+                })
+            }
+            else {
+                console.log({
+                    errorMessage: forgetPasswordResult.message,
+                    eMail: ""
+                })
+            }
+        }
+        setLoading(false);
+    }
+
     return <div
         className={classes.container}
     >
@@ -79,6 +109,10 @@ const ForgotPassword = ({
                         />
                         <Button
                             value="Parolamı Sıfırla"
+                            onClick={() => {
+                                setLoading(true);
+                                forgetPasswordUser()
+                            }}
                         />
                     </div>
                 </div>

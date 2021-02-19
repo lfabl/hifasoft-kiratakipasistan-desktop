@@ -6,6 +6,7 @@ import {
     DashboardNav
 } from '../../navigation';
 import Menu from './components/menu';
+var ipcRenderer = window.require("electron").ipcRenderer;
 
 const DASHBOARD_MENU = [
     {
@@ -30,12 +31,17 @@ const Dashboard = ({
     history
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    useEffect(() => {
-        if(globalState.user && !globalState.user.loginData) {
+    const handleGo = async () => {
+        const userTokenData = await ipcRenderer.sendSync("getUserData");
+        console.log("useToken", userTokenData)
+        if (globalState.user && !globalState.user.loginData) {
             history.push("/dashboard/login");
         } else {
             history.push("/dashboard/home");
         }
+    }
+    useEffect(() => {
+        handleGo()
     }, [globalState.user]);
     return <div
         style={{
@@ -50,7 +56,7 @@ const Dashboard = ({
                 :
                 null
         }
-        <DashboardNav/>
+        <DashboardNav />
     </div>;
 };
 export default Dashboard;

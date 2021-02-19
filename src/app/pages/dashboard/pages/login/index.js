@@ -14,26 +14,69 @@ import {
 import {
     Link
 } from 'react-router-dom';
+import md5 from "js-md5";
+import signin from "../../../../server/fetchs/signin";
+var ipcRenderer = window.require("electron").ipcRenderer;
 
 const Login = ({
     classes,
     history
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const {
         colors
     } = globalState.theme;
-    const login = () => {
-        setGlobalState({
-            user: {
-                loginData: {
-                    "id": "kimlik"
+
+    const login = async () => {
+        if (userName !== "" && password !== "") {
+            if (password.length < 5 || password.length > 80) {
+                console.log({
+                    errorMessage: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maximum 80 karakter girin!"
+                })
+            }
+            else if (userName.length === 0) {
+                console.log({
+                    errorMessage: "Lütfen bir kullanıcı adı veya mail giriniz."
+                })
+            }
+            else {
+                const newMd5Password = md5(password);
+                const signinResult = await signin({
+                    userNameOrMail: userName,
+                    password: newMd5Password
+                });
+                console.log(signinResult)
+                if (signinResult.code === 200) {
+                    await ipcRenderer.sendSync("setUserData", {
+                        token: signinResult.token
+                    });
+                    setGlobalState({
+                        user: {
+                            loginData: {
+                                "token": signinResult.token
+                            }
+                        }
+                    });
+                   
+                }
+                else {
+                    console.log({
+                        errorMessage: "Lütfen doğru kullanıcı adı ve şifrenizi giriniz!",
+                    })
                 }
             }
-        });
+        }
+        else {
+            console.log({
+                errorMessage: "Lütfen kullanıcı adı ve şifrenizi eksiksiz giriniz"
+            })
+        }
+        setLoading(false);
     };
+
     return <div
         className={classes.container}
     >
@@ -96,7 +139,10 @@ const Login = ({
                         />
                         <Button
                             value="Giriş Yap"
-                            onClick={() => login()}
+                            onClick={() => {
+                                setLoading(true);
+                                login();
+                            }}
                         />
                         <Link
                             to="/dashboard/forgotPassword"
