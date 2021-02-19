@@ -8,13 +8,7 @@ import {
     DashboardNav
 } from '../../navigation';
 import Menu from './components/menu';
-<<<<<<< HEAD
 var ipcRenderer = window.require("electron").ipcRenderer;
-=======
-import {
-    objectSpacing
-} from '../../theme/tokens';
->>>>>>> 6b40ec8ac42e098f1e662c14a8b6c892033b15a7
 
 const DASHBOARD_MENU = [
     {
