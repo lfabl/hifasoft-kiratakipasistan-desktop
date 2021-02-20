@@ -1,5 +1,6 @@
 import React, {
-    useState
+    useState,
+    useRef
 } from 'react';
 import injectSheet from 'react-jss';
 import {
@@ -32,16 +33,36 @@ const Login = ({
         colors
     } = globalState.theme;
 
+    const officeRef = useRef();
+    const userNameRef = useRef();
+    const passwordRef = useRef();
+
     const signupUser = async () => {
         if (userName === "" || password === "" || officeName === "" || userMail === "") {
-            console.log({
-                errorMessage: "Lütfen istenilen her bilgiyi doldurduğunuzdan emin olunuz."
-            })
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Lütfen istenilen her bilgiyi doldurduğunuzdan emin olunuz."
+                    }
+                }
+            });
         }
         else if (password.length < 5 || password.length > 80) {
-            console.log({
-                errorMessage: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maximum 80 karakter girin!"
-            })
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maksimum 80 karakter giriniz."
+                    }
+                }
+            });
         }
         else {
             const md5Password = md5(password);
@@ -52,10 +73,11 @@ const Login = ({
                 fullName: officeName
             });
             if (signupResult.code === 200) {
-                console.log(signupResult);
+                /*
                 await ipcRenderer.sendSync("setUserData", {
                     token: signupResult.token
                 });
+                */
                 
                 setGlobalState({
                     user: {
@@ -68,29 +90,61 @@ const Login = ({
             }
             else {
                 if (signupResult.message.indexOf("userName") !== -1) {
-                    console.log({
-                        errorMessage: "Gönderdiğiniz kullanıcı adı gerekli kuralları sağlamıyor. Lütfen minimum 3 maximum 35 karakter girin!"
-                    })
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: "Gönderdiğiniz kullanıcı adı gerekli kuralları sağlamıyor. Lütfen minimum 3 maksimum 35 karakter giriniz."
+                            }
+                        }
+                    });
                 }
                 else if (signupResult.message.indexOf("mail") !== -1) {
-                    console.log({
-                        errorMessage: "Gönderdiğiniz mail gerekli kuralları sağlamıyor. Lütfen minimum 5 maximum 80 karakter girin!"
-                    })
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: "Gönderdiğiniz mail gerekli kuralları sağlamıyor. Lütfen minimum 5 maksimum 80 karakter giriniz."
+                            }
+                        }
+                    });
                 }
                 else if (signupResult.message.indexOf("fullName") !== -1) {
-                    console.log({
-                        errorMessage: "Gönderdiğiniz ofis adı gerekli kuralları sağlamıyor. Lütfen minimum 4 maximum 45 karakter girin!"
-                    })
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: "Gönderdiğiniz ofis adı gerekli kuralları sağlamıyor. Lütfen minimum 4 maksimum 45 karakter giriniz."
+                            }
+                        }
+                    });
                 }
                 else {
-                    console.log({
-                        errorMessage: signupResult.message
-                    })
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: signupResult.message
+                            }
+                        }
+                    });
                 }
             }
         }
         setLoading(false);
-    }
+    };
 
     return <div
         className={classes.container}
@@ -143,17 +197,22 @@ const Login = ({
                             value={userMail}
                             onChangeText={e => setUserMail(e)}
                             placeholder="E - Posta Adresiniz"
+                            onKeyUp={e => e.keyCode === 13 ? officeRef.current.focus() : null}
                             className={classes.userMail}
                         />
                         <TextInput
                             onChangeText={e => setOfficeName(e)}
                             className={classes.officeName}
+                            referance={officeRef}
+                            onKeyUp={e => e.keyCode === 13 ? userNameRef.current.focus() : null}
                             placeholder="Ofis Adı"
                             value={officeName}
                         />
                         <TextInput
                             value={userName}
                             onChangeText={e => setUserName(e)}
+                            referance={userNameRef}
+                            onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
                             placeholder="Kullanıcı Adı"
                             className={classes.userName}
                         />
@@ -161,6 +220,13 @@ const Login = ({
                             onChangeText={e => setPassword(e)}
                             className={classes.password}
                             placeholder="Parolanız"
+                            referance={passwordRef}
+                            onKeyUp={e => {
+                                if(e.keyCode === 13) {
+                                    setLoading(true);
+                                    signupUser();
+                                }
+                            }}
                             value={password}
                             type="password"
                         />

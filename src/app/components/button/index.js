@@ -4,6 +4,13 @@ import {
     styleMain
 } from './stylesheet';
 import useGlobalState from '../../context';
+import Icon from '../icon';
+import {
+    icon 
+} from '@fortawesome/fontawesome-svg-core';
+import {
+    objectSpacing 
+} from '../../theme/tokens';
 
 const Button = ({
     className,
@@ -13,6 +20,7 @@ const Button = ({
     value,
     color,
     style,
+    icon,
     ...props
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
@@ -32,6 +40,19 @@ const Button = ({
         }}
         {...props}
     >
+        {
+            icon ?
+                <Icon
+                    color={icon.color ? icon.color : textColor ? textColor : colors.body}
+                    name={icon.name}
+                    size={icon.size ? icon.size : 18}
+                    style={{
+                        marginRight: value ? objectSpacing * 1.5 : null
+                    }}
+                />
+                :
+                null
+        }
         {value}
     </button>;
 };

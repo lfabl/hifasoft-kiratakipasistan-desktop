@@ -8,24 +8,31 @@ import {
     DashboardNav
 } from '../../navigation';
 import Menu from './components/menu';
+import {
+    objectSpacing
+} from '../../theme/tokens';
 var ipcRenderer = window.require("electron").ipcRenderer;
 
 const DASHBOARD_MENU = [
     {
         "title": "Ana Sayfa",
-        "route": "/home"
+        "route": "/dashboard/home",
+        "icon": "home"
     },
     {
         "title": "Emlak Portföyüm",
-        "route": "/realEstates"
+        "route": "/dashboard/realEstates",
+        "icon": "industry"
     },
     {
         "title": "Kiracı Portföyüm",
-        "route": "/tenants"
+        "route": "/dashboard/tenants",
+        "icon": "user-friends"
     },
     {
         "title": "Profil",
-        "route": "/profile"
+        "route": "/dashboard/profile",
+        "icon": "user"
     }
 ];
 
@@ -34,18 +41,23 @@ const Dashboard = ({
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    const handleGo = async () => {
-        const userTokenData = await ipcRenderer.sendSync("getUserData");
-        console.log("useToken", userTokenData)
+    const handleGo = () => {
         if (globalState.user && !globalState.user.loginData) {
             history.push("/dashboard/login");
         } else {
             history.push("/dashboard/home");
         }
-    }
+    };
+    useEffect(async () => {
+        const userTokenData = await ipcRenderer.sendSync("getUserData");
+        if(userTokenData) {
+            // token teyit, varsa app open, yoksa karrrrışma.
+        }
+    }, []);
     useEffect(() => {
-        handleGo()
+        handleGo();
     }, [globalState.user]);
+    
     return <div
         className={classes.container}
         style={{

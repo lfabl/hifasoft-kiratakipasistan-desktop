@@ -5,6 +5,17 @@ const DEFAULT_GLOBAL_STATE = {
         value: "light",
         colors: {
         }
+    },
+    modal: {
+        children: undefined,
+        onCancel: undefined,
+        isActive: false,
+        type: "loading",
+        data: undefined,
+        onSubmit: {
+            action: () => {},
+            text: "Tamam"
+        }
     }
 };
 export default DEFAULT_GLOBAL_STATE;

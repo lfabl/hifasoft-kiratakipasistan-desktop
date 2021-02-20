@@ -1,6 +1,9 @@
 {
     "primary":  "#DDAC00",
     "layer1":   "#f0f8ff",
+    "layer2":   "#F5F5F5",
+    "accent":   "#CB4343",
+    "success":  "#269E64",
     "gray0":    "hsl(0, 0%, 0%)",
     "gray10":    "hsl(0, 0%, 10%)",
     "gray20":    "hsl(0, 0%, 20%)",

@@ -1,5 +1,6 @@
 import React, {
-    useEffect
+    useEffect,
+    Fragment
 } from 'react';
 import injectSheet from 'react-jss';
 import {
@@ -10,6 +11,9 @@ import useGlobalState, {
     GlobalStateProvider
 } from './context';
 import GenerateColors from './theme/colors';
+import {
+    Modal
+} from './components';
 
 const App = () => {
     const [globalState, setGlobalState] = useGlobalState();
@@ -21,7 +25,22 @@ const App = () => {
             }
         });
     }, []);
-    return <Navigation/>;
+    return <Fragment>
+        <Navigation/>
+        {
+            globalState.modal.isActive ?
+                <Modal
+                    onCancel={globalState.modal.onCancel}
+                    onSubmit={globalState.modal.onSubmit}
+                    type={globalState.modal.type}
+                    data={globalState.modal.data}
+                >
+                    {globalState.modal.children}
+                </Modal>
+                :
+                null
+        }
+    </Fragment>;
 };
 
 const Root = ({

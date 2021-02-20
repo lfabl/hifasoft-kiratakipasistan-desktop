@@ -29,30 +29,52 @@ const ForgotPassword = ({
 
     const forgetPasswordUser = async () => {
         if (eMail === "") {
-            console.log({
-                errorMessage: "Lütfen bir eMail giriniz."
-            })
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Lütfen bir e-posta giriniz."
+                    }
+                }
+            });
         }
         else {
             const forgetPasswordResult = await forgetPassword({
                 mail: eMail,
             });
-            console.log(forgetPasswordResult)
+            
             if (forgetPasswordResult.code === 200) {
-                console.log({
-                    modalVisible: true,
-                    eMail: ""
-                })
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Başarılı!",
+                            message: "Parola sıfırlama bağlantısı gönderildi."
+                        }
+                    }
+                });
             }
             else {
-                console.log({
-                    errorMessage: forgetPasswordResult.message,
-                    eMail: ""
-                })
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Hata!",
+                            message: forgetPasswordResult.message
+                        }
+                    }
+                });
             }
         }
         setLoading(false);
-    }
+    };
 
     return <div
         className={classes.container}
@@ -111,7 +133,7 @@ const ForgotPassword = ({
                             value="Parolamı Sıfırla"
                             onClick={() => {
                                 setLoading(true);
-                                forgetPasswordUser()
+                                forgetPasswordUser();
                             }}
                         />
                     </div>

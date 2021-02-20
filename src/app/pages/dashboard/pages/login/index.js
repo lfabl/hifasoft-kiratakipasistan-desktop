@@ -1,5 +1,6 @@
 import React, {
-    useState
+    useState,
+    useRef
 } from 'react';
 import injectSheet from 'react-jss';
 import {
@@ -30,17 +31,35 @@ const Login = ({
         colors
     } = globalState.theme;
 
+    const passwordRef = useRef();
+
     const login = async () => {
         if (userName !== "" && password !== "") {
             if (password.length < 5 || password.length > 80) {
-                console.log({
-                    errorMessage: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maximum 80 karakter girin!"
-                })
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Eksik Veri!",
+                            message: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maksimum 80 karakter girin."
+                        }
+                    }
+                });
             }
             else if (userName.length === 0) {
-                console.log({
-                    errorMessage: "Lütfen bir kullanıcı adı veya mail giriniz."
-                })
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Eksik Veri!",
+                            message: "Lütfen bir kullanıcı adı veya mail giriniz."
+                        }
+                    }
+                });
             }
             else {
                 const newMd5Password = md5(password);
@@ -48,11 +67,13 @@ const Login = ({
                     userNameOrMail: userName,
                     password: newMd5Password
                 });
-                console.log(signinResult)
+                
                 if (signinResult.code === 200) {
+                    /*
                     await ipcRenderer.sendSync("setUserData", {
                         token: signinResult.token
                     });
+                    */
                     setGlobalState({
                         user: {
                             loginData: {
@@ -60,19 +81,34 @@ const Login = ({
                             }
                         }
                     });
-                   
                 }
                 else {
-                    console.log({
-                        errorMessage: "Lütfen doğru kullanıcı adı ve şifrenizi giriniz!",
-                    })
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Eksik Veri!",
+                                message: "Lütfen doğru kullanıcı adı ve şifrenizi giriniz."
+                            }
+                        }
+                    });
                 }
             }
         }
         else {
-            console.log({
-                errorMessage: "Lütfen kullanıcı adı ve şifrenizi eksiksiz giriniz"
-            })
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Eksik Veri!",
+                        message: "Lütfen kullanıcı adı ve şifrenizi eksiksiz giriniz."
+                    }
+                }
+            });
         }
         setLoading(false);
     };
@@ -127,12 +163,20 @@ const Login = ({
                         <TextInput
                             value={userName}
                             onChangeText={e => setUserName(e)}
+                            onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
                             placeholder="Kullanıcı Adınız"
                             className={classes.userName}
                         />
                         <TextInput
                             onChangeText={e => setPassword(e)}
                             className={classes.password}
+                            referance={passwordRef}
+                            onKeyUp={e => {
+                                if(e.keyCode === 13) {
+                                    setLoading(true);
+                                    login(); 
+                                }
+                            }}
                             placeholder="Parolanız"
                             value={password}
                             type="password"

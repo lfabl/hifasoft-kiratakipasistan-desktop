@@ -11,6 +11,7 @@ import {
 const TextInput = ({
     onChangeText,
     className,
+    referance,
     classes,
     value,
     type,
@@ -25,6 +26,7 @@ const TextInput = ({
         if(onChangeText) onChangeText(_value);
     }, [_value]);
     return <input
+        ref={referance}
         type={type ? type : "text"}
         value={_value}
         onChange={e => {
