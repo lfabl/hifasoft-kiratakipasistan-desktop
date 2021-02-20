@@ -1,5 +1,6 @@
 import React, {
-    useState
+    useState,
+    useEffect
 } from 'react';
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
@@ -7,21 +8,43 @@ import useGlobalState from '../../../../context';
 import {
     Icon
 } from '../../../../components';
-
+import {
+    useQuery
+} from "@apollo/react-hooks";
+import {
+    home
+} from "../../../../server/graphql";
 const Home = ({
     classes
 }) => {
-    const [approachEstates, setApproachEstates] = useState([]);
     const [globalState, setGlobalState] = useGlobalState();
+    const [approachEstates, setApproachEstates] = useState([]);
     const [pastEstates, setPastEstates] = useState([]);
     const [realEstatesStatus, setRealEstatesStatus] = useState({
         active: 0,
         passive: 0
     });
+    const [totalTenantCount, setTotalTenantCount] = useState(0);
     const [activeTenants, setActiveTenants] = useState(0);
     const {
         colors
     } = globalState.theme;
+    const { loading, error, data } = useQuery(home);
+
+    useEffect(() => {
+        if (data && data.home) {
+            const newData = data.home;
+            setApproachEstates(newData.approaching);
+            setPastEstates(newData.pastEstateData);
+            setRealEstatesStatus({
+                active: newData.totalActiveEstateCount,
+                passive: newData.totalPassiveEstateCount,
+            });
+            setTotalTenantCount(newData.totalTenantCount);
+            setActiveTenants(newData.totalTenantCount);
+        }
+    }, [data]);
+
     return <div
         className={classes.table}
         style={{
@@ -78,8 +101,8 @@ const Home = ({
                             size={64}
                         />
                         <div className={classes.totalCount} style={{
-                            color: colors.contrastBody 
-                        }}>{realEstatesStatus.active + realEstatesStatus.passive}</div>
+                            color: colors.contrastBody
+                        }}>{totalTenantCount}</div>
                     </div>
                     <div
                         className={classes.cardInfoContainer}
@@ -90,20 +113,20 @@ const Home = ({
                                 color: colors.contrastBody
                             }}
                         >Aktif: <span style={{
-                                color: colors.success
-                            }}>{realEstatesStatus.active}</span></div>
+                            color: colors.success
+                        }}>{realEstatesStatus.active}</span></div>
                         <div
                             className={classes.cardInfoPassive}
                             style={{
                                 color: colors.contrastBody
                             }}
                         >Pasif: <span style={{
-                                color: colors.accent 
-                            }}>{realEstatesStatus.passive}</span></div>
+                            color: colors.accent
+                        }}>{realEstatesStatus.passive}</span></div>
                     </div>
                 </div>
                 <div className={classes.cardTitle} style={{
-                    backgroundColor: colors.background 
+                    backgroundColor: colors.background
                 }}>Dairelerim</div>
             </div>
             <div
@@ -125,15 +148,15 @@ const Home = ({
                             size={64}
                         />
                         <div className={classes.totalCount} style={{
-                            color: colors.contrastBody 
+                            color: colors.contrastBody
                         }}>{activeTenants}</div>
                     </div>
                 </div>
                 <div className={classes.cardTitle} style={{
-                    backgroundColor: colors.background 
+                    backgroundColor: colors.background
                 }}>Kiracılarım - <span style={{
-                        color: colors.success 
-                    }}>Aktif</span></div>
+                    color: colors.success
+                }}>Aktif</span></div>
             </div>
         </div>
     </div>;

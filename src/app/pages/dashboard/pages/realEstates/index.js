@@ -56,7 +56,6 @@ const RealEstates = ({
                 name: "plus-circle",
                 size: 22
             }}
-            className={classes.}
         />
     </div>;
 };
