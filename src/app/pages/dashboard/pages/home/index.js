@@ -6,9 +6,6 @@ import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
 import useGlobalState from '../../../../context';
 import {
-    useLocation
-} from "react-router-dom";
-import {
     Icon
 } from '../../../../components';
 import {
@@ -20,7 +17,6 @@ import {
 const Home = ({
     classes
 }) => {
-    const location = useLocation();
     const [globalState, setGlobalState] = useGlobalState();
     const [approachEstates, setApproachEstates] = useState([]);
     const [pastEstates, setPastEstates] = useState([]);
@@ -33,7 +29,7 @@ const Home = ({
     const {
         colors
     } = globalState.theme;
-    const { loading, error } = useQuery(home, {
+    useQuery(home, {
         fetchPolicy: "cache-and-network",
         onCompleted: data => {
             if (data && data.home) {

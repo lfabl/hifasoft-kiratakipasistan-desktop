@@ -1,5 +1,6 @@
 import React, {
-    useState
+    useState,
+    useEffect
 } from 'react';
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
@@ -9,7 +10,15 @@ import {
     Icon
 } from '../../../../components';
 import useGlobalState from '../../../../context';
-
+import {
+    useQuery
+} from "@apollo/react-hooks";
+import {
+    getAllRealEstates
+} from "../../../../server/graphql";
+import {
+    paymentPeriodConverter
+} from "../../../../helpers";
 const STATES = {
     "empty": {
         "color": "orange",
@@ -25,30 +34,41 @@ const RealEstates = ({
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    const [search, setSearch] = useState();
-    const [data, setData] = useState([
-        {
-            "title": "Mahalle Güzeli",
-            "state": "empty",
-            "date": "rrule",
-            "amount": 349,
-            "phone": "05555555555",
-            "malsahibisi": "Dayı Dayı",
-            "kiraci": "Gron"
-        },
-        {
-            "title": "Tatlı Apt. No: 5",
-            "state": "active",
-            "date": "rrule",
-            "amount": 1050,
-            "phone": "05554453543",
-            "malsahibisi": "Görmük",
-            "kiraci": "Belirtilmemiş"
-        }
-    ]);
+    const [search, setSearch] = useState("");
+    const [data, setData] = useState([]);
     const {
         colors
     } = globalState.theme;
+    useQuery(getAllRealEstates, {
+        fetchPolicy: "cache-and-network",
+        onCompleted: data => {
+            if (data && data.getAllRealEstates.response.code === 200) {
+                setData(data.getAllRealEstates.data)
+                setGlobalState({
+                    modal: {
+                        isActive: false,
+                        loading: false,
+                        dialog: false,
+                        data: undefined,
+                        type: "loading"
+                    }
+                });
+            }
+        }
+    });
+    useEffect(() => {
+        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token) {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: true,
+                    dialog: false,
+                    data: undefined,
+                    type: "loading"
+                }
+            });
+        }
+    }, []);
 
     return <div
         className={classes.container}
@@ -61,7 +81,7 @@ const RealEstates = ({
         />
         <Button
             textColor={colors.body}
-            onClick={() => {}}
+            onClick={() => { }}
             value="Yeni Emlak Oluştur"
             color={colors.primary}
             icon={{
@@ -73,6 +93,8 @@ const RealEstates = ({
         {
             data && data.length ?
                 data.map((item, index) => {
+                    const status = item.rentalType.length !== 0 && item.rentalType[0].status === "continuation" ? true : false
+                    const paymentPeriodConverted = paymentPeriodConverter(item.paymentPeriod);
                     return <div
                         key={index}
                         className={classes.card}
@@ -83,24 +105,24 @@ const RealEstates = ({
                         <div>
                             <div className={classes.cardTitle}>{item.title}</div>
                             <div className={classes.cardInfo}>Durum: <span style={{
-                                color: STATES[item.state].color 
-                            }}>{STATES[item.state].value}</span></div>
-                            <div className={classes.cardInfo}>Kira Tarihi: <span>{item.date}</span></div>
-                            <div className={classes.cardInfo}>Kira Bedeli: <span>{item.amount}</span></div>
-                            <div className={classes.cardInfo}>Telefon Numarası: <span>{item.phone}</span></div>
-                            <div className={classes.cardInfo}>Mal Sahibi: <span>{item.malsahibisi}</span></div>
-                            <div className={classes.cardInfo}>Kiracı: <span>{item.kiraci}</span></div>
+                                color: STATES[status ? "active" : "empty"].color
+                            }}>{STATES[status ? "active" : "empty"].value}</span></div>
+                            <div className={classes.cardInfo}>Kira Tarihi: <span>{"Her " + paymentPeriodConverted.type + " " + paymentPeriodConverted.date}</span></div>
+                            <div className={classes.cardInfo}>Kira Bedeli: <span>{item.detailRent}</span></div>
+                            <div className={classes.cardInfo}>Telefon Numarası: <span>{item.ownerManagerPhoneNumber}</span></div>
+                            <div className={classes.cardInfo}>Mal Sahibi: <span>{item.ownerNameSurname}</span></div>
+                            <div className={classes.cardInfo}>Kiracı: <span>{item.activeTenant && item.activeTenant.length !== 0 ? item.activeTenant[0].fullName : ""}</span></div>
                         </div>
                         <div
                             className={classes.cardLinkButton}
-                            onClick={() => {}}
+                            onClick={() => { }}
                         >
                             <Icon
-                                name={item.state === "empty" ? "link" : "unlink"}
+                                name={!status ? "link" : "unlink"}
                                 size={26}
-                                color={STATES[item.state].color}
+                                color={STATES[status ? "active" : "empty"].color}
                             />
-                            <span>{item.state === "empty" ? "Sözleşme Başlat" : "Sözleşmeyi Sonlandır"}</span>
+                            <span>{!status ? "Sözleşme Başlat" : "Sözleşmeyi Sonlandır"}</span>
                         </div>
                     </div>;
                 })
