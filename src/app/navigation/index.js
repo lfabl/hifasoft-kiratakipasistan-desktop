@@ -15,7 +15,7 @@ import Welcome from '../pages/welcome';
 
 export const DashboardNav = () => (
     <main style={{
-        width: "100%", height: "100%" 
+        width: "100%", height: "100%", overflow: "auto"
     }}>
         <Switch>
             <Route path="/dashboard/home" component={Home}/>

@@ -13,6 +13,7 @@ import {
 } from '../../theme/tokens';
 
 const Button = ({
+    wrap = "no-wrap",
     className,
     textColor,
     classes,
@@ -36,6 +37,7 @@ const Button = ({
         style={{
             backgroundColor: color ? color : colors.primary,
             color: textColor ? textColor : colors.body,
+            alignSelf: wrap === "no-wrap" ? "stretch" : wrap === "wrap" ? "baseline" : null,
             ...style
         }}
         {...props}

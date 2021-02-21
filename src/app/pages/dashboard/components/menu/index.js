@@ -53,14 +53,16 @@ const Menu = ({
                                 >
                                     <div
                                         onClick={() => {
-                                            setGlobalState({
-                                                modal: {
-                                                    ...globalState.modal,
-                                                    type: "loading",
-                                                    isActive: true
-                                                }
-                                            });
-                                            history.push(item.route);
+                                            if(window.location.pathname !== item.route) {
+                                                setGlobalState({
+                                                    modal: {
+                                                        ...globalState.modal,
+                                                        type: "loading",
+                                                        isActive: true
+                                                    }
+                                                });
+                                                history.push(item.route);
+                                            }
                                         }}
                                         className={classes.item}
                                         style={{

@@ -21,9 +21,9 @@ const Tenants = ({
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [filteredData, setFilteredData] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [datas, setDatas] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
     const {
         colors
     } = globalState.theme;
@@ -55,12 +55,6 @@ const Tenants = ({
                 }
             });
         });
-        setGlobalState({
-            modal: {
-                ...globalState.modal,
-                isActive: false
-            }
-        }, []);
     }, []);
     useEffect(() => {
         if (searchText && searchText.length) {
@@ -122,7 +116,7 @@ const Tenants = ({
                             >
                                 <img
                                     src={item.profileImageName ? item.profileImageName : "/assets/images/default-user.png"}
-                                    width="50px"
+                                    width="100px"
                                 />
                             </div>
                             <div>
