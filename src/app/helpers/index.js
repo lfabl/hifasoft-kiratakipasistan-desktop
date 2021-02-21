@@ -2,51 +2,51 @@ export const paymentPeriodConverter = (paymentPeriod) => {
     let returnPaymentPeriod = {
         type: "",
         date: ""
-    }
+    };
     const type = paymentPeriod.type;
     const date = paymentPeriod.date;
     const newDate = new Date(date);
     returnPaymentPeriod.type = type === "monthly" ? "Ayın" : type === "yearly" ? "Yılın" : null;
     returnPaymentPeriod.date = type === "monthly" ? newDate.getDate() + ". günü" : monthConverter(newDate.getMonth() + 1) + "'ayının " + newDate.getDate() + ". günü";
 
-    return returnPaymentPeriod
-}
+    return returnPaymentPeriod;
+};
 
 export const monthConverter = (month) => {
     if (month === 1) {
-        return "Ocak"
+        return "Ocak";
     }
     else if (month === 2) {
-        return "Şubat"
+        return "Şubat";
     }
     else if (month === 3) {
-        return "Mart"
+        return "Mart";
     }
     else if (month === 4) {
-        return "Nisan"
+        return "Nisan";
     }
     else if (month === 5) {
-        return "Mayıs"
+        return "Mayıs";
     }
     else if (month === 6) {
-        return "Haziran"
+        return "Haziran";
     }
     else if (month === 7) {
-        return "Temmuz"
+        return "Temmuz";
     }
     else if (month === 8) {
-        return "Ağustos"
+        return "Ağustos";
     }
     else if (month === 9) {
-        return "Eylül"
+        return "Eylül";
     }
     else if (month === 10) {
-        return "Ekim"
+        return "Ekim";
     }
     else if (month === 11) {
-        return "Kasım"
+        return "Kasım";
     }
     else if (month === 12) {
-        return "Aralık"
+        return "Aralık";
     }
-}
+};

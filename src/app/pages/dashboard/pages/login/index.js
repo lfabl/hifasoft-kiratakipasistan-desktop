@@ -1,6 +1,7 @@
 import React, {
     useState,
-    useRef
+    useRef,
+    useEffect
 } from 'react';
 import injectSheet from 'react-jss';
 import {
@@ -31,7 +32,12 @@ const Login = ({
         colors
     } = globalState.theme;
 
+    const emailRef = useRef();
     const passwordRef = useRef();
+
+    useEffect(() => {
+        emailRef.current.focus();
+    }, []);
 
     const login = async () => {
         if (userName !== "" && password !== "") {
@@ -166,6 +172,7 @@ const Login = ({
                             onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
                             placeholder="Kullanıcı Adınız"
                             className={classes.userName}
+                            referance={emailRef}
                         />
                         <TextInput
                             onChangeText={e => setPassword(e)}

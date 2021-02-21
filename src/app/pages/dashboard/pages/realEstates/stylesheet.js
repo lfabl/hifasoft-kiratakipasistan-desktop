@@ -1,7 +1,7 @@
 import {
+    objectSpacing,
     active,
-    hover,
-    objectSpacing 
+    hover
 } from "../../../../theme/tokens";
 
 const stylesheet = {
@@ -19,6 +19,7 @@ const stylesheet = {
     card: {
         marginBottom: objectSpacing * 1.5,
         padding: objectSpacing * 2,
+        borderRadius: 10,
         "&:hover": {
             ...hover
         },
