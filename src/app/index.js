@@ -32,10 +32,20 @@ import {
     serverAdres
 } from "../app/server/config";
 
+const fetchAdress = serverAdres + "/app";
+export const client = new ApolloClient({
+    link: createUploadLink({
+        credentials: 'same-origin',
+        mode: 'same-origin',
+        uri: fetchAdress
+    }),
+    cache: new InMemoryCache({
+        addTypename: false
+    })
+});
 
 const App = () => {
     const [globalState, setGlobalState] = useGlobalState();
-    const [token, setToken] = useState("");
     useEffect(() => {
         setGlobalState({
             theme: {
@@ -44,26 +54,6 @@ const App = () => {
             }
         });
     }, []);
-    useEffect(() => {
-        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token && token !== globalState.user.loginData.token) {
-            setToken(globalState.user.loginData.token);
-        }
-    }, [globalState]);
-
-    const fetchAdress = serverAdres + "/app";
-    const client = new ApolloClient({
-        link: createUploadLink({
-            uri: fetchAdress,
-            credentials: 'same-origin',
-            mode: 'same-origin',
-            headers: {
-                "x-access-token": token
-            },
-        }),
-        cache: new InMemoryCache({
-            addTypename: false
-        })
-    });
 
     return <ApolloProvider client={client}>
         <Fragment>

@@ -1,4 +1,5 @@
 import React, {
+    useEffect,
     useState
 } from 'react';
 import injectSheet from 'react-jss';
@@ -27,6 +28,15 @@ const Tenants = ({
     const {
         colors
     } = globalState.theme;
+
+    useEffect(() => {
+        setGlobalState({
+            modal: {
+                ...globalState.modal,
+                isActive: false
+            }
+        }, []);
+    }, []);
 
     return <div
         className={classes.container}

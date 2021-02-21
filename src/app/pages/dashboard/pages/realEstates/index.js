@@ -11,10 +11,6 @@ import {
 } from '../../../../components';
 import useGlobalState from '../../../../context';
 import {
-    useQuery,
-    useLazyQuery
-} from "@apollo/react-hooks";
-import {
     getAllRealEstates
 } from "../../../../server/graphql";
 import {
@@ -23,6 +19,9 @@ import {
 import {
     REAL_ESTATE_STATES
 } from "../../../../constants";
+import {
+    client
+} from '../../../../';
 
 const RealEstates = ({
     classes
@@ -35,40 +34,26 @@ const RealEstates = ({
         colors
     } = globalState.theme;
 
-    const {
-        data
-    } = useQuery(getAllRealEstates);
-
     useEffect(() => {
-        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token && data && data.getAllRealEstates.response.code === 200 && JSON.stringify(data.getAllRealEstates.data) !== JSON.stringify(datas)) {
-            setDatas(data.getAllRealEstates.data);
-            setFilteredData(data.getAllRealEstates.data);
+        client.query({
+            query: getAllRealEstates,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            }
+        }).then(e => {
+            // Burada data işlenecek.
             setGlobalState({
                 modal: {
-                    isActive: false,
-                    loading: false,
-                    dialog: false,
-                    data: undefined,
-                    type: "loading"
+                    ...globalState.modal,
+                    isActive: false
                 }
             });
-        }
-    }, [data]);
-
-    useEffect(() => {
-        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token) {
-            setGlobalState({
-                modal: {
-                    isActive: true,
-                    loading: true,
-                    dialog: false,
-                    data: undefined,
-                    type: "loading"
-                }
-            });
-        }
+        }).catch(e => {
+            // Burda loading kapatılacak.
+        });
     }, []);
-
     useEffect(() => {
         if (searchText && searchText.length) {
             const newFilteredData = datas.filter((data) => {
@@ -100,7 +85,17 @@ const RealEstates = ({
         />
         <Button
             textColor={colors.body}
-            onClick={() => { }}
+            onClick={() => {
+                setGlobalState({
+                    modal: {
+                        isActive: !globalState.modal.isActive,
+                        data: undefined,
+                        type: "loading",
+                        loading: true,
+                        dialog: false
+                    }
+                });
+            }}
             value="Yeni Emlak Oluştur"
             color={colors.primary}
             icon={{

@@ -52,7 +52,16 @@ const Menu = ({
                                     className={classes.itemTableCell}
                                 >
                                     <div
-                                        onClick={() => history.push(item.route)}
+                                        onClick={() => {
+                                            setGlobalState({
+                                                modal: {
+                                                    ...globalState.modal,
+                                                    type: "loading",
+                                                    isActive: true
+                                                }
+                                            });
+                                            history.push(item.route);
+                                        }}
                                         className={classes.item}
                                         style={{
                                             color: colors.body

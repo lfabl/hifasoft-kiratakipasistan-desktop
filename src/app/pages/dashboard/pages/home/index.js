@@ -14,6 +14,7 @@ import {
 import {
     home
 } from "../../../../server/graphql";
+
 const Home = ({
     history,
     classes
@@ -68,6 +69,12 @@ const Home = ({
                 }
             });
         }
+        setGlobalState({
+            modal: {
+                ...globalState.modal,
+                isActive: false
+            }
+        });
     }, []);
 
     return <div
