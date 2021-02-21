@@ -10,26 +10,51 @@ import {
     Icon
 } from '../../../../components';
 import useGlobalState from '../../../../context';
-
+import {
+    getAllTenants
+} from "../../../../server/graphql";
+import {
+    client
+} from '../../../../';
 const Tenants = ({
+    
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const [searchText, setSearchText] = useState("");
-    const [data, setData] = useState([
-        {
-            "userName": "Furkan Atakan BOZKURT",
-            "phone": "0555 555 55 55",
-            "aktifDaire": "Yok",
-            "kefil": "Nahçıvan",
-            "kefilPhone": "0543 333 35 53"
-        }
-    ]);
+    const [datas, setDatas] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const {
         colors
     } = globalState.theme;
 
     useEffect(() => {
+        client.query({
+            query: getAllTenants,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            }
+        }).then(res => {
+            if (res.data.getAllTenants.response.code === 200) {
+                setDatas(res.data.getAllTenants.data);
+                setFilteredData(res.data.getAllTenants.data);
+            }
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        }).catch(e => {
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        });
         setGlobalState({
             modal: {
                 ...globalState.modal,
@@ -37,6 +62,27 @@ const Tenants = ({
             }
         }, []);
     }, []);
+    useEffect(() => {
+        if (searchText && searchText.length) {
+            const newFilteredData = datas.filter((data) => {
+                const searchTextLowerCase = searchText.toLowerCase();
+                const fullName = data.fullName.toLowerCase();
+                const phoneNumber = data.phoneNumber1.toLowerCase();
+                const suretyFullName = data.suretyFullName.toLowerCase();
+                const suretyPhoneNumber = data.suretyPhoneNumber.toLowerCase();
+                const activeApartment = data.activeApartment.length !== 0 ? data.activeApartment[0].title.toLowerCase() : "";
+                return fullName.indexOf(searchTextLowerCase) > -1 ||
+                    phoneNumber.indexOf(searchTextLowerCase) > -1 ||
+                    suretyFullName.indexOf(suretyFullName) > -1 ||
+                    suretyPhoneNumber.indexOf(suretyFullName) > -1 ||
+                    activeApartment.indexOf(searchTextLowerCase) > -1;
+            });
+            setFilteredData(newFilteredData);
+        }
+        else {
+            setFilteredData(datas);
+        }
+    }, [searchText]);
 
     return <div
         className={classes.container}
@@ -49,7 +95,7 @@ const Tenants = ({
         />
         <Button
             textColor={colors.body}
-            onClick={() => {}}
+            onClick={() => { }}
             value="Yeni Kiracı Oluştur"
             color={colors.primary}
             icon={{
@@ -59,8 +105,8 @@ const Tenants = ({
             className={classes.new}
         />
         {
-            data && data.length ?
-                data.map((item, index) => {
+            filteredData && filteredData.length ?
+                filteredData.map((item, index) => {
                     return <div
                         key={index}
                         className={classes.card}
@@ -75,18 +121,28 @@ const Tenants = ({
                                 className={classes.cardLogo}
                             >
                                 <img
-                                    src={item.profilePhoto ? item.profilePhoto : "/assets/images/default-user.png"}
+                                    src={item.profileImageName ? item.profileImageName : "/assets/images/default-user.png"}
                                     width="50px"
                                 />
                             </div>
                             <div>
-                                <div className={classes.cardTitle}>{item.title}</div>
-                                <div className={classes.cardInfo}>Telefon Numarası: <span>{item.phone}</span></div>
+                                <div className={classes.cardTitle}>{item.fullName}</div>
+                                <div className={classes.cardInfo}>Telefon Numarası: <span>{item.phoneNumber1}</span></div>
                                 <div className={classes.cardInfo}>Aktif Daire: <span style={{
-                                    color: item.aktifDaire ? "green" : "orange"
-                                }}>{item.aktifDaire}</span></div>
-                                <div className={classes.cardInfo}>Kefil: <span>{item.kefil}</span></div>
-                                <div className={classes.cardInfo}>Kefil Telefon: <span>{item.kefilPhone}</span></div>
+                                    color: item.activeApartment.length !== 0 ? "green" : "orange"
+                                }}>
+                                    {item.activeApartment.length !== 0 ? item.activeApartment[0].title : "Atanmamış"}
+                                </span></div>
+                                <div className={classes.cardInfo}>Kefil: <span style={{
+                                    color: item.suretyFullName.length !== 0 ? undefined : "orange"
+                                }}>
+                                    {item.suretyFullName.length !== 0 ? item.suretyFullName.length : "Atanmamış"}
+                                </span> </div>
+                                <div className={classes.cardInfo}>Kefil Telefon: <span style={{
+                                    color: item.suretyPhoneNumber.length !== 0 ? undefined : "orange"
+                                }}>
+                                    {item.suretyPhoneNumber.length !== 0 ? item.suretyPhoneNumber.length : "Atanmamış"}
+                                </span></div>
                             </div>
                         </div>
                         <div
@@ -94,11 +150,11 @@ const Tenants = ({
                             onClick={() => { }}
                         >
                             <Icon
-                                name={item.aktifDaire ? "link" : "unlink"}
+                                name={item.activeApartment.length === 0 ? "link" : "unlink"}
                                 size={26}
-                                color={item.aktifDaire ? "green" : "orange"}
+                                color={item.activeApartment.length === 0 ? "green" : "orange"}
                             />
-                            <span>{item.aktifDaire ? "Sözleşme Başlat" : "Sözleşmeyi Sonlandır"}</span>
+                            <span>{item.activeApartment.length === 0 ? "Sözleşme Başlat" : "Sözleşmeyi Sonlandır"}</span>
                         </div>
                     </div>;
                 })
