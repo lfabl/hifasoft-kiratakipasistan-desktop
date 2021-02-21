@@ -9,12 +9,11 @@ import {
     Icon
 } from '../../../../components';
 import {
-    useQuery
-} from "@apollo/react-hooks";
-import {
     home
 } from "../../../../server/graphql";
-
+import {
+    client
+} from '../../../../';
 const Home = ({
     history,
     classes
@@ -31,11 +30,18 @@ const Home = ({
     const {
         colors
     } = globalState.theme;
-    useQuery(home, {
-        fetchPolicy: "cache-and-network",
-        onCompleted: data => {
-            if (data && data.home) {
-                const newData = data.home;
+
+    useEffect(() => {
+        client.query({
+            query: home,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            }
+        }).then(res => {
+            if (res.data.home) {
+                const newData = res.data.home;
                 setApproachEstates(newData.approaching);
                 setPastEstates(newData.pastEstateData);
                 setRealEstatesStatus({
@@ -54,29 +60,22 @@ const Home = ({
                     }
                 });
             }
-        }
-    });
-
-    useEffect(() => {
-        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token) {
             setGlobalState({
                 modal: {
-                    isActive: true,
-                    loading: true,
-                    dialog: false,
-                    data: undefined,
-                    type: "loading"
+                    ...globalState.modal,
+                    isActive: false
                 }
             });
-        }
-        setGlobalState({
-            modal: {
-                ...globalState.modal,
-                isActive: false
-            }
+        }).catch(e => {
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
         });
     }, []);
-
+    
     return <div
         className={classes.table}
         style={{

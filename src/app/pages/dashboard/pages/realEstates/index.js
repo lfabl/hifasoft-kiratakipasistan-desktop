@@ -42,8 +42,11 @@ const RealEstates = ({
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
             }
-        }).then(e => {
-            // Burada data işlenecek.
+        }).then(res => {
+            if (res.data.getAllRealEstates.response.code === 200) {
+                setDatas(res.data.getAllRealEstates.data);
+                setFilteredData(res.data.getAllRealEstates.data);
+            }
             setGlobalState({
                 modal: {
                     ...globalState.modal,
@@ -51,7 +54,12 @@ const RealEstates = ({
                 }
             });
         }).catch(e => {
-            // Burda loading kapatılacak.
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
         });
     }, []);
     useEffect(() => {
