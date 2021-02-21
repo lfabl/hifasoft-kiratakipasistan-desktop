@@ -133,7 +133,9 @@ const RealEstates = ({
                             <div className={classes.cardInfo}>Kira Bedeli: <span>{item.detailRent}</span></div>
                             <div className={classes.cardInfo}>Telefon Numarası: <span>{item.ownerManagerPhoneNumber}</span></div>
                             <div className={classes.cardInfo}>Mal Sahibi: <span>{item.ownerNameSurname}</span></div>
-                            <div className={classes.cardInfo}>Kiracı: <span>{item.activeTenant && item.activeTenant.length !== 0 ? item.activeTenant[0].fullName : ""}</span></div>
+                            <div className={classes.cardInfo}>Kiracı: <span style={{
+                                color: item.activeTenant && item.activeTenant.length !== 0  ?  undefined : "orange"
+                            }}>{item.activeTenant && item.activeTenant.length !== 0 ? item.activeTenant[0].fullName : "Atanmamış"}</span></div>
                         </div>
                         <div
                             className={classes.cardLinkButton}
