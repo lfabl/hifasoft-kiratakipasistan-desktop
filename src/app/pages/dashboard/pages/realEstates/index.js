@@ -11,6 +11,9 @@ import {
 } from '../../../../components';
 import useGlobalState from '../../../../context';
 import {
+    RealEstateContract
+} from "../../views";
+import {
     getAllRealEstates
 } from "../../../../server/graphql";
 import {
@@ -123,8 +126,14 @@ const RealEstates = ({
                         style={{
                             backgroundColor: colors.background
                         }}
+
                     >
-                        <div>
+                        <div
+                            onClick={(e) => {
+                                console.log("ham");
+                                e.preventDefault();
+                            }}
+                        >
                             <div className={classes.cardTitle}>{item.title}</div>
                             <div className={classes.cardInfo}>Durum: <span style={{
                                 color: REAL_ESTATE_STATES[status ? "active" : "empty"].color
@@ -134,12 +143,24 @@ const RealEstates = ({
                             <div className={classes.cardInfo}>Telefon Numarası: <span>{item.ownerManagerPhoneNumber}</span></div>
                             <div className={classes.cardInfo}>Mal Sahibi: <span>{item.ownerNameSurname}</span></div>
                             <div className={classes.cardInfo}>Kiracı: <span style={{
-                                color: item.activeTenant && item.activeTenant.length !== 0  ?  undefined : "orange"
+                                color: item.activeTenant && item.activeTenant.length !== 0 ? undefined : "orange"
                             }}>{item.activeTenant && item.activeTenant.length !== 0 ? item.activeTenant[0].fullName : "Atanmamış"}</span></div>
                         </div>
                         <div
                             className={classes.cardLinkButton}
-                            onClick={() => { }}
+                            onClick={(e) => {
+                                console.log("ham2");
+                                setGlobalState({
+                                    modal: {
+                                        isActive: true,
+                                        loading: false,
+                                        type: "children",
+                                        children: <RealEstateContract id={item.id}>
+
+                                        </RealEstateContract>
+                                    }
+                                });
+                            }}
                         >
                             <Icon
                                 name={!status ? "link" : "unlink"}
