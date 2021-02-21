@@ -48,16 +48,21 @@ const Dashboard = ({
             history.push("/dashboard/home");
         }
     };
-    useEffect(async () => {
+    
+    const getCacheUserData = async () => {
         const userTokenData = await ipcRenderer.sendSync("getUserData");
         if(userTokenData) {
             // token teyit, varsa app open, yoksa karrrrışma.
         }
+    };
+    useEffect(() => {
+        getCacheUserData();
     }, []);
+    
     useEffect(() => {
         handleGo();
     }, [globalState.user]);
-    
+
     return <div
         className={classes.container}
         style={{

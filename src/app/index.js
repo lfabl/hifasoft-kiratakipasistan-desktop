@@ -28,7 +28,7 @@ import {
     createUploadLink
 } from "apollo-upload-client";
 import {
-    serverAdres
+    serverAdres 
 } from "../app/server/config";
 
 
@@ -62,10 +62,11 @@ const App = () => {
         cache: new InMemoryCache({
             addTypename: false
         })
-    })
+    });
 
     return <ApolloProvider client={client}>
         <Fragment>
+            <Navigation />
             {
                 globalState.modal.isActive ?
                     <Modal
@@ -79,7 +80,6 @@ const App = () => {
                     :
                     null
             }
-            <Navigation />
         </Fragment>
     </ApolloProvider>;
 };
