@@ -6,6 +6,9 @@ import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
 import useGlobalState from '../../../../context';
 import {
+    useLocation
+} from "react-router-dom";
+import {
     Icon
 } from '../../../../components';
 import {
@@ -17,6 +20,7 @@ import {
 const Home = ({
     classes
 }) => {
+    const location = useLocation();
     const [globalState, setGlobalState] = useGlobalState();
     const [approachEstates, setApproachEstates] = useState([]);
     const [pastEstates, setPastEstates] = useState([]);
@@ -29,21 +33,45 @@ const Home = ({
     const {
         colors
     } = globalState.theme;
-    const { loading, error, data } = useQuery(home);
+    const { loading, error } = useQuery(home, {
+        fetchPolicy: "cache-and-network",
+        onCompleted: data => {
+            if (data && data.home) {
+                const newData = data.home;
+                setApproachEstates(newData.approaching);
+                setPastEstates(newData.pastEstateData);
+                setRealEstatesStatus({
+                    active: newData.totalActiveEstateCount,
+                    passive: newData.totalPassiveEstateCount,
+                });
+                setTotalTenantCount(newData.totalTenantCount);
+                setActiveTenants(newData.totalTenantCount);
+                setGlobalState({
+                    modal: {
+                        isActive: false,
+                        loading: false,
+                        dialog: false,
+                        data: undefined,
+                        type: "loading"
+                    }
+                });
+            }
+        }
+    });
 
     useEffect(() => {
-        if (data && data.home) {
-            const newData = data.home;
-            setApproachEstates(newData.approaching);
-            setPastEstates(newData.pastEstateData);
-            setRealEstatesStatus({
-                active: newData.totalActiveEstateCount,
-                passive: newData.totalPassiveEstateCount,
+        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token) {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: true,
+                    dialog: false,
+                    data: undefined,
+                    type: "loading"
+                }
             });
-            setTotalTenantCount(newData.totalTenantCount);
-            setActiveTenants(newData.totalTenantCount);
         }
-    }, [data]);
+    }, []);
 
     return <div
         className={classes.table}

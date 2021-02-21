@@ -34,6 +34,7 @@ import {
 
 const App = () => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [token, setToken] = useState("");
     useEffect(() => {
         setGlobalState({
             theme: {
@@ -42,7 +43,12 @@ const App = () => {
             }
         });
     }, []);
- 
+    useEffect(() => {
+        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token && token !== globalState.user.loginData.token) {
+            setToken(globalState.user.loginData.token);
+        }
+    }, [globalState]);
+
     const fetchAdress = serverAdres + "/app";
     const client = new ApolloClient({
         link: createUploadLink({
@@ -50,7 +56,7 @@ const App = () => {
             credentials: 'same-origin',
             mode: 'same-origin',
             headers: {
-                "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token ? globalState.user.loginData.token : ""
+                "x-access-token": token
             },
         }),
         cache: new InMemoryCache({
@@ -60,7 +66,6 @@ const App = () => {
 
     return <ApolloProvider client={client}>
         <Fragment>
-            <Navigation />
             {
                 globalState.modal.isActive ?
                     <Modal
@@ -74,6 +79,7 @@ const App = () => {
                     :
                     null
             }
+            <Navigation />
         </Fragment>
     </ApolloProvider>;
 };
