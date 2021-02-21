@@ -1,6 +1,7 @@
 import React, {
     useEffect,
     useState,
+    useMemo,
     Fragment
 } from 'react';
 import injectSheet from 'react-jss';
@@ -28,7 +29,7 @@ import {
     createUploadLink
 } from "apollo-upload-client";
 import {
-    serverAdres 
+    serverAdres
 } from "../app/server/config";
 
 

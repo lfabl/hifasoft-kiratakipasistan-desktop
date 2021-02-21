@@ -34,3 +34,14 @@ export const ROUTES = [
 export const THEME_TOKENS = {
     spacing: 10
 };
+
+export const REAL_ESTATE_STATES = {
+    "empty": {
+        "color": "orange",
+        "value": "Boş"
+    },
+    "active": {
+        "value": "Kullanımda",
+        "color": "green"
+    }
+};

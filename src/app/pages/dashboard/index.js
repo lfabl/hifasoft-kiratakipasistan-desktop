@@ -48,7 +48,7 @@ const Dashboard = ({
             history.push("/dashboard/home");
         }
     };
-    
+    /*
     const getCacheUserData = async () => {
         const userTokenData = await ipcRenderer.sendSync("getUserData");
         if(userTokenData) {
@@ -58,7 +58,8 @@ const Dashboard = ({
     useEffect(() => {
         getCacheUserData();
     }, []);
-    
+    */
+
     useEffect(() => {
         handleGo();
     }, [globalState.user]);

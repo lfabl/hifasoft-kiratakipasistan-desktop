@@ -11,7 +11,8 @@ import {
 } from '../../../../components';
 import useGlobalState from '../../../../context';
 import {
-    useQuery
+    useQuery,
+    useLazyQuery
 } from "@apollo/react-hooks";
 import {
     getAllRealEstates
@@ -19,43 +20,41 @@ import {
 import {
     paymentPeriodConverter
 } from "../../../../helpers";
-const STATES = {
-    "empty": {
-        "color": "orange",
-        "value": "Boş"
-    },
-    "active": {
-        "value": "Kullanımda",
-        "color": "green"
-    }
-};
+import {
+    REAL_ESTATE_STATES
+} from "../../../../constants";
 
 const RealEstates = ({
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    const [search, setSearch] = useState("");
-    const [data, setData] = useState([]);
+    const [searchText, setSearchText] = useState("");
+    const [datas, setDatas] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const {
         colors
     } = globalState.theme;
-    useQuery(getAllRealEstates, {
-        fetchPolicy: "cache-and-network",
-        onCompleted: data => {
-            if (data && data.getAllRealEstates.response.code === 200) {
-                setData(data.getAllRealEstates.data)
-                setGlobalState({
-                    modal: {
-                        isActive: false,
-                        loading: false,
-                        dialog: false,
-                        data: undefined,
-                        type: "loading"
-                    }
-                });
-            }
+
+    const {
+        data
+    } = useQuery(getAllRealEstates);
+
+    useEffect(() => {
+        if (globalState.user && globalState.user.loginData && globalState.user.loginData.token && data && data.getAllRealEstates.response.code === 200 && JSON.stringify(data.getAllRealEstates.data) !== JSON.stringify(datas)) {
+            setDatas(data.getAllRealEstates.data);
+            setFilteredData(data.getAllRealEstates.data);
+            setGlobalState({
+                modal: {
+                    isActive: false,
+                    loading: false,
+                    dialog: false,
+                    data: undefined,
+                    type: "loading"
+                }
+            });
         }
-    });
+    }, [data]);
+
     useEffect(() => {
         if (globalState.user && globalState.user.loginData && globalState.user.loginData.token) {
             setGlobalState({
@@ -70,12 +69,32 @@ const RealEstates = ({
         }
     }, []);
 
+    useEffect(() => {
+        if (searchText && searchText.length) {
+            const newFilteredData = datas.filter((data) => {
+                const searchTextLowerCase = searchText.toLowerCase();
+                const title = data.title.toLowerCase();
+                const acitveTenant = data.activeTenant.length !== 0 ? data.activeTenant[0].fullName.toLowerCase() : "";
+                const ownerNameSurname = data.ownerNameSurname.toLowerCase();
+                const ownerManagerPhoneNumber = data.ownerManagerPhoneNumber.toLowerCase();
+                return title.indexOf(searchTextLowerCase) > -1 ||
+                    acitveTenant.indexOf(searchTextLowerCase) > -1 ||
+                    ownerNameSurname.indexOf(searchTextLowerCase) > -1 ||
+                    ownerManagerPhoneNumber.indexOf(searchTextLowerCase) > -1;
+            });
+            setFilteredData(newFilteredData);
+        }
+        else {
+            setFilteredData(datas);
+        }
+    }, [searchText]);
+
     return <div
         className={classes.container}
     >
         <TextInput
-            value={search}
-            onChangeText={e => setSearch(e)}
+            value={searchText}
+            onChangeText={e => setSearchText(e)}
             placeholder="Ara"
             className={classes.search}
         />
@@ -91,9 +110,9 @@ const RealEstates = ({
             className={classes.new}
         />
         {
-            data && data.length ?
-                data.map((item, index) => {
-                    const status = item.rentalType.length !== 0 && item.rentalType[0].status === "continuation" ? true : false
+            filteredData && filteredData.length ?
+                filteredData.map((item, index) => {
+                    const status = item.rentalType.length !== 0 && item.rentalType[0].status === "continuation" ? true : false;
                     const paymentPeriodConverted = paymentPeriodConverter(item.paymentPeriod);
                     return <div
                         key={index}
@@ -105,8 +124,8 @@ const RealEstates = ({
                         <div>
                             <div className={classes.cardTitle}>{item.title}</div>
                             <div className={classes.cardInfo}>Durum: <span style={{
-                                color: STATES[status ? "active" : "empty"].color
-                            }}>{STATES[status ? "active" : "empty"].value}</span></div>
+                                color: REAL_ESTATE_STATES[status ? "active" : "empty"].color
+                            }}>{REAL_ESTATE_STATES[status ? "active" : "empty"].value}</span></div>
                             <div className={classes.cardInfo}>Kira Tarihi: <span>{"Her " + paymentPeriodConverted.type + " " + paymentPeriodConverted.date}</span></div>
                             <div className={classes.cardInfo}>Kira Bedeli: <span>{item.detailRent}</span></div>
                             <div className={classes.cardInfo}>Telefon Numarası: <span>{item.ownerManagerPhoneNumber}</span></div>
@@ -120,7 +139,7 @@ const RealEstates = ({
                             <Icon
                                 name={!status ? "link" : "unlink"}
                                 size={26}
-                                color={STATES[status ? "active" : "empty"].color}
+                                color={REAL_ESTATE_STATES[status ? "active" : "empty"].color}
                             />
                             <span>{!status ? "Sözleşme Başlat" : "Sözleşmeyi Sonlandır"}</span>
                         </div>
