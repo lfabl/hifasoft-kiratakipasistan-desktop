@@ -54,7 +54,7 @@ const NewTenant = ({
             <div
                 className={classes.title}
             >
-                Kiracıyı Görüntüle/Düzenle
+                Yeni Kiracı Oluştur
             </div>
             <div
                 className={classes.close}
@@ -184,7 +184,7 @@ const NewTenant = ({
                         value={kefilAddress}
                     />
                     <Button
-                        value="Bilgileri Değiştir"
+                        value="Oluştur"
                         onClick={() => create()}
                     />
                 </div>

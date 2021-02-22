@@ -9,6 +9,7 @@ import {
 } from './stylesheet';
 
 const TextInput = ({
+    wrap = "no-wrap",
     onChangeText,
     className,
     referance,
@@ -37,6 +38,7 @@ const TextInput = ({
             className
         ].join(" ")}
         style={{
+            alignSelf: wrap === "no-wrap" ? "stretch" : wrap === "wrap" ? "baseline" : null,
             border: "1px solid " + colors.seperator
         }}
         {...props}
