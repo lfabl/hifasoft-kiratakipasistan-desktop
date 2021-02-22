@@ -9,7 +9,8 @@ import useGlobalState from '../../../../context';
 import md5 from "js-md5";
 import {
     TextInput,
-    Button
+    Button,
+    Icon
 } from '../../../../components';
 import {
     isoStringToDate
@@ -188,12 +189,28 @@ const Profile = ({
                     <div
                         className={classes.profilData}
                     >
-                        <img
-                            className={classes.photo}
-                            src={data.profilePhoto !== "" ? data.profilePhoto : "/assets/images/default-user.png"}
-                            height="350px"
-                            width="100%"
-                        />
+                        <div
+                            className={classes.profilePhoto}
+                        >
+                            <img
+                                className={classes.photo}
+                                src={data.profilePhoto !== "" ? data.profilePhoto : "/assets/images/default-user.png"}
+                                height="350px"
+                                width="100%"
+                            />
+                            <div
+                                className={classes.updateProfilePhoto}
+                                style={{
+                                    backgroundColor: colors.layer3
+                                }}
+                            >
+                                <Icon
+                                    color={colors.body}
+                                    name="camera"
+                                    size={30}
+                                />
+                            </div>
+                        </div>
                         <div
                             className={classes.info}
                             style={{

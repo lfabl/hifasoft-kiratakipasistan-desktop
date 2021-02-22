@@ -7,6 +7,7 @@ const GenerateColors = (theme) => {
     let result = palettes[theme];
     result.body = palettes[theme].gray0;
     result.layer2 = palettes[theme].gray90;
+    result.hideText = palettes[theme].gray50;
     result.seperator = palettes[theme].gray80;
     result.background = palettes[theme].gray100;
     result.contrastBody = palettes[theme].gray100;

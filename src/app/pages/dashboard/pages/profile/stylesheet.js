@@ -1,5 +1,7 @@
 import {
-    objectSpacing
+    objectSpacing,
+    active,
+    hover
 } from '../../../../theme/tokens';
 
 const stylesheet = {
@@ -14,10 +16,29 @@ const stylesheet = {
     profilData: {
         marginBottom: objectSpacing * 3
     },
+    profilePhoto: {
+        position: "relative"
+    },
+    updateProfilePhoto: {
+        padding: objectSpacing * 1.5,
+        justifyContent: "center",
+        alignItems: "center",
+        position: "absolute",
+        borderRadius: 50,
+        display: "flex",
+        right: 0,
+        top: 0,
+        "&:hover": {
+            ...hover
+        },
+        "&:active": {
+            ...active
+        }
+    },
     photo: {
         borderTopRightRadius: 10,
         borderTopLeftRadius: 10,
-        objectFit: "cover"
+        objectFit: "contain"
     },
     info: {
         padding: objectSpacing * 2 + "px " + objectSpacing * 1.5 + "px",

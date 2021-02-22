@@ -19,8 +19,9 @@ import {
 import {
     client
 } from '../../../../';
+import NewTenant from '../../views/newTenant';
+
 const Tenants = ({
-    
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
@@ -81,6 +82,18 @@ const Tenants = ({
         }
     }, [searchText]);
 
+    const newTenant = () => {
+        setGlobalState({
+            modal: {
+                isActive: true,
+                type: "custom",
+                children: <NewTenant
+                    
+                />
+            }
+        });
+    };
+
     return <div
         className={classes.container}
     >
@@ -92,7 +105,7 @@ const Tenants = ({
         />
         <Button
             textColor={colors.body}
-            onClick={() => { }}
+            onClick={() => newTenant()}
             value="Yeni Kiracı Oluştur"
             color={colors.primary}
             icon={{
