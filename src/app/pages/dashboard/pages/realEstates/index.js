@@ -165,7 +165,7 @@ const RealEstates = ({
                             <Icon
                                 name={!status ? "link" : "unlink"}
                                 size={26}
-                                color={REAL_ESTATE_STATES[status ? "active" : "empty"].color}
+                                color={REAL_ESTATE_STATES[status ? "empty" : "active"].color}
                             />
                             <span>{!status ? "Sözleşme Başlat" : "Sözleşmeyi Sonlandır"}</span>
                         </div>

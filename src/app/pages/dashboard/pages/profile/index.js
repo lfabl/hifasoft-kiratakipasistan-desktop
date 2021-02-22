@@ -13,12 +13,16 @@ import {
     Icon
 } from '../../../../components';
 import {
-    isoStringToDate
+    isoStringToDate,
+    fileSelector
 } from "../../../../helpers";
 import {
     getProfile,
     updateProfile as updateUserData
 } from "../../../../server/graphql";
+import {
+    serverAdres
+} from "../../../../server/config";
 import {
     client
 } from '../../../../';
@@ -26,7 +30,11 @@ import {
 const Profile = ({
     classes
 }) => {
+    const selectFile = fileSelector({
+        type: "image/*"
+    });
     const [globalState, setGlobalState] = useGlobalState();
+    const [newImage, setNewImage] = useState(null);
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [newRePassword, setNewRePassword] = useState("");
@@ -43,20 +51,29 @@ const Profile = ({
     const newRePasswordRef = useRef();
     const newPasswordRef = useRef();
 
+    selectFile.addEventListener("change", () => {
+        const files = selectFile.files;
+        if (files.length !== 0) {
+            setNewImage(files[0]);
+        }
+    });
     useEffect(() => {
-        setGlobalState({
-            modal: {
-                ...globalState.modal,
-                isActive: false
-            }
+        getProfileData({
+            loadingStatus: true
         });
+    }, []);
+
+    const getProfileData = ({
+        loadingStatus
+    }) => {
         client.query({
             query: getProfile,
             context: {
                 headers: {
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
-            }
+            },
+            fetchPolicy: "network-only"
         }).then(async (res) => {
             if (res.data.getProfile.response.code === 200) {
                 const getUserData = res.data.getProfile.data;
@@ -67,13 +84,24 @@ const Profile = ({
                     userName: getUserData.userName,
                     registerDate: registerDate
                 });
-            }
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
+                if (loadingStatus) {
+                    setGlobalState({
+                        modal: {
+                            ...globalState.modal,
+                            isActive: false
+                        }
+                    });
                 }
-            });
+            }
+            else {
+                setGlobalState({
+                    modal: {
+                        ...globalState.modal,
+                        isActive: false
+                    }
+                });
+            }
+            
         }).catch(e => {
             setGlobalState({
                 modal: {
@@ -82,8 +110,7 @@ const Profile = ({
                 }
             });
         });
-    }, []);
-
+    };
     const updateProfile = (variables) => {
         client.mutate({
             mutation: updateUserData,
@@ -94,7 +121,7 @@ const Profile = ({
             },
             variables: variables
         }).then((res) => {
-            console.log(variables);
+            console.log(res);
             if (res.data.updateProfile.code === 200) {
                 setGlobalState({
                     modal: {
@@ -102,10 +129,13 @@ const Profile = ({
                         loading: false,
                         dialog: true,
                         data: {
-                            title: "Hata!",
+                            title: "Başarı!",
                             message: "Başarı ile güncellenmiştir."
                         }
                     }
+                });
+                getProfileData({
+                    loadingStatus: false
                 });
             }
             else {
@@ -121,13 +151,13 @@ const Profile = ({
                     }
                 });
             }
-            
+
         });
     };
-
     const submit = async () => {
         const variables = {
         };
+        if (newImage !== null) variables.profileImage = newImage;
         if (newPassword !== "" || newRePassword !== "") {
             if (oldPassword !== "") {
                 variables.oldPassword = md5(oldPassword);
@@ -166,17 +196,7 @@ const Profile = ({
             }
         }
         else {
-            setGlobalState({
-                modal: {
-                    isActive: true,
-                    loading: false,
-                    dialog: true,
-                    data: {
-                        title: "Hata!",
-                        message: "Lütfen bir değişimde bulununuz."
-                    }
-                }
-            });
+            updateProfile(variables);
         }
     };
 
@@ -194,7 +214,7 @@ const Profile = ({
                         >
                             <img
                                 className={classes.photo}
-                                src={data.profilePhoto !== "" ? data.profilePhoto : "/assets/images/default-user.png"}
+                                src={newImage !== null ? URL.createObjectURL(newImage) : data.profilePhoto !== "" ? `${serverAdres}/profileImages/${data.profilePhoto}` : "/assets/images/default-user.png"}
                                 height="350px"
                                 width="100%"
                             />
@@ -202,6 +222,9 @@ const Profile = ({
                                 className={classes.updateProfilePhoto}
                                 style={{
                                     backgroundColor: colors.layer3
+                                }}
+                                onClick={() => {
+                                    selectFile.click();
                                 }}
                             >
                                 <Icon
@@ -281,7 +304,8 @@ const Profile = ({
                                         dialog: false
                                     }
                                 });
-                                submit();}}
+                                submit();
+                            }}
                             textColor={colors.body}
                             color={colors.primary}
                             value="Kayıt Et"
