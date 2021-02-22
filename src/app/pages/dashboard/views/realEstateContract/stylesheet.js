@@ -20,5 +20,9 @@ const stylesheet = {
         height: 100,
         width: 100
     },
+    title: {
+        fontWeight: 600,
+        fontSize: 20
+    },
 };
 export default stylesheet;

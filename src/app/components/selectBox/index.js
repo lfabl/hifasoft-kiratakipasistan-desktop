@@ -2,25 +2,18 @@ import React from 'react';
 import injectSheet from 'react-jss';
 import stylesheet from "./stylesheet";
 
-/**
-* 
-* datas = [
-*      {
-*          value: "",
-*          label: ""
-*      }
-* ]
-*/
 const SelectBox = ({
     onChangeValue,
     classes,
     datas,
     value,
+    title,
 }) => {
     return <div>
+        <div>{title}</div>
         <select
             value={value}
-            onChange={(e) =>  onChangeValue(e.target.value)}
+            onChange={(e) => onChangeValue(e.target.value)}
         >
             {
                 datas.map((item, index) => {

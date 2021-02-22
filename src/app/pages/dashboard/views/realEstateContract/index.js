@@ -5,18 +5,23 @@ import React, {
 import injectsheet from "react-jss";
 import stylesheet from './stylesheet';
 import {
-    SelectBox
+    DatePicker,
+    TextInput,
+    SelectBox,
 } from "../../../../components";
 import useGlobalState from '../../../../context';
 import {
     client
 } from '../../../../index';
 import {
-    selectBoxTypeConverter
+    selectBoxTypeConverter,
+    contractPeriodTypes,
+    paymentPeriodTypes,
+    paymentTypes
 } from "../../../../helpers";
 import {
-    contractControl,
     getAvailableTenantsForContract,
+    contractControl,
     getRealEstate
 } from "../../../../server/graphql";
 
@@ -28,7 +33,6 @@ const RealEstateContract = ({
     const [loading, setLoading] = useState(true);
     const [allTenants, setAllTenants] = useState([]);
     const [selectTenanatID, setSelectTenantID] = useState("");
-    const [tenantTypes, setTenantTypes] = useState(0);
     const [rentalDate, setRentalDate] = useState(new Date());
     const [contractPeriod, setContractPeriod] = useState("0");
     const [rentalPrice, setRentalPrice] = useState(null);
@@ -42,7 +46,6 @@ const RealEstateContract = ({
     const reset = () => {
         setLoading(true);
         setSelectTenantID("");
-        setTenantTypes(0);
         setRentalDate(new Date());
         setContractPeriod("0");
         setRentalPrice(null);
@@ -52,12 +55,15 @@ const RealEstateContract = ({
     };
     const getEstateData = () => {
         client.query({
-            query: getAvailableTenantsForContract,
+            query: getRealEstate,
             context: {
                 headers: {
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
-            }
+            },
+            variables: {
+                realEstateID: id
+            },
         }).then(async (res) => {
             if (res.data.getRealEstate.response.code === 200) {
                 const data = res.data.getRealEstate.data;
@@ -80,13 +86,16 @@ const RealEstateContract = ({
                 headers: {
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
-            }
+            },
+            variables: {
+                realEstateID: id
+            },
         }).then(async (res) => {
             if (res.data.getAvailableTenantsForContract.response.code === 200) {
                 const converterdTenants = await selectBoxTypeConverter({
                     datas: res.data.getAvailableTenantsForContract.data,
+                    valuePropName: "id",
                     labelPropName: "fullName",
-                    valuePropName: "id"
                 });
                 setAllTenants(converterdTenants);
                 getEstateData();
@@ -176,16 +185,34 @@ const RealEstateContract = ({
                 });
             }}
         >
-            Kiracı seçimi
+            Lütfen Kiracı Seçiniz
         </div>
         <SelectBox
             datas={allTenants}
             value={selectTenanatID}
             onChangeValue={(val) => setSelectTenantID(val)}
+            title={"Kiracı Seç"}
         />
+        <DatePicker
+            title={"Kiralama Tarihi"}
+            value={rentalDate}
+            onChangeValue={(val) => setRentalDate(val)}
 
-    </div>
-    ;
+        />
+        <SelectBox
+            datas={contractPeriodTypes}
+            value={contractPeriod}
+            onChangeValue={(val) => setContractPeriod(val)}
+            title={"Sözleşme Süresi"}
+        />
+        <TextInput
+            value={rentalPrice}
+            onChangeText={e => setRentalPrice(e)}
+            placeholder="Kiralama Fiyatı"
+            type={"number"}
+
+        />
+    </div>;
 };
 
 export default injectsheet(stylesheet)(RealEstateContract);
