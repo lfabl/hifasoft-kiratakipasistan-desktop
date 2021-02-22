@@ -1,7 +1,6 @@
 import React from 'react';
 import injectSheet from 'react-jss';
 import stylesheet from "./stylesheet";
-
 const DatePicker = ({
     onChangeValue,
     classes,

@@ -1,5 +1,7 @@
 import {
     objectSpacing,
+    active,
+    hover
 } from "../../../../theme/tokens";
  
 const stylesheet = {
@@ -24,5 +26,22 @@ const stylesheet = {
         fontWeight: 600,
         fontSize: 20
     },
+    buttons: {
+        justifyContent: "flex-end",
+        display: "flex"
+    },
+    button: {
+        padding: objectSpacing,
+        fontSize: 18,
+        "&:hover": {
+            ...hover
+        },
+        "&:active": {
+            ...active
+        }
+    },
+    submit: {
+        fontWeight: 600
+    }
 };
 export default stylesheet;
