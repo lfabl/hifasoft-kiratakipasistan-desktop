@@ -6,6 +6,7 @@ import React, {
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
 import useGlobalState from '../../../../context';
+import md5 from "js-md5";
 import {
     TextInput,
     Button
@@ -14,11 +15,13 @@ import {
     isoStringToDate
 } from "../../../../helpers";
 import {
-    getProfile
+    getProfile,
+    updateProfile as updateUserData
 } from "../../../../server/graphql";
 import {
     client
 } from '../../../../';
+
 const Profile = ({
     classes
 }) => {
@@ -80,8 +83,100 @@ const Profile = ({
         });
     }, []);
 
-    const submit = () => {
-        alert("submit data");
+    const updateProfile = (variables) => {
+        client.mutate({
+            mutation: updateUserData,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            variables: variables
+        }).then((res) => {
+            console.log(variables);
+            if (res.data.updateProfile.code === 200) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Hata!",
+                            message: "Başarı ile güncellenmiştir."
+                        }
+                    }
+                });
+            }
+            else {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Hata!",
+                            message: res.data.updateProfile.message
+                        }
+                    }
+                });
+            }
+            
+        });
+    };
+
+    const submit = async () => {
+        const variables = {
+        };
+        if (newPassword !== "" || newRePassword !== "") {
+            if (oldPassword !== "") {
+                variables.oldPassword = md5(oldPassword);
+                if (newPassword !== "") {
+                    if (newPassword !== newRePassword) {
+                        setGlobalState({
+                            modal: {
+                                isActive: true,
+                                loading: false,
+                                dialog: true,
+                                data: {
+                                    title: "Hatalı Giriş!",
+                                    message: "Yeni Şifreler Uyuşmuyor."
+                                }
+                            }
+                        });
+                    }
+                    else {
+                        variables.newPassword = md5(newPassword);
+                        updateProfile(variables);
+                    }
+                }
+            }
+            else {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Hatalı Giriş!",
+                            message: "Lütfen Şifrenizi giriniz."
+                        }
+                    }
+                });
+            }
+        }
+        else {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Lütfen bir değişimde bulununuz."
+                    }
+                }
+            });
+        }
     };
 
     return <div
@@ -137,6 +232,7 @@ const Profile = ({
                             className={classes.input}
                             placeholder="Eski Şifre"
                             value={oldPassword}
+                            type={"password"}
                         />
                         <TextInput
                             onKeyUp={e => e.keyCode === 13 ? newRePasswordRef.current.focus() : null}
@@ -145,6 +241,7 @@ const Profile = ({
                             className={classes.input}
                             placeholder="Yeni Şifre"
                             value={newPassword}
+                            type={"password"}
                         />
                         <TextInput
                             onKeyUp={e => e.keyCode === 13 ? submit() : null}
@@ -153,10 +250,21 @@ const Profile = ({
                             referance={newRePasswordRef}
                             className={classes.input}
                             value={newRePassword}
+                            type={"password"}
                         />
                         <Button
                             className={classes.submit}
-                            onClick={() => submit()}
+                            onClick={() => {
+                                setGlobalState({
+                                    modal: {
+                                        isActive: true,
+                                        data: undefined,
+                                        type: "loading",
+                                        loading: true,
+                                        dialog: false
+                                    }
+                                });
+                                submit();}}
                             textColor={colors.body}
                             color={colors.primary}
                             value="Kayıt Et"
