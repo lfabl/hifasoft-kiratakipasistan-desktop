@@ -10,19 +10,27 @@ import {
     TextInput,
     Button
 } from '../../../../components';
-
+import {
+    isoStringToDate
+} from "../../../../helpers";
+import {
+    getProfile
+} from "../../../../server/graphql";
+import {
+    client
+} from '../../../../';
 const Profile = ({
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    const [newRePassword, setNewRePassword] = useState("");
     const [oldPassword, setOldPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
+    const [newRePassword, setNewRePassword] = useState("");
     const [data, setData] = useState({
-        "profilePhoto": "https://i2.milimaj.com/i/milliyet/75/1200x675/5ca1c9c045d2a029641a7362.jpg",
-        "registerDate": "19/05/1997",
-        "fullName": "Mahmut TUNCER",
-        "userName": "mahmuttuncer"
+        "profilePhoto": "",
+        "registerDate": "",
+        "fullName": "",
+        "userName": ""
     });
     const {
         colors
@@ -37,6 +45,38 @@ const Profile = ({
                 ...globalState.modal,
                 isActive: false
             }
+        });
+        client.query({
+            query: getProfile,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            }
+        }).then(async (res) => {
+            if (res.data.getProfile.response.code === 200) {
+                const getUserData = res.data.getProfile.data;
+                const registerDate = await isoStringToDate(getUserData.registerDate, "date");
+                setData({
+                    profilePhoto: getUserData.profileImageName,
+                    fullName: getUserData.fullName,
+                    userName: getUserData.userName,
+                    registerDate: registerDate
+                });
+            }
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        }).catch(e => {
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
         });
     }, []);
 
@@ -55,7 +95,7 @@ const Profile = ({
                     >
                         <img
                             className={classes.photo}
-                            src={data.profilePhoto}
+                            src={data.profilePhoto !== "" ? data.profilePhoto : "/assets/images/default-user.png"}
                             height="350px"
                             width="100%"
                         />
@@ -100,19 +140,19 @@ const Profile = ({
                         />
                         <TextInput
                             onKeyUp={e => e.keyCode === 13 ? newRePasswordRef.current.focus() : null}
-                            onChangeText={e => setOldPassword(e)}
+                            onChangeText={e => setNewPassword(e)}
                             referance={newPasswordRef}
                             className={classes.input}
                             placeholder="Yeni Şifre"
-                            value={oldPassword}
+                            value={newPassword}
                         />
                         <TextInput
                             onKeyUp={e => e.keyCode === 13 ? submit() : null}
-                            onChangeText={e => setOldPassword(e)}
+                            onChangeText={e => setNewRePassword(e)}
                             placeholder="Yeni Şifre Tekrar"
                             referance={newRePasswordRef}
                             className={classes.input}
-                            value={oldPassword}
+                            value={newRePassword}
                         />
                         <Button
                             className={classes.submit}
