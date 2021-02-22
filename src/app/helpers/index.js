@@ -50,3 +50,21 @@ export const monthConverter = (month) => {
         return "Aralık";
     }
 };
+
+export const selectBoxTypeConverter = async ({
+    valuePropName,
+    labelPropName,
+    datas
+}) => {
+    return await new Promise((resolve, reject) => {
+        const newData = [];
+        for (let index = 0; index < datas.length; index++) {
+            const item = datas[index];
+            newData.push({
+                value: item[valuePropName],
+                label: item[labelPropName]
+            });
+            if(index + 1 === datas.length) resolve(newData);
+        }
+    });
+};
