@@ -14,6 +14,9 @@ import {
     getAllTenants
 } from "../../../../server/graphql";
 import {
+    TenantContract
+} from "../../views";
+import {
     client
 } from '../../../../';
 const Tenants = ({
@@ -141,7 +144,19 @@ const Tenants = ({
                         </div>
                         <div
                             className={classes.cardLinkButton}
-                            onClick={() => { }}
+                            onClick={() => { 
+                                setGlobalState({
+                                    modal: {
+                                        isActive: true,
+                                        loading: false,
+                                        type: "children",
+                                        children: <TenantContract id={item.id}>
+
+                                        </TenantContract>
+                                    }
+                                });
+
+                            }}
                         >
                             <Icon
                                 name={item.activeApartment.length === 0 ? "link" : "unlink"}
