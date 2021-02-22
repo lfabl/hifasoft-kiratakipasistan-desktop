@@ -11,8 +11,9 @@ import {
     Icon
 } from '../../../../components';
 
-const NewTenant = ({
-    classes
+const TenantDetail = ({
+    classes,
+    data
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const {
@@ -54,7 +55,7 @@ const NewTenant = ({
             <div
                 className={classes.title}
             >
-                Yeni Kiracı Oluştur
+                Kiracıyı Görüntüle/Düzenle
             </div>
             <div
                 className={classes.close}
@@ -184,7 +185,7 @@ const NewTenant = ({
                         value={kefilAddress}
                     />
                     <Button
-                        value="Oluştur"
+                        value="Bilgileri Değiştir"
                         onClick={() => create()}
                     />
                 </div>
@@ -192,4 +193,4 @@ const NewTenant = ({
         </div>
     </div>;
 };
-export default injectSheet(stylesheet)(NewTenant);
+export default injectSheet(stylesheet)(TenantDetail);

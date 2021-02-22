@@ -20,6 +20,7 @@ import {
     client
 } from '../../../../';
 import NewTenant from '../../views/newTenant';
+import TenantDetail from '../../views/tenantDetail';
 
 const Tenants = ({
     classes
@@ -87,8 +88,18 @@ const Tenants = ({
             modal: {
                 isActive: true,
                 type: "custom",
-                children: <NewTenant
-                    
+                children: <NewTenant/>
+            }
+        });
+    };
+
+    const tenantDetail = () => {
+        setGlobalState({
+            modal: {
+                isActive: true,
+                type: "custom",
+                children: <TenantDetail
+                    data={datas}
                 />
             }
         });
@@ -123,6 +134,7 @@ const Tenants = ({
                         style={{
                             backgroundColor: colors.background
                         }}
+                        onClick={() => tenantDetail()}
                     >
                         <div
                             className={classes.content}
