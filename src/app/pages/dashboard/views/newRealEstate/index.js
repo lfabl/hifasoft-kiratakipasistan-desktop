@@ -5,36 +5,20 @@ import React, {
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
 import {
+    DatePicker,
+    SelectBox,
     TextInput,
     Button,
     Icon
 } from '../../../../components';
+import {
+    paymentPeriodTypes,
+    numberOfRoomTypes,
+    realEstateTypes,
+    usageTypes
+} from "../../../../helpers";
 import useGlobalState from '../../../../context';
-
-const REAL_ESTATE_TYPES = [
-    {
-        title: "Dükkan",
-        name: "store"
-    },
-    {
-        title: "Daire",
-        name: "apartment"
-    },
-    {
-        title: "Diğer",
-        name: "other"
-    }
-];
-const REAL_ESTATE_PERIOD_TYPES = [
-    {
-        title: "Aylık",
-        name: "monthly"
-    },
-    {
-        title: "Yıllık",
-        name: "yearly"
-    }
-];
+import moment from "moment";
 
 const NewRealEstate = ({
     classes
@@ -43,43 +27,48 @@ const NewRealEstate = ({
     const {
         colors
     } = globalState.theme;
-    const [selectedPeriod, setSelectedPeriod] = useState("monthly");
-    const [malsahibiFullName, setMalsahibiFullName] = useState("");
+
+    const [paymentPeriodDate, setPaymentPeriodDate] = useState(moment(new Date()).format("YYYY-MM-DD"));
+    const [detailAdditionalInformation, setDetailAdditionalInformation] = useState("");
+    const [detailManagerPhoneNumber, setDetailManagerPhoneNumber] = useState("");
+    const [ownerManagerPhoneNumber, setOwnerManagerPhoneNumber] = useState("");
+    const [paymentPeriodType, setPaymentPeriodType] = useState("monthly");
     const [selectedType, setSelectedType] = useState("apartment");
-    const [adminPhoneNumber, setAdminPhoneNumber] = useState("");
-    const [malsahibiPhone, setMalsahibiPhone] = useState("");
-    const [malsahibiIBAN, setMalsahibiIBAN] = useState("");
-    const [malsahibiIDNo, setMalsahibiIDNo] = useState("");
-    const [kullanimamaci, setKullanimamaci] = useState("");
-    const [ekbilgiler, setEkbilgiler] = useState("");
-    const [kirabedeli, setKirabedeli] = useState("");
-    const [roomCount, setRoomCount] = useState("");
-    const [elektrik, setElektrik] = useState("");
-    const [dogalgaz, setDogalgaz] = useState("");
-    const [depozito, setDepozito] = useState("");
-    const [address, setAddress] = useState("");
+    const [ownerNameSurname, setOwnerNameSurname] = useState("");
+    const [ownerTcIdentity, setOwnerTcIdentity] = useState("");
+    const [purposeOfUsage, setPurposeOfUsage] = useState("");
+    const [numberOfRoom, setNumberOfRoom] = useState("");
+    const [electricity, setElectricity] = useState("");
+    const [usageType, setUsageType] = useState("null");
+    const [naturalGas, setNaturalGas] = useState("");
+    const [detailDues, setDetailDues] = useState("");
+    const [detailRent, setDetailRent] = useState("");
+    const [ownerIban, setOwnerIban] = useState("");
+    const [deposit, setDeposit] = useState("");
+    const [adress, setAdress] = useState("");
+    const [TCIPNo, setTCIPNo] = useState("");
     const [title, setTitle] = useState("");
     const [water, setWater] = useState("");
-    const [aidat, setAidat] = useState("");
-    const [dask, setDask] = useState("");
 
-    const malsahibiFullNameRef = useRef();
-    const adminPhoneNumberRef = useRef();
-    const malsahibiPhoneRef = useRef();
-    const selectedPeriodRef = useRef();
-    const malsahibiIBANRef = useRef();
-    const malsahibiIDNoRef = useRef();
-    const kullanimamaciRef = useRef();
-    const kirabedeliRef = useRef();
-    const ekbilgilerRef = useRef();
-    const roomCountRef = useRef();
-    const depozitoRef = useRef();
-    const elektrikRef = useRef();
-    const dogalgazRef = useRef();
+    const detailAdditionalInformationRef = useRef();
+    const detailManagerPhoneNumberRef = useRef();
+    const ownerManagerPhoneNumberRef = useRef();
+    const paymentPeriodDateRef = useRef();
+    const paymentPeriodTypeRef = useRef();
+    const ownerNameSurnameRef = useRef();
+    const ownerTcIdentityRef = useRef();
+    const purposeOfUsageRef = useRef();
+    const numberOfRoomRef = useRef();
+    const electricityRef = useRef();
+    const naturalGasRef = useRef();
+    const detailRentRef = useRef();
+    const detailDuesRef = useRef();
+    const ownerIbanRef = useRef();
+    const depozitRef = useRef();
     const addressRef = useRef();
+    const depositRef = useRef();
+    const TCIPNoRef = useRef();
     const waterRef = useRef();
-    const aidatRef = useRef();
-    const daskRef = useRef();
 
     const create = () => {
         console.log("Oluştur baham. :*");
@@ -125,21 +114,21 @@ const NewRealEstate = ({
                     className={classes.switchContainer}
                 >
                     {
-                        REAL_ESTATE_TYPES.map((item, index) => {
+                        realEstateTypes.map((item, index) => {
                             return <div
                                 key={index}
                                 className={classes.switchObject}
                                 style={{
-                                    backgroundColor: selectedType === item.name ? colors.primary : colors.layer1,
-                                    borderBottomRightRadius: index === REAL_ESTATE_TYPES.length - 1 ? 10 : null,
-                                    borderTopRightRadius: index === REAL_ESTATE_TYPES.length - 1 ? 10 : null,
-                                    fontWeight: selectedType === item.name ? 800 : 600,
+                                    backgroundColor: selectedType === item.value ? colors.primary : colors.layer1,
+                                    borderBottomRightRadius: index === realEstateTypes.length - 1 ? 10 : null,
+                                    borderTopRightRadius: index === realEstateTypes.length - 1 ? 10 : null,
+                                    fontWeight: selectedType === item.value ? 800 : 600,
                                     borderBottomLeftRadius: index === 0 ? 10 : null,
                                     borderTopLeftRadius: index === 0 ? 10 : null
                                 }}
-                                onClick={() => setSelectedType(item.name)}
+                                onClick={() => setSelectedType(item.value)}
                             >
-                                {item.title}
+                                {item.label}
                             </div>;
                         })
                     }
@@ -152,6 +141,14 @@ const NewRealEstate = ({
                     >
                         Genel Bilgiler
                     </div>
+                    {
+                        selectedType === "other" ? <SelectBox
+                            datas={usageTypes}
+                            title={"Kullanım Türü"}
+                            onChangeValue={(val) => setUsageType(val)}
+                            value={usageType}
+                        /> : null
+                    }
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? addressRef.current.focus() : null}
                         onChangeText={e => setTitle(e)}
@@ -160,60 +157,68 @@ const NewRealEstate = ({
                         value={title}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? elektrik.current.focus() : null}
-                        onChangeText={e => setAddress(e)}
+                        onKeyUp={e => e.keyCode === 13 ? electricityRef.current.focus() : null}
+                        onChangeText={e => setAdress(e)}
                         className={classes.input}
                         referance={addressRef}
                         placeholder="Adres"
-                        value={address}
+                        value={adress}
                     />
-                    <div
-                        className={classes.seperator}
-                        style={{
-                            backgroundColor: colors.seperator
-                        }}
-                    ></div>
-                    <div
-                        className={classes.subTitle}
-                    >
-                        Tesisat / Dask No
-                    </div>
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? waterRef.current.focus() : null}
-                        placeholder="Elektrik"
-                        onChangeText={e => setElektrik(e)}
-                        className={classes.input}
-                        referance={elektrikRef}
-                        onKeyUp={() => {}}
-                        value={elektrik}
-                    />
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? dogalgazRef.current.focus() : null}
-                        placeholder="Su"
-                        onChangeText={e => setWater(e)}
-                        className={classes.input}
-                        referance={waterRef}
-                        onKeyUp={() => {}}
-                        value={water}
-                    />
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? daskRef.current.focus() : null}
-                        onChangeText={e => setDogalgaz(e)}
-                        placeholder="Doğal Gaz"
-                        className={classes.input}
-                        referance={dogalgazRef}
-                        onKeyUp={() => {}}
-                        value={dogalgaz}
-                    />
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? malsahibiFullNameRef.current.focus() : null}
-                        onChangeText={e => setDask(e)}
-                        className={classes.input}
-                        placeholder="Fask No"
-                        referance={daskRef}
-                        onKeyUp={() => {}}
-                        value={dask}
-                    />
+
+                    {
+                        selectedType !== "other" ? < div
+                            className={classes.tableCell}
+                        >
+                            <div
+                                className={classes.seperator}
+                                style={{
+                                    backgroundColor: colors.seperator
+                                }}
+                            ></div>
+                            <div
+                                className={classes.subTitle}
+                            >
+                                Tesisat / Dask No
+                            </div >
+                            <TextInput
+                                onKeyUp={e => e.keyCode === 13 ? waterRef.current.focus() : null}
+                                placeholder="Elektrik"
+                                onChangeText={e => setElectricity(e)}
+                                className={classes.input}
+                                referance={electricityRef}
+                                onKeyUp={() => { }}
+                                value={electricity}
+                            />
+                            <TextInput
+                                onKeyUp={e => e.keyCode === 13 ? naturalGasRef.current.focus() : null}
+                                placeholder="Su"
+                                onChangeText={e => setWater(e)}
+                                className={classes.input}
+                                referance={waterRef}
+                                onKeyUp={() => { }}
+                                value={water}
+                            />
+                            <TextInput
+                                onKeyUp={e => e.keyCode === 13 ? TCIPNoRef.current.focus() : null}
+                                onChangeText={e => setNaturalGas(e)}
+                                placeholder="Doğal Gaz"
+                                className={classes.input}
+                                referance={naturalGasRef}
+                                onKeyUp={() => { }}
+                                value={naturalGas}
+                            />
+                            <TextInput
+                                onKeyUp={e => e.keyCode === 13 ? ownerNameSurnameRef.current.focus() : null}
+                                onChangeText={e => setTCIPNo(e)}
+                                className={classes.input}
+                                placeholder="Dask No"
+                                referance={TCIPNoRef}
+                                onKeyUp={() => { }}
+                                value={TCIPNo}
+                            />
+                        </div> : null
+                    }
+
                     <div
                         className={classes.seperator}
                         style={{
@@ -226,40 +231,40 @@ const NewRealEstate = ({
                         Mal Sahibi Bilgileri
                     </div>
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? malsahibiPhoneRef.current.focus() : null}
-                        onChangeText={e => setMalsahibiFullName(e)}
+                        onKeyUp={e => e.keyCode === 13 ? ownerManagerPhoneNumberRef.current.focus() : null}
+                        onChangeText={e => setOwnerNameSurname(e)}
                         placeholder="Ad Soyad"
                         className={classes.input}
-                        referance={malsahibiFullNameRef}
-                        onKeyUp={() => {}}
-                        value={malsahibiFullName}
+                        referance={ownerNameSurnameRef}
+                        onKeyUp={() => { }}
+                        value={ownerNameSurname}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? malsahibiIDNoRef.current.focus() : null}
-                        onChangeText={e => setMalsahibiPhone(e)}
-                        referance={malsahibiPhoneRef}
+                        onKeyUp={e => e.keyCode === 13 ? ownerTcIdentityRef.current.focus() : null}
+                        onChangeText={e => setOwnerManagerPhoneNumber(e)}
+                        referance={ownerManagerPhoneNumberRef}
                         placeholder="Telefon No"
                         className={classes.input}
-                        value={malsahibiPhone}
-                        onKeyUp={() => {}}
+                        value={ownerManagerPhoneNumber}
+                        onKeyUp={() => { }}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? malsahibiIBANRef.current.focus() : null}
-                        onChangeText={e => setMalsahibiIDNo(e)}
-                        referance={malsahibiIDNoRef}
+                        onKeyUp={e => e.keyCode === 13 ? ownerIbanRef.current.focus() : null}
+                        onChangeText={e => setOwnerTcIdentity(e)}
+                        referance={ownerTcIdentityRef}
                         placeholder="TC No"
                         className={classes.input}
-                        onKeyUp={() => {}}
-                        value={malsahibiIDNo}
+                        onKeyUp={() => { }}
+                        value={ownerTcIdentity}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? aidatRef.current.focus() : null}
-                        onChangeText={e => setMalsahibiIBAN(e)}
-                        referance={malsahibiIBANRef}
+                        onKeyUp={e => e.keyCode === 13 ? detailDuesRef.current.focus() : null}
+                        onChangeText={e => setOwnerIban(e)}
+                        referance={ownerIbanRef}
                         placeholder="IBAN"
                         className={classes.input}
-                        onKeyUp={() => {}}
-                        value={malsahibiIBAN}
+                        onKeyUp={() => { }}
+                        value={ownerIban}
                     />
                     <div
                         className={classes.seperator}
@@ -272,86 +277,103 @@ const NewRealEstate = ({
                     >
                         Detaylar
                     </div>
+                    {
+                        selectedType !== "other" ? <TextInput
+                            onKeyUp={e => e.keyCode === 13 ? depozitRef.current.focus() : null}
+                            onChangeText={e => setDetailDues(e)}
+                            referance={detailDuesRef}
+                            placeholder="Aidat"
+                            className={classes.input}
+                            onKeyUp={() => { }}
+                            value={detailDues}
+                        /> : null
+                    }
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? depozitoRef.current.focus() : null}
-                        onChangeText={e => setAidat(e)}
-                        referance={aidatRef}
-                        placeholder="Aidat"
-                        className={classes.input}
-                        onKeyUp={() => {}}
-                        value={aidat}
-                    />
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? adminPhoneNumber.current.focus() : null}
-                        onChangeText={e => setDepozito(e)}
-                        referance={depozitoRef}
+                        onKeyUp={e => e.keyCode === 13 ? detailManagerPhoneNumberRef.current.focus() : null}
+                        onChangeText={e => setDeposit(e)}
+                        referance={depozitRef}
                         placeholder="Depozito"
                         className={classes.input}
-                        onKeyUp={() => {}}
-                        value={depozito}
+                        onKeyUp={() => { }}
+                        value={deposit}
                     />
+                    {
+                        selectedType !== "other" ? <TextInput
+                            onKeyUp={e => e.keyCode === 13 ? detailAdditionalInformationRef.current.focus() : null}
+                            onChangeText={e => setDetailManagerPhoneNumber(e)}
+                            referance={detailManagerPhoneNumberRef}
+                            placeholder="Yönetici Telefon No"
+                            className={classes.input}
+                            onKeyUp={() => { }}
+                            value={detailManagerPhoneNumber}
+                        /> : null
+                    }
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? ekbilgilerRef.current.focus() : null}
-                        onChangeText={e => setAdminPhoneNumber(e)}
-                        referance={adminPhoneNumberRef}
-                        placeholder="Yönetici Telefon No"
+                        onKeyUp={e => e.keyCode === 13 ? purposeOfUsageRef.current.focus() : null}
+                        onChangeText={e => setDetailAdditionalInformation(e)}
+                        referance={detailAdditionalInformationRef}
+                        placeholder={selectedType !== "other" ? "Ek Bilgiler" : "Açıklama"}
                         className={classes.input}
-                        onKeyUp={() => {}}
-                        value={adminPhoneNumber}
+                        onKeyUp={() => { }}
+                        value={detailAdditionalInformation}
                     />
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? roomCountRef.current.focus() : null}
-                        onChangeText={e => setEkbilgiler(e)}
-                        referance={ekbilgilerRef}
-                        placeholder="Ek Bilgiler"
-                        className={classes.input}
-                        onKeyUp={() => {}}
-                        value={ekbilgiler}
-                    />
-                    <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? kullanimamaciRef.current.focus() : null}
-                        onChangeText={e => setRoomCount(e)}
-                        referance={roomCountRef}
-                        placeholder="Ek Bilgiler"
-                        className={classes.input}
-                        onKeyUp={() => {}}
-                        value={roomCount}
-                    />
-                    <div>{/*ismail buraya selectbox KİRA BEDELİ*/}</div>
+                    {
+                        selectedType === "apartment" ? <SelectBox
+                            datas={numberOfRoomTypes}
+                            value={numberOfRoom}
+                            onChangeValue={(type) => setNumberOfRoom(type)}
+                            title={"Oda Sayısı"}
+                        /> : null
+                    }
+                    {
+                        selectedType !== "other" ? <TextInput
+                            onKeyUp={e => e.keyCode === 13 ? detailRentRef.current.focus() : null}
+                            onChangeText={e => setPurposeOfUsage(e)}
+                            referance={purposeOfUsageRef}
+                            placeholder="Kullanım Amacı"
+                            className={classes.input}
+                            onKeyUp={() => { }}
+                            value={purposeOfUsage}
+                        /> : null
+                    }
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? create() : null}
-                        onChangeText={e => setKirabedeli(e)}
-                        referance={kirabedeliRef}
-                        placeholder="Ek Bilgiler"
+                        onChangeText={e => setDetailRent(e)}
+                        referance={detailRentRef}
+                        placeholder="Kira Bedeli"
                         className={classes.input}
-                        onKeyUp={() => {}}
-                        value={kirabedeli}
+                        onKeyUp={() => { }}
+                        value={detailRent}
                     />
                     <div
                         className={classes.switchContainer}
                     >
                         {
-                            REAL_ESTATE_PERIOD_TYPES.map((item, index) => {
+                            paymentPeriodTypes.map((item, index) => {
                                 return <div
                                     key={index}
                                     className={classes.switchObject}
                                     style={{
-                                        backgroundColor: selectedPeriod === item.name ? colors.primary : colors.layer1,
-                                        borderBottomRightRadius: index === REAL_ESTATE_PERIOD_TYPES.length - 1 ? 10 : null,
-                                        borderTopRightRadius: index === REAL_ESTATE_PERIOD_TYPES.length - 1 ? 10 : null,
-                                        fontWeight: selectedPeriod === item.name ? 800 : 600,
+                                        backgroundColor: paymentPeriodType === item.value ? colors.primary : colors.layer1,
+                                        borderBottomRightRadius: index === paymentPeriodTypes.length - 1 ? 10 : null,
+                                        borderTopRightRadius: index === paymentPeriodTypes.length - 1 ? 10 : null,
+                                        fontWeight: paymentPeriodType === item.value ? 800 : 600,
                                         borderBottomLeftRadius: index === 0 ? 10 : null,
                                         borderTopLeftRadius: index === 0 ? 10 : null,
                                         width: "50%"
                                     }}
-                                    onClick={() => setSelectedPeriod(item.name)}
+                                    onClick={() => setPaymentPeriodType(item.value)}
                                 >
-                                    {item.title}
+                                    {item.label}
                                 </div>;
                             })
                         }
                     </div>
-                    <div>{/*ismail buraya date piker :D ÖDEME PERİYODU ZAMANI*/}</div>
+                    <DatePicker
+                        title={"Ödeme Periyodu Zamanı"}
+                        value={paymentPeriodDate}
+                        onChangeValue={(val) => setPaymentPeriodDate(val)}
+                    />
                     <div
                         className={classes.description}
                     >
@@ -364,6 +386,6 @@ const NewRealEstate = ({
                 </div>
             </div>
         </div>
-    </div>;
+    </div >;
 };
 export default injectSheet(stylesheet)(NewRealEstate);
