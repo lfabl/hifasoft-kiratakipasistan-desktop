@@ -40,7 +40,9 @@ const RealEstates = ({
     } = globalState.theme;
 
     useEffect(() => {
-        getRealEstates();
+        getRealEstates({
+            loadingStatus: true
+        });
     }, []);
     useEffect(() => {
         if (searchText && searchText.length) {
@@ -62,7 +64,9 @@ const RealEstates = ({
         }
     }, [searchText]);
 
-    const getRealEstates = () =>{
+    const getRealEstates = ({
+        loadingStatus
+    }) => {
         client.query({
             query: getAllRealEstates,
             context: {
@@ -70,25 +74,29 @@ const RealEstates = ({
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
             },
-            fetchPolicy: "network-only"            
+            fetchPolicy: "network-only"
         }).then(res => {
             if (res.data.getAllRealEstates.response.code === 200) {
                 setDatas(res.data.getAllRealEstates.data);
                 setFilteredData(res.data.getAllRealEstates.data);
             }
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
+            if (loadingStatus) {
+                setGlobalState({
+                    modal: {
+                        ...globalState.modal,
+                        isActive: false
+                    }
+                });
+            }
         }).catch(e => {
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
+            if (loadingStatus) {
+                setGlobalState({
+                    modal: {
+                        ...globalState.modal,
+                        isActive: false
+                    }
+                });
+            }
         });
     };
 
@@ -110,6 +118,9 @@ const RealEstates = ({
                         type: "custom",
                         children: <NewRealEstate
                             data={datas}
+                            refetch={() => getRealEstates({
+                                loadingStatus: false
+                            })}
                         />
                     }
                 });
@@ -169,7 +180,9 @@ const RealEstates = ({
                                         isActive: true,
                                         loading: false,
                                         type: "children",
-                                        children: <RealEstateContract id={item.id} refetch={() =>getRealEstates()}>
+                                        children: <RealEstateContract id={item.id} refetch={() => getRealEstates({
+                                            loadingStatus: true
+                                        })}>
 
                                         </RealEstateContract>
                                     }

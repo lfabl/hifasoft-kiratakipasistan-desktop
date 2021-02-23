@@ -17,10 +17,17 @@ import {
     realEstateTypes,
     usageTypes
 } from "../../../../helpers";
+import {
+    newRealEstate
+} from "../../../../server/graphql";
+import {
+    client
+} from '../../../../index';
 import useGlobalState from '../../../../context';
 import moment from "moment";
 
 const NewRealEstate = ({
+    refetch,
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
@@ -38,6 +45,7 @@ const NewRealEstate = ({
     const [ownerTcIdentity, setOwnerTcIdentity] = useState("");
     const [purposeOfUsage, setPurposeOfUsage] = useState("");
     const [numberOfRoom, setNumberOfRoom] = useState("");
+    const [fixtureDatas, setFixtureDatas] = useState([]);
     const [electricity, setElectricity] = useState("");
     const [usageType, setUsageType] = useState("null");
     const [naturalGas, setNaturalGas] = useState("");
@@ -71,7 +79,61 @@ const NewRealEstate = ({
     const waterRef = useRef();
 
     const create = () => {
-        console.log("Oluştur baham. :*");
+        const variables = {
+            type: selectedType,
+            usageType: usageType,
+            fixtureDatas: fixtureDatas,
+            title: title,
+            adress: adress,
+            rentalType: false,
+            electricity: electricity,
+            water: water,
+            naturalGas: naturalGas,
+            TCIPNo: TCIPNo,
+            ownerNameSurname: ownerNameSurname,
+            ownerManagerPhoneNumber: ownerManagerPhoneNumber,
+            ownerTcIdentity: ownerTcIdentity,
+            ownerIban: ownerIban,
+            detailDues: detailDues,
+            detailManagerPhoneNumber: detailManagerPhoneNumber,
+            detailAdditionalInformation: detailAdditionalInformation,
+            numberOfRoom: numberOfRoom,
+            purposeOfUsage: purposeOfUsage,
+            detailRent: detailRent !== "" && detailRent.length !== 0 ? detailRent : "0",
+            paymentPeriod: {
+                type: paymentPeriodType,
+                date: paymentPeriodDate
+            },
+            deposit: deposit
+        };
+
+        client.mutate({
+            mutation: newRealEstate,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            variables: variables,
+        }).then((res) => {
+            if (res.data.newRealEstate.code === 200) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Başarılı!",
+                            message: "Başarılı ile emlak oluşturulmuştur."
+                        }
+                    }
+                });
+                refetch();
+            }
+            else {
+                /* Hata var ise yapılacaklar. */
+            }
+        });
     };
 
     return <div
