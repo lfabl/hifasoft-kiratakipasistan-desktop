@@ -14,6 +14,9 @@ import {
     getAllTenants
 } from "../../../../server/graphql";
 import {
+    serverAdres
+} from "../../../../server/config";
+import {
     TenantContract
 } from "../../views";
 import {
@@ -164,7 +167,7 @@ const Tenants = ({
                                 className={classes.cardLogo}
                             >
                                 <img
-                                    src={item.profileImageName ? item.profileImageName : "/assets/images/default-user.png"}
+                                    src={item.profileImageName ? `${serverAdres}/profileImages/${item.profileImageName}` : "/assets/images/default-user.png"}
                                     width="100px"
                                 />
                             </div>

@@ -1,5 +1,6 @@
 import React, {
     useState,
+    useEffect,
     useRef
 } from 'react';
 import injectSheet from 'react-jss';
@@ -10,26 +11,44 @@ import {
     Button,
     Icon
 } from '../../../../components';
+import {
+    client
+} from '../../../../index';
+import {
+    updateTenant,
+    getTenant,
+} from "../../../../server/graphql";
+import {
+    serverAdres
+} from "../../../../server/config";
+import {
+    fileSelector
+} from "../../../../helpers";
 
 const TenantDetail = ({
+    tenantID,
     classes,
-    id,
     refetch
 }) => {
+    const selectFile = fileSelector({
+        type: "image/*"
+    });
     const [globalState, setGlobalState] = useGlobalState();
     const {
         colors
     } = globalState.theme;
-    const [profilePhoto, setProfilePhoto] = useState("/assets/images/default-user.png");
-    const [suretyPhoneNumber, setSuretyPhoneNumber] = useState("");
-    const [suretyTcIdentity, setSuretyTcIdentity] = useState("");
-    const [phoneNumberTwo, setPhoneNumberTwo] = useState("");
-    const [suretyFullName, setSuretyFullName] = useState("");
-    const [suretyAdress, setSuretyAdress] = useState("");
-    const [tenantAdress, setTenantAdress] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [tcIdentity, setTcIdentity] = useState("");
-    const [fullName, setFullName] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [suretyPhoneNumber, setSuretyPhoneNumber] = useState(null);
+    const [suretyTcIdentity, setSuretyTcIdentity] = useState(null);
+    const [newProfilePhoto, setNewProfilePhoto] = useState(null);
+    const [phoneNumberTwo, setPhoneNumberTwo] = useState(null);
+    const [suretyFullName, setSuretyFullName] = useState(null);
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [suretyAdress, setSuretyAdress] = useState(null);
+    const [tenantAdress, setTenantAdress] = useState(null);
+    const [phoneNumber, setPhoneNumber] = useState(null);
+    const [tcIdentity, setTcIdentity] = useState(null);
+    const [fullName, setFullName] = useState(null);
 
     const suretyPhoneNumberRef = useRef();
     const suretyTcIdentityRef = useRef();
@@ -40,11 +59,105 @@ const TenantDetail = ({
     const addressRef = useRef();
     const phoneRef = useRef();
 
+    useEffect(() => {
+        getTenantData();
+    }, []);
+    selectFile.addEventListener("change", () => {
+        const files = selectFile.files;
+        if (files.length !== 0) {
+            setNewProfilePhoto(files[0]);
+        }
+    });
 
-    const create = () => {
+    const update = () => {
         console.log("Oluştur baham. :*");
+        const variables = {
+        };
+        if (newProfilePhoto !== null) variables.profileImage = newProfilePhoto;
+        client.mutate({
+            mutation: updateTenant,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            variables: {
+                tenantID: tenantID,
+                fullName: fullName,
+                tcIdentity: tcIdentity,
+                phoneNumber1: phoneNumber,
+                phoneNumber2: phoneNumberTwo,
+                tenantAdress: tenantAdress,
+                profileImageName: profilePhoto,
+                suretyFullName: suretyFullName,
+                suretyTcIdentity: suretyTcIdentity,
+                suretyPhoneNumber: suretyPhoneNumber,
+                suretyAdress: suretyAdress,
+                profileImage: variables.profileImage,
+                deleteProfileImage: variables.deleteProfileImage
+            }
+        }).then((res) => {
+            if (res.data.updateTenant.code === 200) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Başarılı!",
+                            message: "Başarılı ile güncellenmiştir."
+                        }
+                    }
+                });
+                refetch();
+            }
+            else {
+                /* Hata var ise yapılacaklar. */
+            }
+        });
+
     };
 
+    const getTenantData = () => {
+        client.query({
+            query: getTenant,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            variables: {
+                tenantID: tenantID
+            },
+            fetchPolicy: "network-only"
+        }).then(res => {
+            if (res.data.getTenant.response.code === 200) {
+                const tenantData = res.data.getTenant.data;
+                console.log(tenantData.phoneNumber1.replace(/ /g, ''));
+                setSuretyPhoneNumber(tenantData.suretyPhoneNumber.replace(/ /g, ''));
+                setSuretyTcIdentity(tenantData.suretyTcIdentity.replace(/ /g, ''));
+                setPhoneNumberTwo(tenantData.phoneNumber2.replace(/ /g, ''));
+                setSuretyFullName(tenantData.suretyFullName);
+                setProfilePhoto(tenantData.profileImageName);
+                setSuretyAdress(tenantData.suretyAdress);
+                setTenantAdress(tenantData.tenantAdress);
+                setPhoneNumber(tenantData.phoneNumber1.replace(/ /g, ''));
+                setTcIdentity(tenantData.tcIdentity.replace(/ /g, ''));
+                setFullName(tenantData.fullName);
+                setLoading(false);
+            }
+        }).catch(e => {
+
+        });
+    };
+
+    if (loading === true) return <div
+        className={classes.loading}
+    >
+        <img
+            src="/assets/images/preload.svg"
+        />
+    </div>;
     return <div
         className={classes.container}
         style={{
@@ -91,13 +204,16 @@ const TenantDetail = ({
                             className={classes.profile}
                         >
                             <img
-                                src={profilePhoto}
+                                src={newProfilePhoto !== null ? URL.createObjectURL(newProfilePhoto) : profilePhoto !== "" ? `${serverAdres}/profileImages/${profilePhoto}` : "/assets/images/default-user.png"}
                                 width={100}
                             />
                             <div
                                 className={classes.updateProfilePhoto}
                                 style={{
                                     backgroundColor: colors.layer3
+                                }}
+                                onClick={() => {
+                                    selectFile.click();
                                 }}
                             >
                                 <Icon
@@ -183,7 +299,7 @@ const TenantDetail = ({
                         type={"number"}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? create() : null}
+                        onKeyUp={e => e.keyCode === 13 ? update() : null}
                         onChangeText={e => setSuretyAdress(e)}
                         referance={suretyAdressRef}
                         placeholder="Kefil Adresi"
@@ -193,7 +309,7 @@ const TenantDetail = ({
                     />
                     <Button
                         value="Bilgileri Değiştir"
-                        onClick={() => create()}
+                        onClick={() => update()}
                     />
                 </div>
             </div>
