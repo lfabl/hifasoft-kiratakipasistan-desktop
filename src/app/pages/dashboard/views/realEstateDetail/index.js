@@ -1,4 +1,5 @@
 import React, {
+    useEffect,
     useState,
     useRef
 } from 'react';
@@ -19,11 +20,21 @@ import {
 } from "../../../../helpers";
 import useGlobalState from '../../../../context';
 import moment from "moment";
+import {
+    client
+} from '../../../../index';
+import {
+    updateRealEstate,
+    getRealEstate,
+} from "../../../../server/graphql";
 
 const RealEstateDetail = ({
-    classes
+    refetch,
+    classes,
+    realEstateID
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [loading, setLoading] = useState(true);
     const {
         colors
     } = globalState.theme;
@@ -38,6 +49,7 @@ const RealEstateDetail = ({
     const [ownerTcIdentity, setOwnerTcIdentity] = useState("");
     const [purposeOfUsage, setPurposeOfUsage] = useState("");
     const [numberOfRoom, setNumberOfRoom] = useState("");
+    const [fixtureDatas, setFixtureDatas] = useState([]);
     const [electricity, setElectricity] = useState("");
     const [usageType, setUsageType] = useState("null");
     const [naturalGas, setNaturalGas] = useState("");
@@ -49,6 +61,7 @@ const RealEstateDetail = ({
     const [TCIPNo, setTCIPNo] = useState("");
     const [title, setTitle] = useState("");
     const [water, setWater] = useState("");
+    const [rentalType, setRentalType] = useState("unattached");
 
     const detailAdditionalInformationRef = useRef();
     const detailManagerPhoneNumberRef = useRef();
@@ -70,10 +83,129 @@ const RealEstateDetail = ({
     const TCIPNoRef = useRef();
     const waterRef = useRef();
 
+    useEffect(() => {
+        getRealEstateData();
+    }, []);
+
     const update = () => {
-        console.log("Oluştur baham. :*");
+        client.mutate({
+            mutation: updateRealEstate,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            variables: {
+                realEstateID: realEstateID,
+                type: selectedType,
+                usageType: usageType,
+                fixtureDatas: fixtureDatas,
+                title: title,
+                adress: adress,
+                rentalType: rentalType,
+                electricity: electricity,
+                water: water,
+                naturalGas: naturalGas,
+                TCIPNo: TCIPNo,
+                ownerNameSurname: ownerNameSurname,
+                ownerManagerPhoneNumber: ownerManagerPhoneNumber,
+                ownerTcIdentity: ownerTcIdentity,
+                ownerIban: ownerIban,
+                detailDues: detailDues,
+                detailManagerPhoneNumber: detailManagerPhoneNumber,
+                detailAdditionalInformation: detailAdditionalInformation,
+                numberOfRoom: numberOfRoom,
+                purposeOfUsage: purposeOfUsage,
+                detailRent: detailRent !== "" && detailRent.length !== 0 ? detailRent : "0",
+                paymentPeriod: {
+                    type: paymentPeriodType,
+                    date: paymentPeriodDate
+                },
+                deposit: deposit
+            }
+        }).then((res) => {
+            if (res.data.updateRealEstate.code === 200) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Başarılı!",
+                            message: "Başarılı ile güncellenmiştir."
+                        }
+                    }
+                });
+                refetch();
+            }
+            else {
+                /* Hata var ise yapılacaklar. */
+            }
+        });
     };
 
+    const getRealEstateData = () => {
+        client.query({
+            query: getRealEstate,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            variables: {
+                realEstateID: realEstateID
+            },
+            fetchPolicy: "network-only"
+        }).then(res => {
+            if (res.data.getRealEstate.response.code === 200) {
+                const realEstateData = res.data.getRealEstate.data;
+                console.log(realEstateData);
+                setSelectedType(realEstateData.type);
+                setUsageType(realEstateData.usageType);
+                setFixtureDatas(realEstateData.fixtureDatas);
+                setTitle(realEstateData.title);
+                setAdress(realEstateData.adress);
+                setElectricity(realEstateData.electricity);
+                setWater(realEstateData.water);
+                setNaturalGas(realEstateData.naturalGas);
+                setTCIPNo(realEstateData.TCIPNo);
+                setOwnerNameSurname(realEstateData.ownerNameSurname);
+                setOwnerManagerPhoneNumber(realEstateData.ownerManagerPhoneNumber);
+                setOwnerTcIdentity(realEstateData.ownerTcIdentity);
+                setOwnerIban(realEstateData.ownerIban);
+                setDetailDues(realEstateData.detailDues);
+                setDetailManagerPhoneNumber(realEstateData.detailManagerPhoneNumber);
+                setDetailAdditionalInformation(realEstateData.detailAdditionalInformation);
+                setNumberOfRoom(realEstateData.numberOfRoom);
+                setPurposeOfUsage(realEstateData.purposeOfUsage);
+                setDetailRent(realEstateData.detailRent);
+                setPaymentPeriodType(realEstateData.paymentPeriod.type);
+                setPaymentPeriodDate(moment(new Date(realEstateData.paymentPeriod.date)).format("YYYY-MM-DD"));
+                setDeposit(realEstateData.deposit !== null
+                    ? realEstateData.deposit
+                    : '0')
+                setRentalType(realEstateData.rentalType.length !== 0 &&
+                    realEstateData.rentalType[0].status &&
+                    realEstateData.rentalType[0].status === 'continuation'
+                    ? realEstateData.rentalType[0].status
+                    : 'unattached');
+                setLoading(false);
+
+            }
+        }).catch(e => {
+
+        });
+    };
+
+
+
+    if (loading === true) return <div
+        className={classes.loading}
+    >
+        <img
+            src="/assets/images/preload.svg"
+        />
+    </div>;
     return <div
         className={classes.container}
         style={{
@@ -86,7 +218,7 @@ const RealEstateDetail = ({
             <div
                 className={classes.title}
             >
-                Yeni Emlak Oluştur
+                Emlak Güncelle
             </div>
             <div
                 className={classes.close}

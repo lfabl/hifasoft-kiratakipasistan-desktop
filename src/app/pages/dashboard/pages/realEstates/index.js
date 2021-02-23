@@ -153,6 +153,10 @@ const RealEstates = ({
                                         type: "custom",
                                         children: <RealEstateDetail
                                             data={datas}
+                                            realEstateID={item.id}
+                                            refetch={() => getRealEstates({
+                                                loadingStatus: false
+                                            })}
                                         />
                                     }
                                 });
