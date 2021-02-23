@@ -63,7 +63,6 @@ const TenantContract = ({
                 realEstateID: ""
             },
         }).then((res) => {
-            console.log(res);
             if (res.data.deleteContract.code === 200) {
                 refetch();
                 /* Sözleşme başarı ile silinmiştir */
@@ -84,7 +83,6 @@ const TenantContract = ({
             variables: newData,
 
         }).then((res) => {
-            console.log(res);
             if (res.data.newContract.code === 200) {
                 refetch();
                 /* Sözleşme başarı ile oluşturulmuştur */
@@ -156,7 +154,6 @@ const TenantContract = ({
                     label: "Lütfen emlak Seçiniz"
                 }, ...converterdTenants]);
                 setLoading(false);
-
             }
             else {
                 setLoading(false);
