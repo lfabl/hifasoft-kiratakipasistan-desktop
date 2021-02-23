@@ -25,6 +25,8 @@ import {
 import {
     client
 } from '../../../../';
+import RealEstateDetail from '../../views/realEstateDetail';
+import NewRealEstate from '../../views/newRealEstate';
 
 const RealEstates = ({
     classes
@@ -104,11 +106,11 @@ const RealEstates = ({
             onClick={() => {
                 setGlobalState({
                     modal: {
-                        isActive: !globalState.modal.isActive,
-                        data: undefined,
-                        type: "loading",
-                        loading: true,
-                        dialog: false
+                        isActive: true,
+                        type: "custom",
+                        children: <NewRealEstate
+                            data={datas}
+                        />
                     }
                 });
             }}
@@ -131,11 +133,18 @@ const RealEstates = ({
                         style={{
                             backgroundColor: colors.background
                         }}
-
                     >
                         <div
                             onClick={(e) => {
-                                console.log("ham");
+                                setGlobalState({
+                                    modal: {
+                                        isActive: true,
+                                        type: "custom",
+                                        children: <RealEstateDetail
+                                            data={datas}
+                                        />
+                                    }
+                                });
                                 e.preventDefault();
                             }}
                         >
