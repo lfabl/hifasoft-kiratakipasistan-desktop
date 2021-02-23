@@ -34,32 +34,7 @@ const Tenants = ({
     } = globalState.theme;
 
     useEffect(() => {
-        client.query({
-            query: getAllTenants,
-            context: {
-                headers: {
-                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
-                }
-            }
-        }).then(res => {
-            if (res.data.getAllTenants.response.code === 200) {
-                setDatas(res.data.getAllTenants.data);
-                setFilteredData(res.data.getAllTenants.data);
-            }
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
-        }).catch(e => {
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
-        });
+        getTenants();
     }, []);
     useEffect(() => {
         if (searchText && searchText.length) {
@@ -82,6 +57,36 @@ const Tenants = ({
             setFilteredData(datas);
         }
     }, [searchText]);
+
+    const getTenants = () =>{
+        client.query({
+            query: getAllTenants,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            fetchPolicy: "network-only"            
+        }).then(res => {
+            if (res.data.getAllTenants.response.code === 200) {
+                setDatas(res.data.getAllTenants.data);
+                setFilteredData(res.data.getAllTenants.data);
+            }
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        }).catch(e => {
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        });
+    };
 
     const newTenant = () => {
         setGlobalState({
@@ -134,10 +139,10 @@ const Tenants = ({
                         style={{
                             backgroundColor: colors.background
                         }}
-                        onClick={() => tenantDetail()}
                     >
                         <div
                             className={classes.content}
+                            onClick={() => tenantDetail()}
                         >
                             <div
                                 className={classes.cardLogo}
@@ -175,7 +180,7 @@ const Tenants = ({
                                         isActive: true,
                                         loading: false,
                                         type: "children",
-                                        children: <TenantContract id={item.id}>
+                                        children: <TenantContract id={item.id} refetch={()=>getTenants()}>
 
                                         </TenantContract>
                                     }

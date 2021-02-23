@@ -32,7 +32,8 @@ import moment from "moment";
 
 const RealEstateContract = ({
     classes,
-    id
+    id,
+    refetch
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const [loading, setLoading] = useState(true);
@@ -61,13 +62,12 @@ const RealEstateContract = ({
                 tenantID: "",
                 realEstateID: id
             },
-            refetchQueries: [{
-                query: getAllRealEstates
-            }]
+
         }).then((res) => {
             console.log(res);
             if (res.data.deleteContract.code === 200) {
-                /* Sözleşme başarı ile oluşturulmuştur */
+                refetch();
+                /* Sözleşme başarı ile silinmiştir */
             }
             else {
                 /* Bir hata oluştur */
@@ -83,11 +83,10 @@ const RealEstateContract = ({
                 }
             },
             variables: newData,
-            refetchQueries: [{
-                query: getAllRealEstates
-            }]
         }).then((res) => {
             if (res.data.newContract.code === 200) {
+                refetch();
+
                 /* Sözleşme başarı ile oluşturulmuştur */
             }
             else {
@@ -116,6 +115,7 @@ const RealEstateContract = ({
             variables: {
                 realEstateID: id
             },
+            fetchPolicy: "network-only"            
         }).then(async (res) => {
             if (res.data.getRealEstate.response.code === 200) {
                 const data = res.data.getRealEstate.data;
@@ -142,6 +142,7 @@ const RealEstateContract = ({
             variables: {
                 realEstateID: id
             },
+            fetchPolicy: "network-only"            
         }).then(async (res) => {
             if (res.data.getAvailableTenantsForContract.response.code === 200) {
                 const converterdTenants = await selectBoxTypeConverter({
@@ -172,7 +173,8 @@ const RealEstateContract = ({
                 headers: {
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
-            }
+            },
+            fetchPolicy: "network-only"            
         }).then(res => {
             const status = res.data.contractControl.code !== 200 ? false : true;
             if (status === false) {

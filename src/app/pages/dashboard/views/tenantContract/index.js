@@ -32,7 +32,8 @@ import moment from "moment";
 
 const TenantContract = ({
     classes,
-    id
+    id,
+    refetch
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const [loading, setLoading] = useState(true);
@@ -61,13 +62,11 @@ const TenantContract = ({
                 tenantID: id,
                 realEstateID: ""
             },
-            refetchQueries: [{
-                query: getAllRealEstates
-            }]
         }).then((res) => {
             console.log(res);
             if (res.data.deleteContract.code === 200) {
-                /* Sözleşme başarı ile oluşturulmuştur */
+                refetch();
+                /* Sözleşme başarı ile silinmiştir */
             }
             else {
                 /* Bir hata oluştur */
@@ -83,12 +82,11 @@ const TenantContract = ({
                 }
             },
             variables: newData,
-            refetchQueries: [{
-                query: getAllRealEstates
-            }]
+
         }).then((res) => {
             console.log(res);
             if (res.data.newContract.code === 200) {
+                refetch();
                 /* Sözleşme başarı ile oluşturulmuştur */
             }
             else {
@@ -117,6 +115,7 @@ const TenantContract = ({
             variables: {
                 realEstateID: selectRealEstateID
             },
+            fetchPolicy: "network-only"
         }).then(async (res) => {
             if (res.data.getRealEstate.response.code === 200) {
                 const data = res.data.getRealEstate.data;
@@ -144,6 +143,7 @@ const TenantContract = ({
             variables: {
                 realEstateID: id
             },
+            fetchPolicy: "network-only"
         }).then(async (res) => {
             if (res.data.getAvailableRealEstatesForContract.response.code === 200) {
                 const converterdTenants = await selectBoxTypeConverter({
@@ -175,7 +175,8 @@ const TenantContract = ({
                 headers: {
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
-            }
+            },
+            fetchPolicy: "network-only"
         }).then(res => {
             const status = res.data.contractControl.code !== 200 ? false : true;
             if (status === false) {
@@ -332,7 +333,7 @@ const TenantContract = ({
                         ) {
                             const newContractData = {
                                 tenantID: id,
-                                realEstateID:  selectRealEstateID ,
+                                realEstateID: selectRealEstateID,
                                 rentalDate: rentalDate,
                                 contractPeriod: contractPeriod,
                                 rentalPrice: rentalPrice,

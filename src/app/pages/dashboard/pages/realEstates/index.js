@@ -38,32 +38,7 @@ const RealEstates = ({
     } = globalState.theme;
 
     useEffect(() => {
-        client.query({
-            query: getAllRealEstates,
-            context: {
-                headers: {
-                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
-                }
-            }
-        }).then(res => {
-            if (res.data.getAllRealEstates.response.code === 200) {
-                setDatas(res.data.getAllRealEstates.data);
-                setFilteredData(res.data.getAllRealEstates.data);
-            }
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
-        }).catch(e => {
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
-        });
+        getRealEstates();
     }, []);
     useEffect(() => {
         if (searchText && searchText.length) {
@@ -84,6 +59,36 @@ const RealEstates = ({
             setFilteredData(datas);
         }
     }, [searchText]);
+
+    const getRealEstates = () =>{
+        client.query({
+            query: getAllRealEstates,
+            context: {
+                headers: {
+                    "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                }
+            },
+            fetchPolicy: "network-only"            
+        }).then(res => {
+            if (res.data.getAllRealEstates.response.code === 200) {
+                setDatas(res.data.getAllRealEstates.data);
+                setFilteredData(res.data.getAllRealEstates.data);
+            }
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        }).catch(e => {
+            setGlobalState({
+                modal: {
+                    ...globalState.modal,
+                    isActive: false
+                }
+            });
+        });
+    };
 
     return <div
         className={classes.container}
@@ -155,7 +160,7 @@ const RealEstates = ({
                                         isActive: true,
                                         loading: false,
                                         type: "children",
-                                        children: <RealEstateContract id={item.id}>
+                                        children: <RealEstateContract id={item.id} refetch={() =>getRealEstates()}>
 
                                         </RealEstateContract>
                                     }
