@@ -18,7 +18,8 @@ import {
 } from "../../../../server/graphql";
 
 const NewTenant = ({
-    classes
+    classes,
+    refetch
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const {
@@ -76,6 +77,7 @@ const NewTenant = ({
                         }
                     }
                 });
+                refetch();
             }
             else {
                 /* Hata var ise yapılacaklar. */

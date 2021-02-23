@@ -21,6 +21,9 @@ import {
 } from '../../../../';
 import NewTenant from '../../views/newTenant';
 import TenantDetail from '../../views/tenantDetail';
+import {
+    faBalanceScaleRight 
+} from '@fortawesome/free-solid-svg-icons';
 
 const Tenants = ({
     classes
@@ -34,7 +37,9 @@ const Tenants = ({
     } = globalState.theme;
 
     useEffect(() => {
-        getTenants();
+        getTenants({
+            loadingStatus: true 
+        });
     }, []);
     useEffect(() => {
         if (searchText && searchText.length) {
@@ -58,7 +63,9 @@ const Tenants = ({
         }
     }, [searchText]);
 
-    const getTenants = () =>{
+    const getTenants = ({
+        loadingStatus
+    }) => {
         client.query({
             query: getAllTenants,
             context: {
@@ -66,18 +73,20 @@ const Tenants = ({
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
             },
-            fetchPolicy: "network-only"            
+            fetchPolicy: "network-only"
         }).then(res => {
             if (res.data.getAllTenants.response.code === 200) {
                 setDatas(res.data.getAllTenants.data);
                 setFilteredData(res.data.getAllTenants.data);
             }
-            setGlobalState({
-                modal: {
-                    ...globalState.modal,
-                    isActive: false
-                }
-            });
+            if (loadingStatus) {
+                setGlobalState({
+                    modal: {
+                        ...globalState.modal,
+                        isActive: false
+                    }
+                });
+            }
         }).catch(e => {
             setGlobalState({
                 modal: {
@@ -93,18 +102,25 @@ const Tenants = ({
             modal: {
                 isActive: true,
                 type: "custom",
-                children: <NewTenant/>
+                children: <NewTenant
+                    refetch={() => getTenants({
+                        loadingStatus: false
+                    })}
+                />
             }
         });
     };
 
-    const tenantDetail = () => {
+    const tenantDetail = (id) => {
         setGlobalState({
             modal: {
                 isActive: true,
                 type: "custom",
                 children: <TenantDetail
-                    data={datas}
+                    tenantID={id}
+                    refetch={() => getTenants({
+                        loadingStatus: false
+                    })}
                 />
             }
         });
@@ -142,7 +158,7 @@ const Tenants = ({
                     >
                         <div
                             className={classes.content}
-                            onClick={() => tenantDetail()}
+                            onClick={() => tenantDetail(item.id)}
                         >
                             <div
                                 className={classes.cardLogo}
@@ -174,13 +190,15 @@ const Tenants = ({
                         </div>
                         <div
                             className={classes.cardLinkButton}
-                            onClick={() => { 
+                            onClick={() => {
                                 setGlobalState({
                                     modal: {
                                         isActive: true,
                                         loading: false,
                                         type: "children",
-                                        children: <TenantContract id={item.id} refetch={()=>getTenants()}>
+                                        children: <TenantContract id={item.id} refetch={() => getTenants({
+                                            loadingStatus: true
+                                        })}>
 
                                         </TenantContract>
                                     }

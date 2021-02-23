@@ -13,31 +13,33 @@ import {
 
 const TenantDetail = ({
     classes,
-    data
+    id,
+    refetch
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const {
         colors
     } = globalState.theme;
     const [profilePhoto, setProfilePhoto] = useState("/assets/images/default-user.png");
-    const [kefilFullName, setKefilFullName] = useState("");
-    const [kefilAddress, setKefilAddress] = useState("");
-    const [kefilPhone, setKefilPhone] = useState("");
-    const [kefilIDNo, setKefilIDNo] = useState("");
+    const [suretyPhoneNumber, setSuretyPhoneNumber] = useState("");
+    const [suretyTcIdentity, setSuretyTcIdentity] = useState("");
+    const [phoneNumberTwo, setPhoneNumberTwo] = useState("");
+    const [suretyFullName, setSuretyFullName] = useState("");
+    const [suretyAdress, setSuretyAdress] = useState("");
+    const [tenantAdress, setTenantAdress] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [tcIdentity, setTcIdentity] = useState("");
     const [fullName, setFullName] = useState("");
-    const [address, setAddress] = useState("");
-    const [phoneTwo, setPhoneTwo] = useState("");
-    const [phone, setPhone] = useState("");
-    const [idNo, setIDNo] = useState("");
 
-    const kefilFullNameRef = useRef();
-    const kefilAddressRef = useRef();
-    const kefilPhoneRef = useRef();
-    const kefilIDNoRef = useRef();
+    const suretyPhoneNumberRef = useRef();
+    const suretyTcIdentityRef = useRef();
+    const suretyFullNameRef = useRef();
+    const suretyAdressRef = useRef();
+    const tcIdentityRef = useRef();
     const phoneTwoRef = useRef();
     const addressRef = useRef();
     const phoneRef = useRef();
-    const idNoRef = useRef();
+
 
     const create = () => {
         console.log("Oluştur baham. :*");
@@ -107,7 +109,7 @@ const TenantDetail = ({
                         </div>
                     </div>
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? idNoRef.current.focus() : null}
+                        onKeyUp={e => e.keyCode === 13 ? tcIdentityRef.current.focus() : null}
                         onChangeText={e => setFullName(e)}
                         placeholder="Ad ve Soyad"
                         className={classes.input}
@@ -115,74 +117,79 @@ const TenantDetail = ({
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? phoneRef.current.focus() : null}
-                        onChangeText={e => setIDNo(e)}
+                        onChangeText={e => setTcIdentity(e)}
                         className={classes.input}
-                        referance={idNoRef}
+                        referance={tcIdentityRef}
                         placeholder="TC No"
-                        value={idNo}
+                        value={tcIdentity}
+                        type={"number"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? phoneTwoRef.current.focus() : null}
                         placeholder="Kiracı Telefon Numarası"
-                        onChangeText={e => setPhone(e)}
+                        onChangeText={e => setPhoneNumber(e)}
                         className={classes.input}
                         referance={phoneRef}
-                        onKeyUp={() => {}}
-                        value={phone}
+                        onKeyUp={() => { }}
+                        value={phoneNumber}
+                        type={"number"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? addressRef.current.focus() : null}
                         placeholder="Kiracı Telefon Numarası 2"
-                        onChangeText={e => setPhoneTwo(e)}
+                        onChangeText={e => setPhoneNumberTwo(e)}
                         className={classes.input}
                         referance={phoneTwoRef}
-                        onKeyUp={() => {}}
-                        value={phoneTwo}
+                        onKeyUp={() => { }}
+                        value={phoneNumberTwo}
+                        type={"number"}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? kefilFullNameRef.current.focus() : null}
-                        onChangeText={e => setAddress(e)}
+                        onKeyUp={e => e.keyCode === 13 ? suretyFullNameRef.current.focus() : null}
+                        onChangeText={e => setTenantAdress(e)}
                         placeholder="Kiracı Adresi"
                         className={classes.input}
                         referance={addressRef}
-                        onKeyUp={() => {}}
-                        value={address}
+                        onKeyUp={() => { }}
+                        value={tenantAdress}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? kefilIDNoRef.current.focus() : null}
-                        onChangeText={e => setKefilFullName(e)}
-                        referance={kefilFullNameRef}
+                        onKeyUp={e => e.keyCode === 13 ? suretyTcIdentityRef.current.focus() : null}
+                        onChangeText={e => setSuretyFullName(e)}
+                        referance={suretyFullNameRef}
                         className={classes.input}
                         placeholder="Kefil Adı"
-                        value={kefilFullName}
-                        onKeyUp={() => {}}
+                        value={suretyFullName}
+                        onKeyUp={() => { }}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? kefilPhoneRef.current.focus() : null}
-                        onChangeText={e => setKefilIDNo(e)}
+                        onKeyUp={e => e.keyCode === 13 ? suretyPhoneNumberRef.current.focus() : null}
+                        onChangeText={e => setSuretyTcIdentity(e)}
                         placeholder="Kefil TC No"
                         className={classes.input}
-                        referance={kefilIDNoRef}
-                        onKeyUp={() => {}}
-                        value={kefilIDNo}
+                        referance={suretyTcIdentityRef}
+                        onKeyUp={() => { }}
+                        value={suretyTcIdentity}
+                        type={"number"}
                     />
                     <TextInput
-                        onKeyUp={e => e.keyCode === 13 ? kefilAddressRef.current.focus() : null}
-                        onChangeText={e => setKefilPhone(e)}
+                        onKeyUp={e => e.keyCode === 13 ? suretyAdressRef.current.focus() : null}
+                        onChangeText={e => setSuretyPhoneNumber(e)}
                         placeholder="Kefil Telefon"
                         className={classes.input}
-                        referance={kefilPhoneRef}
-                        onKeyUp={() => {}}
-                        value={kefilPhone}
+                        referance={suretyPhoneNumberRef}
+                        onKeyUp={() => { }}
+                        value={suretyPhoneNumber}
+                        type={"number"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? create() : null}
-                        onChangeText={e => setKefilAddress(e)}
-                        referance={kefilAddressRef}
+                        onChangeText={e => setSuretyAdress(e)}
+                        referance={suretyAdressRef}
                         placeholder="Kefil Adresi"
                         className={classes.input}
-                        onKeyUp={() => {}}
-                        value={kefilAddress}
+                        onKeyUp={() => { }}
+                        value={suretyAdress}
                     />
                     <Button
                         value="Bilgileri Değiştir"
