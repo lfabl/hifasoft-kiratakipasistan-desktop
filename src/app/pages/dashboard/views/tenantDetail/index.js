@@ -40,17 +40,17 @@ const TenantDetail = ({
         colors
     } = globalState.theme;
     const [loading, setLoading] = useState(true);
-    const [suretyPhoneNumber, setSuretyPhoneNumber] = useState(null);
-    const [suretyTcIdentity, setSuretyTcIdentity] = useState(null);
+    const [suretyPhoneNumber, setSuretyPhoneNumber] = useState("");
+    const [suretyTcIdentity, setSuretyTcIdentity] = useState("");
     const [newProfilePhoto, setNewProfilePhoto] = useState(null);
-    const [phoneNumberTwo, setPhoneNumberTwo] = useState(null);
-    const [suretyFullName, setSuretyFullName] = useState(null);
-    const [profilePhoto, setProfilePhoto] = useState(null);
-    const [suretyAdress, setSuretyAdress] = useState(null);
-    const [tenantAdress, setTenantAdress] = useState(null);
-    const [phoneNumber, setPhoneNumber] = useState(null);
-    const [tcIdentity, setTcIdentity] = useState(null);
-    const [fullName, setFullName] = useState(null);
+    const [phoneNumberTwo, setPhoneNumberTwo] = useState("");
+    const [suretyFullName, setSuretyFullName] = useState("");
+    const [profilePhoto, setProfilePhoto] = useState("");
+    const [suretyAdress, setSuretyAdress] = useState("");
+    const [tenantAdress, setTenantAdress] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [tcIdentity, setTcIdentity] = useState("");
+    const [fullName, setFullName] = useState("");
 
     const suretyPhoneNumberRef = useRef();
     const suretyTcIdentityRef = useRef();
@@ -61,14 +61,14 @@ const TenantDetail = ({
     const addressRef = useRef();
     const phoneRef = useRef();
 
+    selectFile.addEventListener("change", () => {
+        const files = selectFile.files;
+        if (files.length !== 0) {
+            setNewProfilePhoto(files[0]);
+        }
+    });
     useEffect(() => {
         getTenantData();
-        selectFile.addEventListener("change", () => {
-            const files = selectFile.files;
-            if (files.length !== 0) {
-                setNewProfilePhoto(files[0]);
-            }
-        });
     }, []);
 
     const update = () => {
