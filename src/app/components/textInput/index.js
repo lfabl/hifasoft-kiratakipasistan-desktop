@@ -27,9 +27,13 @@ const TextInput = ({
     } = globalState.theme;
 
     useEffect(() => {
-        if(onChangeText) onChangeText(_value);
+        _setValue(value);
+    }, [value])
+
+    useEffect(() => {
+        if (onChangeText) onChangeText(_value);
     }, [_value]);
-    
+
     return <div
         className={classes.container}
         style={{

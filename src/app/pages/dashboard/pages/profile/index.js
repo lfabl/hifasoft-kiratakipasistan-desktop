@@ -84,6 +84,9 @@ const Profile = ({
                     userName: getUserData.userName,
                     registerDate: registerDate
                 });
+                setOldPassword("");
+                setNewPassword("");
+                setNewRePassword("");
                 if (loadingStatus) {
                     setGlobalState({
                         modal: {
@@ -101,7 +104,7 @@ const Profile = ({
                     }
                 });
             }
-            
+
         }).catch(e => {
             setGlobalState({
                 modal: {
@@ -121,7 +124,6 @@ const Profile = ({
             },
             variables: variables
         }).then((res) => {
-            console.log(res);
             if (res.data.updateProfile.code === 200) {
                 setGlobalState({
                     modal: {
