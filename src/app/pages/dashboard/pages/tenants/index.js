@@ -25,7 +25,7 @@ import {
 import NewTenant from '../../views/newTenant';
 import TenantDetail from '../../views/tenantDetail';
 import {
-    faBalanceScaleRight 
+    faBalanceScaleRight
 } from '@fortawesome/free-solid-svg-icons';
 
 const Tenants = ({
@@ -41,7 +41,7 @@ const Tenants = ({
 
     useEffect(() => {
         getTenants({
-            loadingStatus: true 
+            loadingStatus: true
         });
     }, []);
     useEffect(() => {
@@ -49,15 +49,15 @@ const Tenants = ({
             const newFilteredData = datas.filter((data) => {
                 const searchTextLowerCase = searchText.toLowerCase();
                 const fullName = data.fullName.toLowerCase();
-                const phoneNumber = data.phoneNumber1.toLowerCase();
+                const activeApartment = data.activeApartment.length !== 0 ? data.activeApartment[0].title.toLowerCase() : "";
                 const suretyFullName = data.suretyFullName.toLowerCase();
                 const suretyPhoneNumber = data.suretyPhoneNumber.toLowerCase();
-                const activeApartment = data.activeApartment.length !== 0 ? data.activeApartment[0].title.toLowerCase() : "";
+                const phoneNumber1 = data.phoneNumber1.toLowerCase();
                 return fullName.indexOf(searchTextLowerCase) > -1 ||
-                    phoneNumber.indexOf(searchTextLowerCase) > -1 ||
-                    suretyFullName.indexOf(suretyFullName) > -1 ||
-                    suretyPhoneNumber.indexOf(suretyFullName) > -1 ||
-                    activeApartment.indexOf(searchTextLowerCase) > -1;
+                    phoneNumber1.indexOf(searchTextLowerCase) > -1 ||
+                    suretyFullName.indexOf(searchTextLowerCase) > -1 ||
+                    activeApartment.indexOf(searchTextLowerCase) > -1 ||
+                    suretyPhoneNumber.indexOf(searchTextLowerCase) > -1;
             });
             setFilteredData(newFilteredData);
         }
