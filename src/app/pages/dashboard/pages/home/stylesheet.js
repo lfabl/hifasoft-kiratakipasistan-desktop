@@ -19,14 +19,26 @@ const stylesheet = {
     pastEstates: {
         padding: objectSpacing * 1.5 + "px " + objectSpacing * 2 + "px",
         marginBottom: objectSpacing * 1.5,
-        borderRadius: 50,
-        fontWeight: 600
+        borderRadius: 10,
+        fontWeight: 600,
+        "&:active": {
+            ...active
+        },
+        "&:hover": {
+            ...hover
+        }
     },
     approachEstates: {
         padding: objectSpacing * 1.5 + "px " + objectSpacing * 2 + "px",
         marginBottom: objectSpacing * 1.5,
-        borderRadius: 50,
-        fontWeight: 600
+        borderRadius: 10,
+        fontWeight: 600,
+        "&:active": {
+            ...active
+        },
+        "&:hover": {
+            ...hover
+        }
     },
     card: {
         marginBottom: objectSpacing * 2,
