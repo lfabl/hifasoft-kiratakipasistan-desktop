@@ -230,3 +230,25 @@ export const fileSelector = ({
     return fileSelector;
 };
 
+export const customAlert = ({
+    onPressOkey,
+    message,
+    title
+}) => {
+    const remote = window["require"]('electron').remote;
+    window.confirm = function (message) {
+        const buttonIdx = remote.dialog.showMessageBox(null, {
+            type: 'question',
+            buttons: ['OK', 'Cancel'],
+            defaultId: 0,
+            cancelId: 1,
+            message: title,
+            detail: message,
+        });
+        if (buttonIdx === 0) { 
+            onPressOkey();
+        }
+        return buttonIdx === 0;
+    };
+    window.confirm(message);
+};

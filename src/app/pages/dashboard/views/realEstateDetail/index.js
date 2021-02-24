@@ -25,8 +25,12 @@ import {
 } from '../../../../index';
 import {
     updateRealEstate,
+    deleteRealEstate,
     getRealEstate,
 } from "../../../../server/graphql";
+import {
+    customAlert
+} from "../../../../helpers";
 
 const RealEstateDetail = ({
     refetch,
@@ -197,8 +201,40 @@ const RealEstateDetail = ({
         });
     };
 
-    const deleteRealEstate = () => {
-
+    const deleteRealEstateData = () => {
+        customAlert({
+            message: "Emlak Silinsinmi?",
+            onPressOkey: () => {
+                client.mutate({
+                    mutation: deleteRealEstate,
+                    context: {
+                        headers: {
+                            "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                        }
+                    },
+                    variables: {
+                        realEstateID: realEstateID
+                    }
+                }).then((res) => {
+                    if (res.data.deleteRealEstate.code === 200) {
+                        setGlobalState({
+                            modal: {
+                                isActive: true,
+                                loading: false,
+                                dialog: true,
+                                data: {
+                                    title: "Başarılı!",
+                                    message: "Başarılı ile silinmiştir."
+                                }
+                            }
+                        });
+                        refetch();
+                    }
+                    else {
+                    }
+                });
+            }
+        })
     };
 
     if (loading === true) return <div
@@ -520,7 +556,7 @@ const RealEstateDetail = ({
                         value="Emlağı Sil"
                         color={colors.accent}
                         textColor={colors.contrastBody}
-                        onClick={() => deleteRealEstate()}
+                        onClick={() => deleteRealEstateData()}
                         className={classes.deleteRealEstate}
                     />
                     <Button

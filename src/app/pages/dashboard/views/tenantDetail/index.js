@@ -16,13 +16,15 @@ import {
 } from '../../../../index';
 import {
     updateTenant,
+    deleteTenant,
     getTenant,
 } from "../../../../server/graphql";
 import {
     serverAdres
 } from "../../../../server/config";
 import {
-    fileSelector
+    fileSelector,
+    customAlert
 } from "../../../../helpers";
 
 const TenantDetail = ({
@@ -70,9 +72,7 @@ const TenantDetail = ({
     }, []);
 
     const update = () => {
-        console.log("Oluştur baham. :*");
-        const variables = {
-        };
+        const variables = {};
         if (newProfilePhoto !== null) variables.profileImage = newProfilePhoto;
         client.mutate({
             mutation: updateTenant,
@@ -151,8 +151,40 @@ const TenantDetail = ({
         });
     };
 
-    const deleteTenant = () => {
-
+    const deleteTenantData = () => {
+        customAlert({
+            message: "Kiracı Silinsinmi?",
+            onPressOkey: () => {
+                client.mutate({
+                    mutation: deleteTenant,
+                    context: {
+                        headers: {
+                            "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
+                        }
+                    },
+                    variables: {
+                        tenantID: tenantID
+                    }
+                }).then((res) => {
+                    if (res.data.deleteTenant.code === 200) {
+                        setGlobalState({
+                            modal: {
+                                isActive: true,
+                                loading: false,
+                                dialog: true,
+                                data: {
+                                    title: "Başarılı!",
+                                    message: "Başarılı ile silinmiştir."
+                                }
+                            }
+                        });
+                        refetch();
+                    }
+                    else {
+                    }
+                });
+            }
+        })
     };
 
     if (loading === true) return <div
@@ -315,7 +347,7 @@ const TenantDetail = ({
                     <Button
                         value="Kiracıyı Sil"
                         color={colors.accent}
-                        onClick={() => deleteTenant()}
+                        onClick={() => deleteTenantData()}
                         textColor={colors.contrastBody}
                         className={classes.deleteTenant}
                     />
