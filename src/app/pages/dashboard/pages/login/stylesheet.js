@@ -1,6 +1,7 @@
 import {
     objectSpacing,
-    active
+    active,
+    hover
 } from '../../../../theme/tokens';
 
 export const styleMain = {
@@ -55,6 +56,11 @@ export const styleMain = {
     userName: {
         marginBottom: objectSpacing * 2
     },
+    passwordContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        display: "flex"
+    },
     password: {
         marginBottom: objectSpacing * 2
     },
@@ -94,7 +100,19 @@ export const styleMain = {
         },
         "& a:active": {
             ...active
+        }
+    },
+    eyeContainer: {
+        paddingTop: objectSpacing * 2,
+        paddingBottom: objectSpacing,
+        paddingRight: objectSpacing,
+        paddingLeft: objectSpacing,
+        "&:hover": {
+            ...hover
         },
+        "&:active": {
+            ...active
+        }
     }
 };
 export default styleMain;
