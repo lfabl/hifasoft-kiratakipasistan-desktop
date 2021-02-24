@@ -1,6 +1,6 @@
 import React, {
-    useState,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
@@ -14,6 +14,7 @@ import {
 import {
     client
 } from '../../../../';
+
 const Home = ({
     history,
     classes
@@ -75,7 +76,7 @@ const Home = ({
             });
         });
     }, []);
-    
+
     return <div
         className={classes.table}
         style={{

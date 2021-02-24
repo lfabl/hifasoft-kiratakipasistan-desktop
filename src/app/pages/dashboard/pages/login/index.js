@@ -24,6 +24,7 @@ const Login = ({
     classes,
     history
 }) => {
+    const [hidePassword, setHidePassword] = useState(false);
     const [globalState, setGlobalState] = useGlobalState();
     const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState("");
@@ -174,20 +175,34 @@ const Login = ({
                             className={classes.userName}
                             referance={emailRef}
                         />
-                        <TextInput
-                            onChangeText={e => setPassword(e)}
-                            className={classes.password}
-                            referance={passwordRef}
-                            onKeyUp={e => {
-                                if(e.keyCode === 13) {
-                                    setLoading(true);
-                                    login(); 
-                                }
-                            }}
-                            title="Parolanız"
-                            value={password}
-                            type="password"
-                        />
+                        <div
+                            className={classes.passwordContainer}
+                        >
+                            <TextInput
+                                onChangeText={e => setPassword(e)}
+                                className={classes.password}
+                                referance={passwordRef}
+                                onKeyUp={e => {
+                                    if(e.keyCode === 13) {
+                                        setLoading(true);
+                                        login(); 
+                                    }
+                                }}
+                                title="Parolanız"
+                                value={password}
+                                type={hidePassword ? "text" : "password"}
+                            />
+                            <div
+                                className={classes.eyeContainer}
+                                onClick={() => setHidePassword(!hidePassword)}
+                            >
+                                <Icon
+                                    color={colors.body}
+                                    name={hidePassword ? "eye" : "eye-slash"}
+                                    size={32}
+                                />
+                            </div>
+                        </div>
                         <Button
                             value="Giriş Yap"
                             onClick={() => {
