@@ -11,9 +11,11 @@ import {
 const TextInput = ({
     wrap = "no-wrap",
     onChangeText,
+    placeholder,
     className,
     referance,
     classes,
+    title,
     value,
     type,
     ...props
@@ -23,25 +25,40 @@ const TextInput = ({
     const {
         colors
     } = globalState.theme;
+
     useEffect(() => {
         if(onChangeText) onChangeText(_value);
     }, [_value]);
-    return <input
-        ref={referance}
-        type={type ? type : "text"}
-        value={_value}
-        onChange={e => {
-            _setValue(e.target.value);
-        }}
-        className={[
-            classes.container,
-            className
-        ].join(" ")}
+    
+    return <div
+        className={classes.container}
         style={{
-            alignSelf: wrap === "no-wrap" ? "stretch" : wrap === "wrap" ? "baseline" : null,
-            border: "1px solid " + colors.seperator
+            width: "100%"
         }}
-        {...props}
-    />;
+    >
+        <div
+            className={classes.title}
+        >
+            {title}
+        </div>
+        <input
+            ref={referance}
+            type={type ? type : "text"}
+            value={_value}
+            placeholder={placeholder}
+            onChange={e => {
+                _setValue(e.target.value);
+            }}
+            className={[
+                classes.input,
+                className
+            ].join(" ")}
+            style={{
+                alignSelf: wrap === "no-wrap" ? "stretch" : wrap === "wrap" ? "baseline" : null,
+                border: "1px solid " + colors.seperator
+            }}
+            {...props}
+        />
+    </div>;
 };
 export default injectSheet(styleMain)(TextInput);

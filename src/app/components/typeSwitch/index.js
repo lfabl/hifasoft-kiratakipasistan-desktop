@@ -6,16 +6,20 @@ const TypeSwitch = ({
     onChangeValue,
     unSelectColor,
     selectColor,
+    className,
     classes,
     value,
     title,
     types,
 }) => {
-    const defaultRadiusValue = 10;
-    const defaultRadiusWidthValue = 0.5;
-    const defaultSelectColor = selectColor ? selectColor : "#303030";
     const defaultUnselectColor = unSelectColor ? unSelectColor : "white";
-    return <div>
+    const defaultSelectColor = selectColor ? selectColor : "#303030";
+    const defaultRadiusWidthValue = 0.5;
+    const defaultRadiusValue = 10;
+
+    return <div
+        className={className}
+    >
         <div>{title}</div>
         <div style={{
             width: "100%",
@@ -42,6 +46,7 @@ const TypeSwitch = ({
                         onClick={() => {
                             onChangeValue(item.value);
                         }}
+                        className={classes.tab}
                     >
                         <div style={{
                             color: value === item.value ? defaultUnselectColor : defaultSelectColor

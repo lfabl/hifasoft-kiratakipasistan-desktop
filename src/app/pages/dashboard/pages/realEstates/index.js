@@ -106,7 +106,7 @@ const RealEstates = ({
         <TextInput
             value={searchText}
             onChangeText={e => setSearchText(e)}
-            placeholder="Ara"
+            title="Ara"
             className={classes.search}
         />
         <Button

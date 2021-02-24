@@ -127,7 +127,7 @@ const NewTenant = ({
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? tcIdentityRef.current.focus() : null}
                         onChangeText={e => setFullName(e)}
-                        placeholder="Ad ve Soyad"
+                        title="Ad ve Soyad"
                         className={classes.input}
                         value={fullName}
                     />
@@ -136,13 +136,13 @@ const NewTenant = ({
                         onChangeText={e => setTcIdentity(e)}
                         className={classes.input}
                         referance={tcIdentityRef}
-                        placeholder="TC No"
+                        title="TC No"
                         value={tcIdentity}
                         type={"number"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? phoneTwoRef.current.focus() : null}
-                        placeholder="Kiracı Telefon Numarası"
+                        title="Kiracı Telefon Numarası"
                         onChangeText={e => setPhoneNumber(e)}
                         className={classes.input}
                         referance={phoneRef}
@@ -152,7 +152,7 @@ const NewTenant = ({
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? addressRef.current.focus() : null}
-                        placeholder="Kiracı Telefon Numarası 2"
+                        title="Kiracı Telefon Numarası 2"
                         onChangeText={e => setPhoneNumberTwo(e)}
                         className={classes.input}
                         referance={phoneTwoRef}
@@ -163,7 +163,7 @@ const NewTenant = ({
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyFullNameRef.current.focus() : null}
                         onChangeText={e => setTenantAdress(e)}
-                        placeholder="Kiracı Adresi"
+                        title="Kiracı Adresi"
                         className={classes.input}
                         referance={addressRef}
                         onKeyUp={() => { }}
@@ -174,14 +174,14 @@ const NewTenant = ({
                         onChangeText={e => setSuretyFullName(e)}
                         referance={suretyFullNameRef}
                         className={classes.input}
-                        placeholder="Kefil Adı"
+                        title="Kefil Adı"
                         value={suretyFullName}
                         onKeyUp={() => { }}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyPhoneNumberRef.current.focus() : null}
                         onChangeText={e => setSuretyTcIdentity(e)}
-                        placeholder="Kefil TC No"
+                        title="Kefil TC No"
                         className={classes.input}
                         referance={suretyTcIdentityRef}
                         onKeyUp={() => { }}
@@ -191,7 +191,7 @@ const NewTenant = ({
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyAdressRef.current.focus() : null}
                         onChangeText={e => setSuretyPhoneNumber(e)}
-                        placeholder="Kefil Telefon"
+                        title="Kefil Telefon"
                         className={classes.input}
                         referance={suretyPhoneNumberRef}
                         onKeyUp={() => { }}
@@ -202,7 +202,7 @@ const NewTenant = ({
                         onKeyUp={e => e.keyCode === 13 ? create() : null}
                         onChangeText={e => setSuretyAdress(e)}
                         referance={suretyAdressRef}
-                        placeholder="Kefil Adresi"
+                        title="Kefil Adresi"
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={suretyAdress}

@@ -107,6 +107,15 @@ const stylesheet = {
     },
     description: {
         marginBottom: objectSpacing
+    },
+    useType: {
+        marginBottom: objectSpacing
+    },
+    roomCount: {
+        marginBottom: objectSpacing
+    },
+    periodDate: {
+        marginBottom: objectSpacing
     }
 };
 export default stylesheet;

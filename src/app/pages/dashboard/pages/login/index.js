@@ -170,7 +170,7 @@ const Login = ({
                             value={userName}
                             onChangeText={e => setUserName(e)}
                             onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
-                            placeholder="Kullanıcı Adınız"
+                            title="Kullanıcı Adınız"
                             className={classes.userName}
                             referance={emailRef}
                         />
@@ -184,7 +184,7 @@ const Login = ({
                                     login(); 
                                 }
                             }}
-                            placeholder="Parolanız"
+                            title="Parolanız"
                             value={password}
                             type="password"
                         />

@@ -42,6 +42,9 @@ const stylesheet = {
     },
     submit: {
         fontWeight: 600
+    },
+    item: {
+        marginBottom: objectSpacing
     }
 };
 export default stylesheet;

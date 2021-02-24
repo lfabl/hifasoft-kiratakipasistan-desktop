@@ -74,6 +74,9 @@ const stylesheet = {
         "&:active": {
             ...active
         }
+    },
+    deleteTenant: {
+        marginBottom: objectSpacing
     }
 };
 export default stylesheet;

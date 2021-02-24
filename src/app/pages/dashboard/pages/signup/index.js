@@ -196,7 +196,7 @@ const Login = ({
                         <TextInput
                             value={userMail}
                             onChangeText={e => setUserMail(e)}
-                            placeholder="E - Posta Adresiniz"
+                            title="E - Posta Adresiniz"
                             onKeyUp={e => e.keyCode === 13 ? officeRef.current.focus() : null}
                             className={classes.userMail}
                         />
@@ -205,7 +205,7 @@ const Login = ({
                             className={classes.officeName}
                             referance={officeRef}
                             onKeyUp={e => e.keyCode === 13 ? userNameRef.current.focus() : null}
-                            placeholder="Ofis Adı"
+                            title="Ofis Adı"
                             value={officeName}
                         />
                         <TextInput
@@ -213,13 +213,13 @@ const Login = ({
                             onChangeText={e => setUserName(e)}
                             referance={userNameRef}
                             onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
-                            placeholder="Kullanıcı Adı"
+                            title="Kullanıcı Adı"
                             className={classes.userName}
                         />
                         <TextInput
                             onChangeText={e => setPassword(e)}
                             className={classes.password}
-                            placeholder="Parolanız"
+                            title="Parolanız"
                             referance={passwordRef}
                             onKeyUp={e => {
                                 if(e.keyCode === 13) {

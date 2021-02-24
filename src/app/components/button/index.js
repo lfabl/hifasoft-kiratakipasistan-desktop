@@ -6,9 +6,6 @@ import {
 import useGlobalState from '../../context';
 import Icon from '../icon';
 import {
-    icon 
-} from '@fortawesome/fontawesome-svg-core';
-import {
     objectSpacing 
 } from '../../theme/tokens';
 

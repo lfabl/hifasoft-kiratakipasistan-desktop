@@ -183,7 +183,7 @@ const RealEstateDetail = ({
                 setPaymentPeriodDate(moment(new Date(realEstateData.paymentPeriod.date)).format("YYYY-MM-DD"));
                 setDeposit(realEstateData.deposit !== null
                     ? realEstateData.deposit
-                    : '0')
+                    : '0');
                 setRentalType(realEstateData.rentalType.length !== 0 &&
                     realEstateData.rentalType[0].status &&
                     realEstateData.rentalType[0].status === 'continuation'
@@ -197,7 +197,9 @@ const RealEstateDetail = ({
         });
     };
 
+    const deleteRealEstate = () => {
 
+    };
 
     if (loading === true) return <div
         className={classes.loading}
@@ -279,12 +281,13 @@ const RealEstateDetail = ({
                             title={"Kullanım Türü"}
                             onChangeValue={(val) => setUsageType(val)}
                             value={usageType}
+                            className={classes.useType}
                         /> : null
                     }
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? addressRef.current.focus() : null}
                         onChangeText={e => setTitle(e)}
-                        placeholder="Başlık"
+                        title="Başlık"
                         className={classes.input}
                         value={title}
                     />
@@ -293,7 +296,7 @@ const RealEstateDetail = ({
                         onChangeText={e => setAdress(e)}
                         className={classes.input}
                         referance={addressRef}
-                        placeholder="Adres"
+                        title="Adres"
                         value={adress}
                     />
 
@@ -314,7 +317,7 @@ const RealEstateDetail = ({
                             </div >
                             <TextInput
                                 onKeyUp={e => e.keyCode === 13 ? waterRef.current.focus() : null}
-                                placeholder="Elektrik"
+                                title="Elektrik"
                                 onChangeText={e => setElectricity(e)}
                                 className={classes.input}
                                 referance={electricityRef}
@@ -323,7 +326,7 @@ const RealEstateDetail = ({
                             />
                             <TextInput
                                 onKeyUp={e => e.keyCode === 13 ? naturalGasRef.current.focus() : null}
-                                placeholder="Su"
+                                title="Su"
                                 onChangeText={e => setWater(e)}
                                 className={classes.input}
                                 referance={waterRef}
@@ -333,7 +336,7 @@ const RealEstateDetail = ({
                             <TextInput
                                 onKeyUp={e => e.keyCode === 13 ? TCIPNoRef.current.focus() : null}
                                 onChangeText={e => setNaturalGas(e)}
-                                placeholder="Doğal Gaz"
+                                title="Doğal Gaz"
                                 className={classes.input}
                                 referance={naturalGasRef}
                                 onKeyUp={() => { }}
@@ -343,7 +346,7 @@ const RealEstateDetail = ({
                                 onKeyUp={e => e.keyCode === 13 ? ownerNameSurnameRef.current.focus() : null}
                                 onChangeText={e => setTCIPNo(e)}
                                 className={classes.input}
-                                placeholder="Dask No"
+                                title="Dask No"
                                 referance={TCIPNoRef}
                                 onKeyUp={() => { }}
                                 value={TCIPNo}
@@ -365,7 +368,7 @@ const RealEstateDetail = ({
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? ownerManagerPhoneNumberRef.current.focus() : null}
                         onChangeText={e => setOwnerNameSurname(e)}
-                        placeholder="Ad Soyad"
+                        title="Ad Soyad"
                         className={classes.input}
                         referance={ownerNameSurnameRef}
                         onKeyUp={() => { }}
@@ -375,7 +378,7 @@ const RealEstateDetail = ({
                         onKeyUp={e => e.keyCode === 13 ? ownerTcIdentityRef.current.focus() : null}
                         onChangeText={e => setOwnerManagerPhoneNumber(e)}
                         referance={ownerManagerPhoneNumberRef}
-                        placeholder="Telefon No"
+                        title="Telefon No"
                         className={classes.input}
                         value={ownerManagerPhoneNumber}
                         onKeyUp={() => { }}
@@ -384,7 +387,7 @@ const RealEstateDetail = ({
                         onKeyUp={e => e.keyCode === 13 ? ownerIbanRef.current.focus() : null}
                         onChangeText={e => setOwnerTcIdentity(e)}
                         referance={ownerTcIdentityRef}
-                        placeholder="TC No"
+                        title="TC No"
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={ownerTcIdentity}
@@ -393,7 +396,7 @@ const RealEstateDetail = ({
                         onKeyUp={e => e.keyCode === 13 ? detailDuesRef.current.focus() : null}
                         onChangeText={e => setOwnerIban(e)}
                         referance={ownerIbanRef}
-                        placeholder="IBAN"
+                        title="IBAN"
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={ownerIban}
@@ -414,7 +417,7 @@ const RealEstateDetail = ({
                             onKeyUp={e => e.keyCode === 13 ? depozitRef.current.focus() : null}
                             onChangeText={e => setDetailDues(e)}
                             referance={detailDuesRef}
-                            placeholder="Aidat"
+                            title="Aidat"
                             className={classes.input}
                             onKeyUp={() => { }}
                             value={detailDues}
@@ -424,7 +427,7 @@ const RealEstateDetail = ({
                         onKeyUp={e => e.keyCode === 13 ? detailManagerPhoneNumberRef.current.focus() : null}
                         onChangeText={e => setDeposit(e)}
                         referance={depozitRef}
-                        placeholder="Depozito"
+                        title="Depozito"
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={deposit}
@@ -434,7 +437,7 @@ const RealEstateDetail = ({
                             onKeyUp={e => e.keyCode === 13 ? detailAdditionalInformationRef.current.focus() : null}
                             onChangeText={e => setDetailManagerPhoneNumber(e)}
                             referance={detailManagerPhoneNumberRef}
-                            placeholder="Yönetici Telefon No"
+                            title="Yönetici Telefon No"
                             className={classes.input}
                             onKeyUp={() => { }}
                             value={detailManagerPhoneNumber}
@@ -444,7 +447,7 @@ const RealEstateDetail = ({
                         onKeyUp={e => e.keyCode === 13 ? purposeOfUsageRef.current.focus() : null}
                         onChangeText={e => setDetailAdditionalInformation(e)}
                         referance={detailAdditionalInformationRef}
-                        placeholder={selectedType !== "other" ? "Ek Bilgiler" : "Açıklama"}
+                        title={selectedType !== "other" ? "Ek Bilgiler" : "Açıklama"}
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={detailAdditionalInformation}
@@ -455,6 +458,7 @@ const RealEstateDetail = ({
                             value={numberOfRoom}
                             onChangeValue={(type) => setNumberOfRoom(type)}
                             title={"Oda Sayısı"}
+                            className={classes.roomCount}
                         /> : null
                     }
                     {
@@ -462,7 +466,7 @@ const RealEstateDetail = ({
                             onKeyUp={e => e.keyCode === 13 ? detailRentRef.current.focus() : null}
                             onChangeText={e => setPurposeOfUsage(e)}
                             referance={purposeOfUsageRef}
-                            placeholder="Kullanım Amacı"
+                            title="Kullanım Amacı"
                             className={classes.input}
                             onKeyUp={() => { }}
                             value={purposeOfUsage}
@@ -472,7 +476,7 @@ const RealEstateDetail = ({
                         onKeyUp={e => e.keyCode === 13 ? update() : null}
                         onChangeText={e => setDetailRent(e)}
                         referance={detailRentRef}
-                        placeholder="Kira Bedeli"
+                        title="Kira Bedeli"
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={detailRent}
@@ -505,6 +509,7 @@ const RealEstateDetail = ({
                         title={"Ödeme Periyodu Zamanı"}
                         value={paymentPeriodDate}
                         onChangeValue={(val) => setPaymentPeriodDate(val)}
+                        className={classes.periodDate}
                     />
                     <div
                         className={classes.description}
@@ -512,12 +517,19 @@ const RealEstateDetail = ({
                         Her periyodun tamamlanmasına 3 gün kala size hatırlatma bildirimi gönderilecektir.
                     </div>
                     <Button
+                        value="Emlağı Sil"
+                        color={colors.accent}
+                        textColor={colors.contrastBody}
+                        onClick={() => deleteRealEstate()}
+                        className={classes.deleteRealEstate}
+                    />
+                    <Button
                         value="Güncelle"
                         onClick={() => update()}
                     />
                 </div>
             </div>
         </div>
-    </div >;
+    </div>;
 };
 export default injectSheet(stylesheet)(RealEstateDetail);

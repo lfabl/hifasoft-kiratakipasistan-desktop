@@ -126,7 +126,7 @@ const ForgotPassword = ({
                         <TextInput
                             value={eMail}
                             onChangeText={e => setEMail(e)}
-                            placeholder="E - Posta Adresiniz"
+                            title="E - Posta Adresiniz"
                             className={classes.eMail}
                         />
                         <Button

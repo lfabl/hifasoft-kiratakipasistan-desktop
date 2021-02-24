@@ -270,7 +270,7 @@ const Profile = ({
                             onKeyUp={e => e.keyCode === 13 ? newPasswordRef.current.focus() : null}
                             onChangeText={e => setOldPassword(e)}
                             className={classes.input}
-                            placeholder="Eski Şifre"
+                            title="Eski Şifre"
                             value={oldPassword}
                             type={"password"}
                         />
@@ -279,14 +279,14 @@ const Profile = ({
                             onChangeText={e => setNewPassword(e)}
                             referance={newPasswordRef}
                             className={classes.input}
-                            placeholder="Yeni Şifre"
+                            title="Yeni Şifre"
                             value={newPassword}
                             type={"password"}
                         />
                         <TextInput
                             onKeyUp={e => e.keyCode === 13 ? submit() : null}
                             onChangeText={e => setNewRePassword(e)}
-                            placeholder="Yeni Şifre Tekrar"
+                            title="Yeni Şifre Tekrar"
                             referance={newRePasswordRef}
                             className={classes.input}
                             value={newRePassword}

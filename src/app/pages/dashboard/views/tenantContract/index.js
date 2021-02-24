@@ -1,14 +1,14 @@
 import React, {
-    useState,
-    useEffect
+    useEffect,
+    useState
 } from "react";
 import injectsheet from "react-jss";
 import stylesheet from './stylesheet';
 import {
     DatePicker,
+    TypeSwitch,
     TextInput,
-    SelectBox,
-    TypeSwitch
+    SelectBox
 } from "../../../../components";
 import useGlobalState from '../../../../context';
 import {
@@ -21,12 +21,11 @@ import {
     paymentTypes
 } from "../../../../helpers";
 import {
-    getAvailableRealEstatesForContract,
-    contractControl,
-    getRealEstate,
-    newContract as newTenantContract,
     deleteContract as deleteTenantContract,
-    getAllRealEstates
+    getAvailableRealEstatesForContract,
+    newContract as newTenantContract,
+    contractControl,
+    getRealEstate
 } from "../../../../server/graphql";
 import moment from "moment";
 
@@ -72,6 +71,7 @@ const TenantContract = ({
             }
         });
     };
+
     const newContract = (newData) => {
         client.mutate({
             mutation: newTenantContract,
@@ -92,6 +92,7 @@ const TenantContract = ({
             }
         });
     };
+
     const reset = () => {
         setLoading(true);
         setSelectRealEsateteID("");
@@ -102,6 +103,7 @@ const TenantContract = ({
         setPaymentPeriodType("monthly");
         setPaymentPeriodDate(moment(new Date()).format("YYYY-MM-DD"));
     };
+
     const getEstateData = () => {
         client.query({
             query: getRealEstate,
@@ -130,6 +132,7 @@ const TenantContract = ({
             setLoading(false);
         });
     };
+
     const getRealEstates = () => {
         client.query({
             query: getAvailableRealEstatesForContract,
@@ -162,6 +165,7 @@ const TenantContract = ({
             setLoading(false);
         });
     };
+
     const getContractControl = () => {
         client.query({
             query: contractControl,
@@ -222,6 +226,7 @@ const TenantContract = ({
             src="/assets/images/preload.svg"
         />
     </div>;
+
     return <div
         className={classes.container}
         style={{
@@ -239,31 +244,36 @@ const TenantContract = ({
                     datas={allTenants}
                     value={selectRealEstateID}
                     onChangeValue={(val) => setSelectRealEsateteID(val)}
-                    title={"Emlak Seç"}
+                    title="Emlak Seç"
+                    className={classes.item}
                 />
             </div> : <div>
                 <DatePicker
-                    title={"Kiralama Tarihi"}
+                    title="Kiralama Tarihi"
                     value={rentalDate}
                     onChangeValue={(val) => setRentalDate(val)}
+                    className={classes.item}
                 />
                 <SelectBox
                     datas={contractPeriodTypes}
                     value={contractPeriod}
                     onChangeValue={(val) => setContractPeriod(val)}
-                    title={"Sözleşme Süresi"}
+                    title="Sözleşme Süresi"
+                    className={classes.item}
                 />
                 <TextInput
                     value={rentalPrice}
                     onChangeText={e => setRentalPrice(e)}
-                    placeholder="Kiralama Fiyatı"
-                    type={"number"}
+                    title="Kiralama Fiyatı"
+                    type="number"
+                    className={classes.item}
                 />
                 <SelectBox
                     datas={paymentTypes}
                     value={paymentType}
                     onChangeValue={(val) => setPaymentType(val)}
-                    title={"Ödeme Türü"}
+                    title="Ödeme Türü"
+                    className={classes.item}
                 />
                 <TypeSwitch
                     types={paymentPeriodTypes}
@@ -271,11 +281,13 @@ const TenantContract = ({
                     onChangeValue={(type) => setPaymentPeriodType(type)}
                     selectColor={"#30D5C8"}
                     unSelectColor={"#F9F9F9"}
+                    className={classes.item}
                 />
                 <DatePicker
-                    title={"Ödeme Periyodu Zamanı"}
+                    title="Ödeme Periyodu Zamanı"
                     value={paymentPeriodDate}
                     onChangeValue={(val) => setPaymentPeriodDate(val)}
+                    className={classes.item}    
                 />
                 <div>Her periyodun tamamlanmasına 3 gün kala size hatırlatma bildirimi gönderilecektir.</div>
             </div>
