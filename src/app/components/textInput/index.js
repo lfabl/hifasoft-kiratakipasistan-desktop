@@ -21,19 +21,10 @@ const TextInput = ({
     ...props
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    const [_value, _setValue] = useState(value ? value : "");
     const {
         colors
     } = globalState.theme;
-
-    useEffect(() => {
-        _setValue(value);
-    }, [value])
-
-    useEffect(() => {
-        if (onChangeText) onChangeText(_value);
-    }, [_value]);
-
+   
     return <div
         className={classes.container}
         style={{
@@ -48,10 +39,10 @@ const TextInput = ({
         <input
             ref={referance}
             type={type ? type : "text"}
-            value={_value}
+            value={value}
             placeholder={placeholder}
             onChange={e => {
-                _setValue(e.target.value);
+                if (onChangeText) onChangeText(e.target.value);
             }}
             className={[
                 classes.input,
