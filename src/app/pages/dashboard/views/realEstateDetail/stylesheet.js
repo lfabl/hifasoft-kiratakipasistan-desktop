@@ -202,6 +202,14 @@ const stylesheet = {
         alignItems: "center",
         flexDirection: "row",
         display: "flex"
+    },
+    fixtureCounter: {
+        fontFamily: "'Exo 2', sans-serif",
+        justifyContent: "flex-end",
+        alignItems: "center",
+        display: "flex",
+        fontWeight: 500,
+        fontSize: 18
     }
 };
 export default stylesheet;

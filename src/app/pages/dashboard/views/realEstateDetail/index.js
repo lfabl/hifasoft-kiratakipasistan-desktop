@@ -671,6 +671,14 @@ const RealEstateDetail = ({
                                                 })
                                             }
                                         </div>
+                                        <div
+                                            className={classes.fixtureCounter}
+                                            style={{
+                                                color: colors.hideText
+                                            }}
+                                        >
+                                            7 / 8
+                                        </div>
                                     </div>;
                                 })
                             }
