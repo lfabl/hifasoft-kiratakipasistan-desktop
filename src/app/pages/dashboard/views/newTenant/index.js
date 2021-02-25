@@ -82,6 +82,8 @@ const NewTenant = ({
             else {
                 /* Hata var ise yapılacaklar. */
             }
+        }).catch(e => {
+            /* Hata mesajının alert olarak verilmesi. */
         });
     };
 
