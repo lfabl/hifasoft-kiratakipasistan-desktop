@@ -178,7 +178,6 @@ const RealEstates = ({
                         <div
                             className={classes.cardLinkButton}
                             onClick={(e) => {
-                                console.log("ham2");
                                 setGlobalState({
                                     modal: {
                                         isActive: true,

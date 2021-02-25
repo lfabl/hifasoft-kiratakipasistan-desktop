@@ -27,7 +27,6 @@ const Home = ({
         passive: 0
     });
     const [totalRealEstateCount, setTotalRealEstateCount] = useState(0);
-    const [totalTenantCount, setTotalTenantCount] = useState(0);
     const [activeTenants, setActiveTenants] = useState(0);
     const {
         colors
@@ -52,7 +51,6 @@ const Home = ({
                     passive: newData.totalPassiveEstateCount,
                 });
                 setTotalRealEstateCount(newData.totalEstatesCount);
-                setTotalTenantCount(newData.totalTenantCount);
                 setActiveTenants(newData.totalTenantCount);
                 setGlobalState({
                     modal: {
