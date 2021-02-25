@@ -23,7 +23,8 @@ export const DashboardNav = () => (
             <Route path="/dashboard/signup" component={Signup}/>
             <Route path="/dashboard/profile" component={Profile}/>
             <Route path="/dashboard/tenants" component={Tenants}/>
-            <Route path="/dashboard/realEstates" component={RealEstates}/>
+            <Route path="/dashboard/realEstates" component={RealEstates} exact/>
+            <Route path="/dashboard/realEstates/:id" component={RealEstates}/>
             <Route path="/dashboard/forgotpassword" component={ForgotPassword}/>
         </Switch>
     </main>

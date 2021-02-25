@@ -1,6 +1,6 @@
 import React, {
-    useState,
-    useEffect
+    useEffect,
+    useState
 } from 'react';
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
@@ -29,7 +29,8 @@ import RealEstateDetail from '../../views/realEstateDetail';
 import NewRealEstate from '../../views/newRealEstate';
 
 const RealEstates = ({
-    classes
+    classes,
+    match
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const [searchText, setSearchText] = useState("");
@@ -63,6 +64,21 @@ const RealEstates = ({
             setFilteredData(datas);
         }
     }, [searchText]);
+    useEffect(() => {
+        if(match && match.params && match.params.id) setTimeout(() => setGlobalState({
+            modal: {
+                isActive: true,
+                type: "custom",
+                children: <RealEstateDetail
+                    data={datas}
+                    realEstateID={match.params.id}
+                    refetch={() => getRealEstates({
+                        loadingStatus: false
+                    })}
+                />
+            }
+        }), 500);
+    }, [datas]);
 
     const getRealEstates = ({
         loadingStatus

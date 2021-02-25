@@ -11,7 +11,9 @@ export const home = gql`
                     id,
                     title,
                     contract {
-                        id
+                        id,
+                        rentalDate,
+                        contractPeriod
                     }
                 },
                 pastEstateData {
@@ -19,7 +21,7 @@ export const home = gql`
                     title,
                     contract {
                         id,
-                        contractDate,
+                        rentalDate,
                         contractPeriod
                     }
                 },

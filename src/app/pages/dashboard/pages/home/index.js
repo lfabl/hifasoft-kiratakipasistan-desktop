@@ -14,6 +14,16 @@ import {
 import {
     client
 } from '../../../../';
+import AlertDetail from './views/alertDetail';
+
+const ALERT_DATA = {
+    "approach": {
+        title: "Yaklaşan Sözleşmeler"
+    },
+    "past": {
+        title: "Geciken Sözleşmeler"
+    }
+};
 
 const Home = ({
     history,
@@ -78,6 +88,21 @@ const Home = ({
         });
     }, []);
 
+    const openAlertDetail = (type) => {
+        setGlobalState({
+            modal: {
+                data: undefined,
+                isActive: true,
+                type: "custom",
+                children: <AlertDetail
+                    data={type === "approach" ? approachEstates : pastEstates}
+                    title={ALERT_DATA[type].title}
+                    history={history}
+                />
+            }
+        });
+    };
+
     return <div
         className={classes.table}
         style={{
@@ -95,6 +120,7 @@ const Home = ({
                             backgroundColor: colors.accent,
                             color: colors.contrastBody
                         }}
+                        onClick={() => openAlertDetail("past")}
                     >
                         Yenilenmesi <b>geciken {pastEstates.length}</b> adet emlak sözleşmeniz var.
                     </div>
@@ -109,6 +135,7 @@ const Home = ({
                             backgroundColor: colors.warning,
                             color: colors.contrastBody
                         }}
+                        onClick={() => openAlertDetail("approach")}
                     >
                         Yenilenmesi <b>yaklaşan {approachEstates.length}</b> adet emlak sözleşmeniz var.
                     </div>

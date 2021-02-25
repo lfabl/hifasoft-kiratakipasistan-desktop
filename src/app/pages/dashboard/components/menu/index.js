@@ -45,7 +45,7 @@ const Menu = ({
                                 className={classes.itemTable}
                                 key={index}
                                 style={{
-                                    backgroundColor: window.location.pathname === item.route ? colors.primary : "transparent"
+                                    backgroundColor: window.location.pathname.indexOf(item.route) !== -1 ? colors.primary : "transparent"
                                 }}
                             >
                                 <div
@@ -53,7 +53,7 @@ const Menu = ({
                                 >
                                     <div
                                         onClick={() => {
-                                            if(window.location.pathname !== item.route) {
+                                            if(window.location.href.indexOf(item.route) === -1) {
                                                 setGlobalState({
                                                     modal: {
                                                         ...globalState.modal,
