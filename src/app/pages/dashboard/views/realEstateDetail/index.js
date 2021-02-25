@@ -13,6 +13,7 @@ import {
     Icon
 } from '../../../../components';
 import {
+    typeValidMessageConverter,
     paymentPeriodTypes,
     numberOfRoomTypes,
     realEstateTypes,
@@ -127,7 +128,7 @@ const RealEstateDetail = ({
                 },
                 deposit: deposit
             }
-        }).then((res) => {
+        }).then(async (res) => {
             if (res.data.updateRealEstate.code === 200) {
                 setGlobalState({
                     modal: {
@@ -144,6 +145,14 @@ const RealEstateDetail = ({
             }
             else {
                 /* Hata var ise yapılacaklar. */
+                const errorMessage = await typeValidMessageConverter({
+                    message: res.data.updateRealEstate.message,
+                    title: "Emlak"
+                });
+                customAlert({
+                    title: "Hata",
+                    message: errorMessage
+                });
             }
         });
     };
@@ -163,7 +172,6 @@ const RealEstateDetail = ({
         }).then(res => {
             if (res.data.getRealEstate.response.code === 200) {
                 const realEstateData = res.data.getRealEstate.data;
-                console.log(realEstateData);
                 setSelectedType(realEstateData.type);
                 setUsageType(realEstateData.usageType);
                 setFixtureDatas(realEstateData.fixtureDatas);
@@ -196,8 +204,17 @@ const RealEstateDetail = ({
                 setLoading(false);
 
             }
+            else {
+                customAlert({
+                    title: "Hata",
+                    message: res.data.getRealEstate.response.message
+                });
+            }
         }).catch(e => {
-
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -231,10 +248,14 @@ const RealEstateDetail = ({
                         refetch();
                     }
                     else {
+                        customAlert({
+                            title: "Hata",
+                            message: res.data.deleteRealEstate.message
+                        });
                     }
                 });
             }
-        })
+        });
     };
 
     if (loading === true) return <div

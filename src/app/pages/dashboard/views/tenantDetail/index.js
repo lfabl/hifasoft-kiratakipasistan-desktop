@@ -23,6 +23,7 @@ import {
     serverAdres
 } from "../../../../server/config";
 import {
+    typeValidMessageConverter,
     fileSelector,
     customAlert
 } from "../../../../helpers";
@@ -72,7 +73,8 @@ const TenantDetail = ({
     }, []);
 
     const update = () => {
-        const variables = {};
+        const variables = {
+        };
         if (newProfilePhoto !== null) variables.profileImage = newProfilePhoto;
         client.mutate({
             mutation: updateTenant,
@@ -96,7 +98,7 @@ const TenantDetail = ({
                 profileImage: variables.profileImage,
                 deleteProfileImage: variables.deleteProfileImage
             }
-        }).then((res) => {
+        }).then(async (res) => {
             if (res.data.updateTenant.code === 200) {
                 setGlobalState({
                     modal: {
@@ -113,6 +115,14 @@ const TenantDetail = ({
             }
             else {
                 /* Hata var ise yapılacaklar. */
+                const errorMessage = await typeValidMessageConverter({
+                    message: res.data.updateTenant.message,
+                    title: "Kiracı"
+                });
+                customAlert({
+                    title: "Hata",
+                    message: errorMessage
+                });
             }
         });
 
@@ -133,7 +143,6 @@ const TenantDetail = ({
         }).then(res => {
             if (res.data.getTenant.response.code === 200) {
                 const tenantData = res.data.getTenant.data;
-                console.log(tenantData.phoneNumber1.replace(/ /g, ''));
                 setSuretyPhoneNumber(tenantData.suretyPhoneNumber.replace(/ /g, ''));
                 setSuretyTcIdentity(tenantData.suretyTcIdentity.replace(/ /g, ''));
                 setPhoneNumberTwo(tenantData.phoneNumber2.replace(/ /g, ''));
@@ -147,7 +156,10 @@ const TenantDetail = ({
                 setLoading(false);
             }
         }).catch(e => {
-
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -181,10 +193,14 @@ const TenantDetail = ({
                         refetch();
                     }
                     else {
+                        customAlert({
+                            title: "Hata",
+                            message: res.data.deleteTenant.message
+                        });
                     }
                 });
             }
-        })
+        });
     };
 
     if (loading === true) return <div

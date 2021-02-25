@@ -16,7 +16,10 @@ import {
 import {
     newTenant
 } from "../../../../server/graphql";
-
+import {
+    typeValidMessageConverter,
+    customAlert
+} from "../../../../helpers";
 const NewTenant = ({
     classes,
     refetch
@@ -64,7 +67,7 @@ const NewTenant = ({
                 profileImageName: "",
                 fullName: fullName,
             },
-        }).then((res) => {
+        }).then(async (res) => {
             if (res.data.newTenant.code === 200) {
                 setGlobalState({
                     modal: {
@@ -80,10 +83,21 @@ const NewTenant = ({
                 refetch();
             }
             else {
-                /* Hata var ise yapılacaklar. */
+                const errorMessage = await typeValidMessageConverter({
+                    message: res.data.newTenant.message,
+                    title: "Kiracı"
+                });
+                customAlert({
+                    title: "Hata",
+                    message: errorMessage
+                });
             }
         }).catch(e => {
             /* Hata mesajının alert olarak verilmesi. */
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 

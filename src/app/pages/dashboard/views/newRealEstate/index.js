@@ -12,10 +12,12 @@ import {
     Icon
 } from '../../../../components';
 import {
+    typeValidMessageConverter,
     paymentPeriodTypes,
     numberOfRoomTypes,
     realEstateTypes,
-    usageTypes
+    usageTypes,
+    customAlert
 } from "../../../../helpers";
 import {
     newRealEstate
@@ -115,7 +117,7 @@ const NewRealEstate = ({
                 }
             },
             variables: variables,
-        }).then((res) => {
+        }).then(async (res) => {
             if (res.data.newRealEstate.code === 200) {
                 setGlobalState({
                     modal: {
@@ -132,6 +134,14 @@ const NewRealEstate = ({
             }
             else {
                 /* Hata var ise yapılacaklar. */
+                const errorMessage = await typeValidMessageConverter({
+                    message: res.data.newRealEstate.message,
+                    title: "Emlak"
+                });
+                customAlert({
+                    title: "Hata",
+                    message: errorMessage
+                });
             }
         });
     };

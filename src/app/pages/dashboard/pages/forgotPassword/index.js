@@ -32,7 +32,6 @@ const ForgotPassword = ({
             setGlobalState({
                 modal: {
                     isActive: true,
-                    loading: false,
                     dialog: true,
                     data: {
                         title: "Hata!",

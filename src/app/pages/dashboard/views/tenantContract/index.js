@@ -15,10 +15,12 @@ import {
     client
 } from '../../../../index';
 import {
+    typeValidMessageConverter,
     selectBoxTypeConverter,
     contractPeriodTypes,
     paymentPeriodTypes,
-    paymentTypes
+    paymentTypes,
+    customAlert
 } from "../../../../helpers";
 import {
     deleteContract as deleteTenantContract,
@@ -68,6 +70,10 @@ const TenantContract = ({
             }
             else {
                 /* Bir hata oluştur */
+                customAlert({
+                    title: "Hata",
+                    message: res.data.deleteContract.message
+                });
             }
         });
     };
@@ -82,13 +88,21 @@ const TenantContract = ({
             },
             variables: newData,
 
-        }).then((res) => {
+        }).then(async (res) => {
             if (res.data.newContract.code === 200) {
                 refetch();
                 /* Sözleşme başarı ile oluşturulmuştur */
             }
             else {
-                /* Bir hata oluştur */
+                /* Bir hata oluştu */
+                const errorMessage = await typeValidMessageConverter({
+                    message: res.data.newContract.message,
+                    title: "Sözleşme"
+                });
+                customAlert({
+                    title: "Hata",
+                    message: errorMessage
+                });
             }
         });
     };
@@ -127,9 +141,17 @@ const TenantContract = ({
             }
             else {
                 setLoading(false);
+                customAlert({
+                    title: "Hata",
+                    message: res.data.getRealEstate.response.message
+                });
             }
         }).catch(e => {
             setLoading(false);
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -160,9 +182,17 @@ const TenantContract = ({
             }
             else {
                 setLoading(false);
+                customAlert({
+                    title: "Hata",
+                    message: res.data.getAvailableRealEstatesForContract.response.message
+                });
             }
         }).catch(e => {
             setLoading(false);
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -212,6 +242,10 @@ const TenantContract = ({
             }
         }).catch(e => {
             setLoading(false);
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -287,7 +321,7 @@ const TenantContract = ({
                     title="Ödeme Periyodu Zamanı"
                     value={paymentPeriodDate}
                     onChangeValue={(val) => setPaymentPeriodDate(val)}
-                    className={classes.item}    
+                    className={classes.item}
                 />
                 <div>Her periyodun tamamlanmasına 3 gün kala size hatırlatma bildirimi gönderilecektir.</div>
             </div>

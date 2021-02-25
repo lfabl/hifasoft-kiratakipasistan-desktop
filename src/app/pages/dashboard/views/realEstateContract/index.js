@@ -15,10 +15,12 @@ import {
     client
 } from '../../../../index';
 import {
+    typeValidMessageConverter,
     selectBoxTypeConverter,
     contractPeriodTypes,
     paymentPeriodTypes,
-    paymentTypes
+    paymentTypes,
+    customAlert
 } from "../../../../helpers";
 import {
     getAvailableTenantsForContract,
@@ -26,7 +28,6 @@ import {
     getRealEstate,
     newContract as newRealEstateContract,
     deleteContract as deleteRealEstateContract,
-    getAllRealEstates
 } from "../../../../server/graphql";
 import moment from "moment";
 
@@ -64,17 +65,21 @@ const RealEstateContract = ({
             },
 
         }).then((res) => {
-            console.log(res);
             if (res.data.deleteContract.code === 200) {
                 refetch();
                 /* Sözleşme başarı ile silinmiştir */
+
             }
             else {
                 /* Bir hata oluştur */
+                customAlert({
+                    title: "Hata",
+                    message: res.data.deleteContract.message
+                });
             }
         });
     };
-    
+
     const newContract = (newData) => {
         client.mutate({
             mutation: newRealEstateContract,
@@ -84,14 +89,25 @@ const RealEstateContract = ({
                 }
             },
             variables: newData,
-        }).then((res) => {
+        }).then(async (res) => {
             if (res.data.newContract.code === 200) {
                 refetch();
-
                 /* Sözleşme başarı ile oluşturulmuştur */
+                customAlert({
+                    title: "Hata",
+                    message: "Sözleşme başarı ile oluşturulmuştur."
+                });
             }
             else {
                 /* Bir hata oluştur */
+                const errorMessage = await typeValidMessageConverter({
+                    message: res.data.newContract.message,
+                    title: "Sözleşme"
+                });
+                customAlert({
+                    title: "Hata",
+                    message: errorMessage
+                });
             }
         });
     };
@@ -118,7 +134,7 @@ const RealEstateContract = ({
             variables: {
                 realEstateID: id
             },
-            fetchPolicy: "network-only"            
+            fetchPolicy: "network-only"
         }).then(async (res) => {
             if (res.data.getRealEstate.response.code === 200) {
                 const data = res.data.getRealEstate.data;
@@ -129,9 +145,17 @@ const RealEstateContract = ({
             }
             else {
                 setLoading(false);
+                customAlert({
+                    title: "Hata",
+                    message: res.data.getRealEstate.response.message
+                });
             }
         }).catch(e => {
             setLoading(false);
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -146,7 +170,7 @@ const RealEstateContract = ({
             variables: {
                 realEstateID: id
             },
-            fetchPolicy: "network-only"            
+            fetchPolicy: "network-only"
         }).then(async (res) => {
             if (res.data.getAvailableTenantsForContract.response.code === 200) {
                 const converterdTenants = await selectBoxTypeConverter({
@@ -161,10 +185,19 @@ const RealEstateContract = ({
                 getEstateData();
             }
             else {
+
                 setLoading(false);
+                customAlert({
+                    title: "Hata",
+                    message: res.data.getAvailableTenantsForContract.response.message
+                });
             }
         }).catch(e => {
             setLoading(false);
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
@@ -179,7 +212,7 @@ const RealEstateContract = ({
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
             },
-            fetchPolicy: "network-only"            
+            fetchPolicy: "network-only"
         }).then(res => {
             const status = res.data.contractControl.code !== 200 ? false : true;
             if (status === false) {
@@ -213,6 +246,10 @@ const RealEstateContract = ({
             }
         }).catch(e => {
             setLoading(false);
+            customAlert({
+                title: "Hata",
+                message: e
+            });
         });
     };
 
