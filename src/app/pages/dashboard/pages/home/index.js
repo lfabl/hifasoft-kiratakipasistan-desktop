@@ -26,6 +26,7 @@ const Home = ({
         active: 0,
         passive: 0
     });
+    const [totalRealEstateCount, setTotalRealEstateCount] = useState(0);
     const [totalTenantCount, setTotalTenantCount] = useState(0);
     const [activeTenants, setActiveTenants] = useState(0);
     const {
@@ -39,7 +40,8 @@ const Home = ({
                 headers: {
                     "x-access-token": globalState.user && globalState.user.loginData && globalState.user.loginData.token
                 }
-            }
+            },
+            fetchPolicy: "network-only"
         }).then(res => {
             if (res.data.home) {
                 const newData = res.data.home;
@@ -49,6 +51,7 @@ const Home = ({
                     active: newData.totalActiveEstateCount,
                     passive: newData.totalPassiveEstateCount,
                 });
+                setTotalRealEstateCount(newData.totalEstatesCount);
                 setTotalTenantCount(newData.totalTenantCount);
                 setActiveTenants(newData.totalTenantCount);
                 setGlobalState({
@@ -135,7 +138,7 @@ const Home = ({
                         />
                         <div className={classes.totalCount} style={{
                             color: colors.contrastBody
-                        }}>{totalTenantCount}</div>
+                        }}>{totalRealEstateCount}</div>
                     </div>
                     <div
                         className={classes.cardInfoContainer}
@@ -146,16 +149,16 @@ const Home = ({
                                 color: colors.contrastBody
                             }}
                         >Aktif: <span style={{
-                                color: colors.success
-                            }}>{realEstatesStatus.active}</span></div>
+                            color: colors.success
+                        }}>{realEstatesStatus.active}</span></div>
                         <div
                             className={classes.cardInfoPassive}
                             style={{
                                 color: colors.contrastBody
                             }}
                         >Pasif: <span style={{
-                                color: colors.accent
-                            }}>{realEstatesStatus.passive}</span></div>
+                            color: colors.accent
+                        }}>{realEstatesStatus.passive}</span></div>
                     </div>
                 </div>
                 <div className={classes.cardTitle} style={{
@@ -189,8 +192,8 @@ const Home = ({
                 <div className={classes.cardTitle} style={{
                     backgroundColor: colors.background
                 }}>Kiracılarım - <span style={{
-                        color: colors.success
-                    }}>Aktif</span></div>
+                    color: colors.success
+                }}>Aktif</span></div>
             </div>
         </div>
     </div>;
