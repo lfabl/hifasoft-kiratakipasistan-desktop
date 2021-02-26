@@ -16,6 +16,11 @@ const DEFAULT_GLOBAL_STATE = {
             action: () => {},
             text: "Tamam"
         }
+    },
+    lightbox: {
+        isActive: false,
+        data: undefined,
+        index: 0
     }
 };
 export default DEFAULT_GLOBAL_STATE;

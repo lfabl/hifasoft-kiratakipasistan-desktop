@@ -1,7 +1,5 @@
 import React, {
     useEffect,
-    useState,
-    useMemo,
     Fragment
 } from 'react';
 import injectSheet from 'react-jss';
@@ -31,6 +29,8 @@ import {
 import {
     serverAdres
 } from "../app/server/config";
+import Lightbox from 'lightbox-react';
+import 'lightbox-react/style.css';
 
 const fetchAdress = serverAdres + "/app";
 export const client = new ApolloClient({
@@ -68,6 +68,34 @@ const App = () => {
                     >
                         {globalState.modal.children}
                     </Modal>
+                    :
+                    null
+            }
+            {
+                globalState.lightbox.isActive ?
+                    <Lightbox
+                        mainSrc={globalState.lightbox.data[globalState.lightbox.index]}
+                        nextSrc={globalState.lightbox.data[(globalState.lightbox.index + 1) % globalState.lightbox.data.length]}
+                        prevSrc={globalState.lightbox.data[(globalState.lightbox.index + globalState.lightbox.data.length - 1) % globalState.lightbox.data.length]}
+                        onCloseRequest={() => setGlobalState({
+                            lightbox: {
+                                ...globalState.lightbox,
+                                isActive: false
+                            }
+                        })}
+                        onMovePrevRequest={() => setGlobalState({
+                            lightbox: {
+                                ...globalState.lightbox,
+                                index: (globalState.lightbox.index + globalState.lightbox.data.length - 1) % globalState.lightbox.data.length
+                            }
+                        })}
+                        onMoveNextRequest={() => setGlobalState({
+                            lightbox: {
+                                ...globalState.lightbox,
+                                index: (globalState.lightbox.index + 1) % globalState.lightbox.data.length
+                            }
+                        })}
+                    />
                     :
                     null
             }

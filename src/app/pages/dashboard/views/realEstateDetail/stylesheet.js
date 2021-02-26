@@ -152,6 +152,7 @@ const stylesheet = {
     },
     fixtureHeader: {
         justifyContent: "space-between",
+        marginBottom: objectSpacing,
         alignItems: "center",
         flexDirection: "row",
         display: "flex"
@@ -199,6 +200,7 @@ const stylesheet = {
     },
     fixtureEditTitle: {
         justifyContent: "flex-start",
+        marginBottom: objectSpacing,
         alignItems: "center",
         flexDirection: "row",
         display: "flex"

@@ -145,156 +145,165 @@ const FixtureCard = ({
             </div>
         </div>
         <div
-            className={classes.fixturesCards}
+            className={classes.table}
         >
-            {
-                datas.map((item, index) => {
-                    return <div
-                        key={index}
-                        className={classes.fixtureContainer}
-                        style={{
-                            border: "1px solid " + colors.seperator
-                        }}
-                    >
-                        <div
-                            className={classes.fixtureHeader}
+            <div
+                className={classes.tableCell}
+            >
+                {
+                    datas.map((item, index) => {
+                        return <div
+                            key={index}
+                            className={classes.fixtureContainer}
+                            style={{
+                                border: "1px solid " + colors.seperator
+                            }}
                         >
-                            {
-                                isEdit === index ?
-                                    <div
-                                        className={classes.fixtureEditTitle}
-                                    >
-                                        <input
-                                            type="text"
-                                            value={editValue}
-                                            onChange={(e) => setEditValue(e.target.value)}
-                                        />
-                                        <button
-                                            onClick={() => {
-                                                if (editValue.trim().length) {
-                                                    onEditItem({
-                                                        index: index,
-                                                        itemName: editValue,
-                                                        images: item.images,
-                                                    });
-                                                    setIsEdit(null);
-                                                }
-                                                else {
-                                                    customAlert({
-                                                        message: "Demirbaş ismi boş olamaz!",
-                                                        buttons: ["OK"]
-                                                    });
-                                                };
-                                            }}
-                                        >
-                                            Kaydet
-                                        </button>
-                                    </div>
-                                    :
-                                    <div
-                                        className={classes.fixtureTitle}
-                                        onClick={() => {
-                                            setEditValue(item.name);
-                                            setIsEdit(index);
-                                        }}
-                                    >
-                                        {item.name}
-                                    </div>
-                            }
                             <div
-                                className={classes.fixturesAddButton}
-                                onClick={() => {
-                                    customAlert({
-                                        message: "Demirbaş Silinsinmi?",
-                                        onPressOkey: () => {
-                                            onDeleteItem(index);
-                                        }
-                                    });
-                                }}
+                                className={classes.fixtureHeader}
                             >
-                                <Icon
-                                    color={colors.accent}
-                                    name="trash"
-                                    size={22}
-                                />
-                            </div>
-                        </div>
-                        <div
-                            className={classes.fixtureImages}
-                        >
-                            {
-                                item.images && item.images.map((pItem, pIndex) => {
-                                    const imageSrc = pItem.newImage ? URL.createObjectURL(pItem.newImage) : "data:image/" + pItem.image.substr(pItem.image.lastIndexOf('.') + 1) + `;base64,${pItem.imageBase64}`;
-                                    return <div
-                                        key={pIndex}
-                                        className={classes.fixtureImage}
-                                    >
-                                        <img
-                                            height={75}
-                                            src={imageSrc}
-                                            width={75}
-                                            style={{
-                                                objectFit: "contain"
-                                            }}
-                                            className={classes.fixtureImage}
-                                            onClick={() => {
-                                                /* Resimi tam boyut açmak için */
-                                            }}
-                                        />
+                                {
+                                    isEdit === index ?
                                         <div
-                                            className={classes.fixtureRemoveImage}
-                                            onClick={() => {
-                                                customAlert({
-                                                    message: "Demirbaş Resmi Silinsinmi?",
-                                                    onPressOkey: () => {
-                                                        onDeleteImage(index, pIndex);
+                                            className={classes.fixtureEditTitle}
+                                        >
+                                            <input
+                                                type="text"
+                                                value={editValue}
+                                                onChange={(e) => setEditValue(e.target.value)}
+                                            />
+                                            <button
+                                                onClick={() => {
+                                                    if (editValue.trim().length) {
+                                                        onEditItem({
+                                                            index: index,
+                                                            itemName: editValue,
+                                                            images: item.images,
+                                                        });
+                                                        setIsEdit(null);
                                                     }
-                                                });
+                                                    else {
+                                                        customAlert({
+                                                            message: "Demirbaş ismi boş olamaz!",
+                                                            buttons: ["OK"]
+                                                        });
+                                                    };
+                                                }}
+                                            >
+                                                Kaydet
+                                            </button>
+                                        </div>
+                                        :
+                                        <div
+                                            className={classes.fixtureTitle}
+                                            onClick={() => {
+                                                setEditValue(item.name);
+                                                setIsEdit(index);
                                             }}
                                         >
-                                            <Icon
-                                                color={colors.accent}
-                                                name="times-circle"
-                                                size={22}
-                                            />
+                                            {item.name}
                                         </div>
-                                    </div>;
-                                })
-                            }
-                            {
-                                item.images.length < 8 ? <div
-                                    className={classes.newFixtureImage}
-                                    style={{
-                                        border: "1px solid " + colors.seperator
-                                    }}
+                                }
+                                <div
+                                    className={classes.fixturesAddButton}
                                     onClick={() => {
-                                        setAddImageContainerIndex(index);
+                                        customAlert({
+                                            message: "Demirbaş Silinsinmi?",
+                                            onPressOkey: () => {
+                                                onDeleteItem(index);
+                                            }
+                                        });
                                     }}
                                 >
                                     <Icon
-                                        color={colors.success}
-                                        name="plus"
+                                        color={colors.accent}
+                                        name="trash"
                                         size={22}
                                     />
-                                </div> : null
-                            }
-                        </div>
-                        <div
-                            className={classes.fixtureCounter}
-                            style={{
-                                color: colors.hideText
-                            }}
-                        >
-                            {
-                                item.images.length
-                            }/8
-                        </div>
-                    </div>;
-                })
-            }
+                                </div>
+                            </div>
+                            <div
+                                className={classes.fixtureImages}
+                            >
+                                {
+                                    item.images && item.images.map((pItem, pIndex) => {
+                                        const imageSrc = pItem.newImage ? URL.createObjectURL(pItem.newImage) : "data:image/" + pItem.image.substr(pItem.image.lastIndexOf('.') + 1) + `;base64,${pItem.imageBase64}`;
+                                        return <div
+                                            key={pIndex}
+                                            className={classes.fixtureImage}
+                                        >
+                                            <img
+                                                height={75}
+                                                src={imageSrc}
+                                                width={75}
+                                                style={{
+                                                    objectFit: "contain"
+                                                }}
+                                                className={classes.fixtureImage}
+                                                onClick={e => {
+                                                    setGlobalState({
+                                                        lightbox: {
+                                                            data: item.images.map(sImage => sImage.newImage ? URL.createObjectURL(sImage.newImage) : "data:image/" + sImage.image.substr(sImage.image.lastIndexOf('.') + 1) + `;base64,${sImage.imageBase64}`),
+                                                            isActive: true,
+                                                            index: pIndex
+                                                        }
+                                                    });
+                                                    e.preventDefault();
+                                                }}
+                                            />
+                                            <div
+                                                className={classes.fixtureRemoveImage}
+                                                onClick={() => {
+                                                    customAlert({
+                                                        message: "Demirbaş Resmi Silinsinmi?",
+                                                        onPressOkey: () => {
+                                                            onDeleteImage(index, pIndex);
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <Icon
+                                                    color={colors.accent}
+                                                    name="times-circle"
+                                                    size={22}
+                                                />
+                                            </div>
+                                        </div>;
+                                    })
+                                }
+                                {
+                                    item.images.length < 8 ? <div
+                                        className={classes.newFixtureImage}
+                                        style={{
+                                            border: "1px solid " + colors.seperator
+                                        }}
+                                        onClick={() => {
+                                            setAddImageContainerIndex(index);
+                                        }}
+                                    >
+                                        <Icon
+                                            color={colors.success}
+                                            name="plus"
+                                            size={22}
+                                        />
+                                    </div> : null
+                                }
+                            </div>
+                            <div
+                                className={classes.fixtureCounter}
+                                style={{
+                                    color: colors.hideText
+                                }}
+                            >
+                                {
+                                    item.images.length
+                                }/8
+                            </div>
+                        </div>;
+                    })
+                }
+            </div>
         </div>
-    </div >;
+    </div>;
 };
-
-
 export default injectSheet(stylesheet)(FixtureCard);

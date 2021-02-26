@@ -1,24 +1,31 @@
 import {
     objectSpacing,
-    hover,
-    active
+    active,
+    hover
 } from "../../../../theme/tokens";
 
 const stylesheet = {
+    table: {
+        display: "table",
+        width: "100%"
+    },
+    tableCell: {
+        display: "table-cell"
+    },
     fixturesContainer: {
-        marginBottom: objectSpacing * 1.5,
+        marginBottom: objectSpacing * 1.5
     },
     fixturesHeader: {
-        padding: objectSpacing,
         justifyContent: "space-between",
+        padding: objectSpacing,
         flexDirection: "row",
         alignItems: "center",
-        display: "flex",
+        display: "flex"
     },
     fixturesTitle: {
         fontFamily: "'Exo 2', sans-serif",
         fontWeight: 600,
-        fontSize: 20,
+        fontSize: 20
     },
     fixturesAddButton: {
         padding: objectSpacing,
@@ -37,6 +44,7 @@ const stylesheet = {
     },
     fixtureHeader: {
         justifyContent: "space-between",
+        marginBottom: objectSpacing,
         alignItems: "center",
         flexDirection: "row",
         display: "flex"
@@ -56,11 +64,13 @@ const stylesheet = {
         justifyContent: "flex-start",
         flexDirection: "row",
         alignItems: "center",
-        display: "flex",
+        flexWrap: "wrap",
+        display: "flex"
     },
     fixtureImage: {
+        marginBottom: objectSpacing * 1.5,
+        marginRight: objectSpacing * 1.5,
         position: "relative",
-        marginRight: objectSpacing,
         "&:hover": {
             ...hover
         },
