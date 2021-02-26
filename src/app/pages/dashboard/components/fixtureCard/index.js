@@ -63,7 +63,7 @@ const FixtureCard = ({
         });
         setDatas(newItems);
     };
-    
+
     const onDeleteItem = (indexOnDelete) => {
         const newItems = datas.filter((item, index) => index !== indexOnDelete);
         setDatas(newItems);
@@ -149,7 +149,6 @@ const FixtureCard = ({
         >
             {
                 datas.map((item, index) => {
-                    console.log(item);
                     return <div
                         key={index}
                         className={classes.fixtureContainer}
@@ -176,7 +175,7 @@ const FixtureCard = ({
                                                     onEditItem({
                                                         index: index,
                                                         itemName: editValue,
-                                                        images: JSON.parse(JSON.stringify(item.images)),
+                                                        images: item.images,
                                                     });
                                                     setIsEdit(null);
                                                 }
@@ -245,7 +244,12 @@ const FixtureCard = ({
                                         <div
                                             className={classes.fixtureRemoveImage}
                                             onClick={() => {
-                                                onDeleteImage(index, pIndex);
+                                                customAlert({
+                                                    message: "Demirbaş Resmi Silinsinmi?",
+                                                    onPressOkey: () => {
+                                                        onDeleteImage(index, pIndex);
+                                                    }
+                                                });
                                             }}
                                         >
                                             <Icon

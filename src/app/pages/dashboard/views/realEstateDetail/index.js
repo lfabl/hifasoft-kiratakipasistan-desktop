@@ -14,9 +14,11 @@ import {
 } from '../../../../components';
 import {
     typeValidMessageConverter,
+    fixtureDataConverter,
     paymentPeriodTypes,
     numberOfRoomTypes,
     realEstateTypes,
+    customAlert,    
     usageTypes
 } from "../../../../helpers";
 import useGlobalState from '../../../../context';
@@ -29,16 +31,15 @@ import {
     deleteRealEstate,
     getRealEstate,
 } from "../../../../server/graphql";
-import {
-    customAlert
-} from "../../../../helpers";
 import FixtureCard from "../../components/fixtureCard";
+
 const RealEstateDetail = ({
     refetch,
     classes,
     realEstateID
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [updateLoading, setUpdateLoading] = useState(false);
     const [loading, setLoading] = useState(true);
     const {
         colors
@@ -92,7 +93,8 @@ const RealEstateDetail = ({
         getRealEstateData();
     }, []);
 
-    const update = () => {
+    const update = async () => {
+        const newFixtureData = await fixtureDataConverter(fixtureDatas);
         client.mutate({
             mutation: updateRealEstate,
             context: {
@@ -104,7 +106,7 @@ const RealEstateDetail = ({
                 realEstateID: realEstateID,
                 type: selectedType,
                 usageType: usageType,
-                fixtureDatas: fixtureDatas,
+                fixtureDatas: newFixtureData,
                 title: title,
                 adress: adress,
                 rentalType: rentalType,
@@ -129,6 +131,7 @@ const RealEstateDetail = ({
                 deposit: deposit
             }
         }).then(async (res) => {
+            setUpdateLoading(false);
             if (res.data.updateRealEstate.code === 200) {
                 setGlobalState({
                     modal: {
@@ -573,20 +576,27 @@ const RealEstateDetail = ({
                     >
                         Her periyodun tamamlanmasına 3 gün kala size hatırlatma bildirimi gönderilecektir.
                     </div>
-                    <FixtureCard
-                        datas={fixtureDatas}
-                        setDatas={(val) => setFixtureDatas(val)}
-                    />
+                    {
+                        selectedType !== "other" ? <FixtureCard
+                            datas={fixtureDatas}
+                            setDatas={(val) => setFixtureDatas(val)}
+                        /> : null
+                    } 
                     <Button
                         value="Emlağı Sil"
                         color={colors.accent}
                         textColor={colors.contrastBody}
                         onClick={() => deleteRealEstateData()}
                         className={classes.deleteRealEstate}
+                        disabled={updateLoading}
                     />
                     <Button
                         value="Güncelle"
-                        onClick={() => update()}
+                        onClick={() => {
+                            setUpdateLoading(true);
+                            update();
+                        }}
+                        disabled={updateLoading}
                     />
                 </div>
             </div>

@@ -13,6 +13,7 @@ import {
 } from '../../../../components';
 import {
     typeValidMessageConverter,
+    fixtureDataConverter,
     paymentPeriodTypes,
     numberOfRoomTypes,
     realEstateTypes,
@@ -27,12 +28,14 @@ import {
 } from '../../../../index';
 import useGlobalState from '../../../../context';
 import moment from "moment";
+import FixtureCard from "../../components/fixtureCard";
 
 const NewRealEstate = ({
     refetch,
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [createLoading, setCreateLoading] = useState(false);
     const {
         colors
     } = globalState.theme;
@@ -80,11 +83,12 @@ const NewRealEstate = ({
     const TCIPNoRef = useRef();
     const waterRef = useRef();
 
-    const create = () => {
+    const create = async () => {
+        const newFixtureData = await fixtureDataConverter(fixtureDatas);
         const variables = {
             type: selectedType,
             usageType: usageType,
-            fixtureDatas: fixtureDatas,
+            fixtureDatas: newFixtureData,
             title: title,
             adress: adress,
             rentalType: false,
@@ -118,6 +122,7 @@ const NewRealEstate = ({
             },
             variables: variables,
         }).then(async (res) => {
+            setCreateLoading(false);
             if (res.data.newRealEstate.code === 200) {
                 setGlobalState({
                     modal: {
@@ -454,9 +459,21 @@ const NewRealEstate = ({
                     >
                         Her periyodun tamamlanmasına 3 gün kala size hatırlatma bildirimi gönderilecektir.
                     </div>
+
+                    {
+                        selectedType !== "other" ? <FixtureCard
+                            datas={fixtureDatas}
+                            setDatas={(val) => setFixtureDatas(val)}
+                        /> : null
+                    }
                     <Button
                         value="Oluştur"
-                        onClick={() => create()}
+                        onClick={() => {
+                            setCreateLoading(true);
+                            create();
+                        }}
+                        disabled={createLoading}
+
                     />
                 </div>
             </div>
