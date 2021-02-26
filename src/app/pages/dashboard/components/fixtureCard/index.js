@@ -23,7 +23,7 @@ const FixtureCard = ({
         type: "image/*",
         multiple: true
     });
-    const [imageContainerIndex, setImageContainerIndex] = useState(null);
+    const [addImageContainerIndex, setAddImageContainerIndex] = useState(null);
     const [editValue, setEditValue] = useState("");
     const [isEdit, setIsEdit] = useState(null);
     const {
@@ -36,12 +36,11 @@ const FixtureCard = ({
             onAddImage(files);
         }
     });
-
     useEffect(() => {
-        if (imageContainerIndex !== null) {
+        if (addImageContainerIndex !== null) {
             selectFile.click();
         }
-    }, [imageContainerIndex]);
+    }, [addImageContainerIndex]);
 
     const onAddItem = (name) => {
         setDatas([
@@ -52,7 +51,6 @@ const FixtureCard = ({
             }
         ]);
     };
-
     const onEditItem = (data) => {
         const newItems = [];
         datas.map((item, index) => {
@@ -65,16 +63,13 @@ const FixtureCard = ({
         });
         setDatas(newItems);
     };
-
+    
     const onDeleteItem = (indexOnDelete) => {
         const newItems = datas.filter((item, index) => index !== indexOnDelete);
         setDatas(newItems);
     };
-
     const onAddImage = (images) => {
-        console.log(images);
-        const detectedData = datas[imageContainerIndex];
-
+        const detectedData = datas[addImageContainerIndex];
         for (let index = 0; index < images.length; index++) {
             if (8 - detectedData.images.length > 0) {
                 const image = images[index];
@@ -82,24 +77,36 @@ const FixtureCard = ({
                     newImage: image
                 });
             }
-
             if (index + 1 === images.length) {
-                console.log("detectedData", detectedData);
                 const newItems = [];
                 datas.map((item, index) => {
-                    index === imageContainerIndex ?
+                    index === addImageContainerIndex ?
                         newItems.push({
                             name: detectedData.name,
                             images: detectedData.images
                         })
                         : newItems.push(item);
                 });
-                console.log("newItems", newItems);
                 setDatas(newItems);
-                setImageContainerIndex(null);
+                setAddImageContainerIndex(null);
             }
         }
+    };
+    const onDeleteImage = (containerIndex, imageIndex) => {
+        const detectedData = datas[containerIndex];
+        const temp = detectedData.images;
+        const newItems = [];
 
+        temp.splice(imageIndex, 1);
+        datas.map((item, index) => {
+            index === containerIndex ?
+                newItems.push({
+                    name: detectedData.name,
+                    images: temp
+                })
+                : newItems.push(item);
+        });
+        setDatas(newItems);
     };
 
     return <div
@@ -231,9 +238,15 @@ const FixtureCard = ({
                                                 objectFit: "contain"
                                             }}
                                             className={classes.fixtureImage}
+                                            onClick={() => {
+                                                /* Resimi tam boyut açmak için */
+                                            }}
                                         />
                                         <div
                                             className={classes.fixtureRemoveImage}
+                                            onClick={() => {
+                                                onDeleteImage(index, pIndex);
+                                            }}
                                         >
                                             <Icon
                                                 color={colors.accent}
@@ -251,7 +264,7 @@ const FixtureCard = ({
                                         border: "1px solid " + colors.seperator
                                     }}
                                     onClick={() => {
-                                        setImageContainerIndex(index);
+                                        setAddImageContainerIndex(index);
                                     }}
                                 >
                                     <Icon
