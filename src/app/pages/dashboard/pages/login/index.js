@@ -1,5 +1,7 @@
 import React, {
-    useState
+    useState,
+    useRef,
+    useEffect
 } from 'react';
 import injectSheet from 'react-jss';
 import {
@@ -14,26 +16,110 @@ import {
 import {
     Link
 } from 'react-router-dom';
+import md5 from "js-md5";
+import signin from "../../../../server/fetchs/signin";
+var ipcRenderer = window.require("electron").ipcRenderer;
 
 const Login = ({
     classes,
     history
 }) => {
+    const [hidePassword, setHidePassword] = useState(false);
     const [globalState, setGlobalState] = useGlobalState();
+    const [loading, setLoading] = useState(false);
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
     const {
         colors
     } = globalState.theme;
-    const login = () => {
-        setGlobalState({
-            user: {
-                loginData: {
-                    "id": "kimlik"
+
+    const emailRef = useRef();
+    const passwordRef = useRef();
+
+    useEffect(() => {
+        emailRef.current.focus();
+    }, []);
+
+    const login = async () => {
+        if (userName !== "" && password !== "") {
+            if (password.length < 5 || password.length > 80) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Eksik Veri!",
+                            message: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maksimum 80 karakter girin."
+                        }
+                    }
+                });
+            }
+            else if (userName.length === 0) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Eksik Veri!",
+                            message: "Lütfen bir kullanıcı adı veya mail giriniz."
+                        }
+                    }
+                });
+            }
+            else {
+                const newMd5Password = md5(password);
+                const signinResult = await signin({
+                    userNameOrMail: userName,
+                    password: newMd5Password
+                });
+                
+                if (signinResult.code === 200) {
+                    /*
+                    await ipcRenderer.sendSync("setUserData", {
+                        token: signinResult.token
+                    });
+                    */
+                    setGlobalState({
+                        user: {
+                            loginData: {
+                                "token": signinResult.token
+                            }
+                        }
+                    });
+                }
+                else {
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Eksik Veri!",
+                                message: "Lütfen doğru kullanıcı adı ve şifrenizi giriniz."
+                            }
+                        }
+                    });
                 }
             }
-        });
+        }
+        else {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Eksik Veri!",
+                        message: "Lütfen kullanıcı adı ve şifrenizi eksiksiz giriniz."
+                    }
+                }
+            });
+        }
+        setLoading(false);
     };
+
     return <div
         className={classes.container}
     >
@@ -84,19 +170,45 @@ const Login = ({
                         <TextInput
                             value={userName}
                             onChangeText={e => setUserName(e)}
-                            placeholder="Kullanıcı Adınız"
+                            onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
+                            title="Kullanıcı Adınız veya E-Posta"
                             className={classes.userName}
+                            referance={emailRef}
                         />
-                        <TextInput
-                            onChangeText={e => setPassword(e)}
-                            className={classes.password}
-                            placeholder="Parolanız"
-                            value={password}
-                            type="password"
-                        />
+                        <div
+                            className={classes.passwordContainer}
+                        >
+                            <TextInput
+                                onChangeText={e => setPassword(e)}
+                                className={classes.password}
+                                referance={passwordRef}
+                                onKeyUp={e => {
+                                    if(e.keyCode === 13) {
+                                        setLoading(true);
+                                        login(); 
+                                    }
+                                }}
+                                title="Parolanız"
+                                value={password}
+                                type={hidePassword ? "text" : "password"}
+                            />
+                            <div
+                                className={classes.eyeContainer}
+                                onClick={() => setHidePassword(!hidePassword)}
+                            >
+                                <Icon
+                                    color={colors.body}
+                                    name={hidePassword ? "eye" : "eye-slash"}
+                                    size={32}
+                                />
+                            </div>
+                        </div>
                         <Button
                             value="Giriş Yap"
-                            onClick={() => login()}
+                            onClick={() => {
+                                setLoading(true);
+                                login();
+                            }}
                         />
                         <Link
                             to="/dashboard/forgotPassword"

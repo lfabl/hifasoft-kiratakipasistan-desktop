@@ -14,16 +14,67 @@ import {
 import {
     Link
 } from 'react-router-dom';
+import forgetPassword from "../../../../server/fetchs/forgetPassword";
 
 const ForgotPassword = ({
     classes,
     history
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [loading, setLoading] = useState(false);
     const [eMail, setEMail] = useState("");
     const {
         colors
     } = globalState.theme;
+
+    const forgetPasswordUser = async () => {
+        if (eMail === "") {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Lütfen bir e-posta giriniz."
+                    }
+                }
+            });
+        }
+        else {
+            const forgetPasswordResult = await forgetPassword({
+                mail: eMail,
+            });
+            
+            if (forgetPasswordResult.code === 200) {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Başarılı!",
+                            message: "Parola sıfırlama bağlantısı gönderildi."
+                        }
+                    }
+                });
+            }
+            else {
+                setGlobalState({
+                    modal: {
+                        isActive: true,
+                        loading: false,
+                        dialog: true,
+                        data: {
+                            title: "Hata!",
+                            message: forgetPasswordResult.message
+                        }
+                    }
+                });
+            }
+        }
+        setLoading(false);
+    };
+
     return <div
         className={classes.container}
     >
@@ -74,11 +125,15 @@ const ForgotPassword = ({
                         <TextInput
                             value={eMail}
                             onChangeText={e => setEMail(e)}
-                            placeholder="E - Posta Adresiniz"
+                            title="E - Posta Adresiniz"
                             className={classes.eMail}
                         />
                         <Button
                             value="Parolamı Sıfırla"
+                            onClick={() => {
+                                setLoading(true);
+                                forgetPasswordUser();
+                            }}
                         />
                     </div>
                 </div>

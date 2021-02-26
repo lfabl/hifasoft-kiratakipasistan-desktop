@@ -1,5 +1,6 @@
 import React, {
-    useState
+    useState,
+    useRef
 } from 'react';
 import injectSheet from 'react-jss';
 import {
@@ -14,12 +15,16 @@ import {
 import {
     Link
 } from 'react-router-dom';
+import md5 from "js-md5";
+import signup from "../../../../server/fetchs/signup";
+var ipcRenderer = window.require("electron").ipcRenderer;
 
 const Login = ({
     classes,
     history
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
+    const [loading, setLoading] = useState(false);
     const [officeName, setOfficeName] = useState("");
     const [userMail, setUserMail] = useState("");
     const [userName, setUserName] = useState("");
@@ -27,6 +32,120 @@ const Login = ({
     const {
         colors
     } = globalState.theme;
+
+    const officeRef = useRef();
+    const userNameRef = useRef();
+    const passwordRef = useRef();
+
+    const signupUser = async () => {
+        if (userName === "" || password === "" || officeName === "" || userMail === "") {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Lütfen istenilen her bilgiyi doldurduğunuzdan emin olunuz."
+                    }
+                }
+            });
+        }
+        else if (password.length < 5 || password.length > 80) {
+            setGlobalState({
+                modal: {
+                    isActive: true,
+                    loading: false,
+                    dialog: true,
+                    data: {
+                        title: "Hata!",
+                        message: "Gönderdiğiniz şifre gerekli kuralları sağlamıyor. Lütfen minimum 5 maksimum 80 karakter giriniz."
+                    }
+                }
+            });
+        }
+        else {
+            const md5Password = md5(password);
+            const signupResult = await signup({
+                userName: userName,
+                mail: userMail,
+                password: md5Password,
+                fullName: officeName
+            });
+            if (signupResult.code === 200) {
+                /*
+                await ipcRenderer.sendSync("setUserData", {
+                    token: signupResult.token
+                });
+                */
+                
+                setGlobalState({
+                    user: {
+                        loginData: {
+                            "token": signupResult.token
+                        }
+                    }
+                });
+                
+            }
+            else {
+                if (signupResult.message.indexOf("userName") !== -1) {
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: "Gönderdiğiniz kullanıcı adı gerekli kuralları sağlamıyor. Lütfen minimum 3 maksimum 35 karakter giriniz."
+                            }
+                        }
+                    });
+                }
+                else if (signupResult.message.indexOf("mail") !== -1) {
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: "Gönderdiğiniz mail gerekli kuralları sağlamıyor. Lütfen minimum 5 maksimum 80 karakter giriniz."
+                            }
+                        }
+                    });
+                }
+                else if (signupResult.message.indexOf("fullName") !== -1) {
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: "Gönderdiğiniz ofis adı gerekli kuralları sağlamıyor. Lütfen minimum 4 maksimum 45 karakter giriniz."
+                            }
+                        }
+                    });
+                }
+                else {
+                    setGlobalState({
+                        modal: {
+                            isActive: true,
+                            loading: false,
+                            dialog: true,
+                            data: {
+                                title: "Hata!",
+                                message: signupResult.message
+                            }
+                        }
+                    });
+                }
+            }
+        }
+        setLoading(false);
+    };
+
     return <div
         className={classes.container}
     >
@@ -77,30 +196,46 @@ const Login = ({
                         <TextInput
                             value={userMail}
                             onChangeText={e => setUserMail(e)}
-                            placeholder="E - Posta Adresiniz"
+                            title="E - Posta Adresiniz"
+                            onKeyUp={e => e.keyCode === 13 ? officeRef.current.focus() : null}
                             className={classes.userMail}
                         />
                         <TextInput
                             onChangeText={e => setOfficeName(e)}
                             className={classes.officeName}
-                            placeholder="Ofis Adı"
+                            referance={officeRef}
+                            onKeyUp={e => e.keyCode === 13 ? userNameRef.current.focus() : null}
+                            title="Ofis Adı"
                             value={officeName}
                         />
                         <TextInput
                             value={userName}
                             onChangeText={e => setUserName(e)}
-                            placeholder="Kullanıcı Adı"
+                            referance={userNameRef}
+                            onKeyUp={e => e.keyCode === 13 ? passwordRef.current.focus() : null}
+                            title="Kullanıcı Adı"
                             className={classes.userName}
                         />
                         <TextInput
                             onChangeText={e => setPassword(e)}
                             className={classes.password}
-                            placeholder="Parolanız"
+                            title="Parolanız"
+                            referance={passwordRef}
+                            onKeyUp={e => {
+                                if(e.keyCode === 13) {
+                                    setLoading(true);
+                                    signupUser();
+                                }
+                            }}
                             value={password}
                             type="password"
                         />
                         <Button
                             value="Kayıt Ol"
+                            onClick={() => {
+                                setLoading(true);
+                                signupUser();
+                            }}
                         />
                     </div>
                 </div>

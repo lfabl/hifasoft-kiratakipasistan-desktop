@@ -4,8 +4,13 @@ import {
     styleMain
 } from './stylesheet';
 import useGlobalState from '../../context';
+import Icon from '../icon';
+import {
+    objectSpacing 
+} from '../../theme/tokens';
 
 const Button = ({
+    wrap = "no-wrap",
     className,
     textColor,
     classes,
@@ -13,6 +18,7 @@ const Button = ({
     value,
     color,
     style,
+    icon,
     ...props
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
@@ -28,10 +34,24 @@ const Button = ({
         style={{
             backgroundColor: color ? color : colors.primary,
             color: textColor ? textColor : colors.body,
+            alignSelf: wrap === "no-wrap" ? "stretch" : wrap === "wrap" ? "baseline" : null,
             ...style
         }}
         {...props}
     >
+        {
+            icon ?
+                <Icon
+                    color={icon.color ? icon.color : textColor ? textColor : colors.body}
+                    name={icon.name}
+                    size={icon.size ? icon.size : 18}
+                    style={{
+                        marginRight: value ? objectSpacing * 1.5 : null
+                    }}
+                />
+                :
+                null
+        }
         {value}
     </button>;
 };

@@ -1,6 +1,11 @@
 {
     "primary":  "#FFC700",
     "layer1":   "#f0f8ff",
+    "layer2":   "#F5F5F5",
+    "layer3":   "#E1E2E4",
+    "accent":   "#CB4343",
+    "success":  "#269E64",
+    "warning":  "#ecb24a",
     "gray0":    "hsl(0, 0%, 0%)",
     "gray10":    "hsl(0, 0%, 10%)",
     "gray20":    "hsl(0, 0%, 20%)",

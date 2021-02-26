@@ -28,7 +28,6 @@ export const styleMain = {
     },
     content: {
         borderRadius: objectSpacing,
-        maxHeight: 700,
         minWidth: 500,
         maxWidth: 600,
         width: "80%"
