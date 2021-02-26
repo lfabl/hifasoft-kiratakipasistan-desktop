@@ -56,13 +56,11 @@ const stylesheet = {
         justifyContent: "flex-start",
         flexDirection: "row",
         alignItems: "center",
-        display: "flex"
-    },
-    fixtureImage: {
-        marginRight: objectSpacing / 2
+        display: "flex",
     },
     fixtureImage: {
         position: "relative",
+        marginRight: objectSpacing,
         "&:hover": {
             ...hover
         },
@@ -75,6 +73,21 @@ const stylesheet = {
         position: "absolute",
         right: -11,
         top: -11,
+        "&:hover": {
+            ...hover
+        },
+        "&:active": {
+            ...active
+        }
+    },
+    newFixtureImage: {
+        width: 75,
+        height: 75,
+        marginRight: objectSpacing,
+        borderRadius: 5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         "&:hover": {
             ...hover
         },

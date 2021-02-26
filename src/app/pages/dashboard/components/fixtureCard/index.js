@@ -7,7 +7,8 @@ import useGlobalState from '../../../../context';
 import injectSheet from 'react-jss';
 import stylesheet from './stylesheet';
 import {
-    customAlert
+    customAlert,
+    fileSelector
 } from "../../../../helpers";
 import {
     Icon
@@ -18,12 +19,29 @@ const FixtureCard = ({
     classes
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
-    const [isEdit, setIsEdit] = useState(null);
+    const selectFile = fileSelector({
+        type: "image/*",
+        multiple: true
+    });
+    const [imageContainerIndex, setImageContainerIndex] = useState(null);
     const [editValue, setEditValue] = useState("");
+    const [isEdit, setIsEdit] = useState(null);
     const {
         colors
     } = globalState.theme;
 
+    selectFile.addEventListener("change", () => {
+        const files = selectFile.files;
+        if (files.length !== 0) {
+            onAddImage(files);
+        }
+    });
+
+    useEffect(() => {
+        if (imageContainerIndex !== null) {
+            selectFile.click();
+        }
+    }, [imageContainerIndex]);
 
     const onAddItem = (name) => {
         setDatas([
@@ -53,6 +71,37 @@ const FixtureCard = ({
         setDatas(newItems);
     };
 
+    const onAddImage = (images) => {
+        console.log(images);
+        const detectedData = datas[imageContainerIndex];
+
+        for (let index = 0; index < images.length; index++) {
+            if (8 - detectedData.images.length > 0) {
+                const image = images[index];
+                detectedData.images.push({
+                    newImage: image
+                });
+            }
+
+            if (index + 1 === images.length) {
+                console.log("detectedData", detectedData);
+                const newItems = [];
+                datas.map((item, index) => {
+                    index === imageContainerIndex ?
+                        newItems.push({
+                            name: detectedData.name,
+                            images: detectedData.images
+                        })
+                        : newItems.push(item);
+                });
+                console.log("newItems", newItems);
+                setDatas(newItems);
+                setImageContainerIndex(null);
+            }
+        }
+
+    };
+
     return <div
         className={classes.fixturesContainer}
     >
@@ -67,10 +116,18 @@ const FixtureCard = ({
             <div
                 className={classes.fixturesAddButton}
                 onClick={() => {
-                    onAddItem({
-                        itemName: `Demirbaş ${datas.length + 1}`,
-                        images: []
-                    });
+                    if (datas.length < 8) {
+                        onAddItem({
+                            itemName: `Demirbaş ${datas.length + 1}`,
+                            images: []
+                        });
+                    }
+                    else {
+                        customAlert({
+                            message: "Yeni demirbaş ekleme sınırına ulaştınız!",
+                            buttons: ["OK"]
+                        });
+                    }
                 }}
             >
                 <Icon
@@ -161,13 +218,14 @@ const FixtureCard = ({
                         >
                             {
                                 item.images && item.images.map((pItem, pIndex) => {
+                                    const imageSrc = pItem.newImage ? URL.createObjectURL(pItem.newImage) : "data:image/" + pItem.image.substr(pItem.image.lastIndexOf('.') + 1) + `;base64,${pItem.imageBase64}`;
                                     return <div
                                         key={pIndex}
                                         className={classes.fixtureImage}
                                     >
                                         <img
                                             height={75}
-                                            src={"data:image/png;base64, " + pItem.imageBase64}
+                                            src={imageSrc}
                                             width={75}
                                             style={{
                                                 objectFit: "contain"
@@ -186,6 +244,23 @@ const FixtureCard = ({
                                     </div>;
                                 })
                             }
+                            {
+                                item.images.length < 8 ? <div
+                                    className={classes.newFixtureImage}
+                                    style={{
+                                        border: "1px solid " + colors.seperator
+                                    }}
+                                    onClick={() => {
+                                        setImageContainerIndex(index);
+                                    }}
+                                >
+                                    <Icon
+                                        color={colors.success}
+                                        name="plus"
+                                        size={22}
+                                    />
+                                </div> : null
+                            }
                         </div>
                         <div
                             className={classes.fixtureCounter}
@@ -193,13 +268,15 @@ const FixtureCard = ({
                                 color: colors.hideText
                             }}
                         >
-                            7 / 8
+                            {
+                                item.images.length
+                            }/8
                         </div>
                     </div>;
                 })
             }
         </div>
-    </div>;
+    </div >;
 };
 
 
