@@ -233,13 +233,14 @@ export const fileSelector = ({
 export const customAlert = ({
     onPressOkey,
     message,
-    title
+    title,
+    buttons
 }) => {
     const remote = window["require"]('electron').remote;
     window.confirm = function (message) {
         const buttonIdx = remote.dialog.showMessageBox(null, {
             type: 'question',
-            buttons: ['OK', 'Cancel'],
+            buttons: buttons ? buttons : ['OK', 'Cancel'],
             defaultId: 0,
             cancelId: 1,
             message: title,
@@ -256,19 +257,19 @@ export const customAlert = ({
 };
 
 export const typeValidMessageConverter = async ({
-    message, title 
+    message, title
 }) => {
     const findTypeText = await findType({
-        message, title 
+        message, title
     });
     const findErrorText = await findError({
-        message 
+        message
     });
     return findTypeText + " Parametresi " + findErrorText;
 };
 
 const findError = async ({
-    message 
+    message
 }) => {
     return await new Promise(async (resolve, reject) => {
         const errorTypes = [
@@ -302,7 +303,7 @@ const findError = async ({
 };
 
 const findType = async ({
-    message, title 
+    message, title
 }) => {
     const types = [
         {

@@ -32,7 +32,7 @@ import {
 import {
     customAlert
 } from "../../../../helpers";
-
+import FixtureCard from "../../components/fixtureCard";
 const RealEstateDetail = ({
     refetch,
     classes,
@@ -63,7 +63,6 @@ const RealEstateDetail = ({
     const [detailRent, setDetailRent] = useState("");
     const [ownerIban, setOwnerIban] = useState("");
     const [deposit, setDeposit] = useState("");
-    const [isEdit, setIsEdit] = useState(null);
     const [adress, setAdress] = useState("");
     const [TCIPNo, setTCIPNo] = useState("");
     const [title, setTitle] = useState("");
@@ -574,116 +573,10 @@ const RealEstateDetail = ({
                     >
                         Her periyodun tamamlanmasına 3 gün kala size hatırlatma bildirimi gönderilecektir.
                     </div>
-                    <div
-                        className={classes.fixturesContainer}
-                    >
-                        <div
-                            className={classes.fixturesHeader}
-                        >
-                            <div
-                                className={classes.fixturesTitle}
-                            >
-                                Demirbaşlar
-                            </div>
-                            <div
-                                className={classes.fixturesAddButton}
-                            >
-                                <Icon
-                                    color={colors.success}
-                                    name="plus-circle"
-                                    size={22}
-                                />
-                            </div>
-                        </div>
-                        <div
-                            className={classes.fixturesCards}
-                        >
-                            {
-                                fixtureDatas && fixtureDatas.map((item, index) => {
-                                    return <div
-                                        key={index}
-                                        className={classes.fixtureContainer}
-                                        style={{
-                                            border: "1px solid " + colors.seperator
-                                        }}
-                                    >
-                                        <div
-                                            className={classes.fixtureHeader}
-                                        >
-                                            {
-                                                isEdit === index ?
-                                                    <div
-                                                        className={classes.fixtureEditTitle}
-                                                    >
-                                                        <input
-                                                            type="text"
-                                                        />
-                                                        <button>Kaydet</button>
-                                                    </div>
-                                                    :
-                                                    <div
-                                                        className={classes.fixtureTitle}
-                                                        onClick={() => {
-                                                            setIsEdit(index);
-                                                        }}
-                                                    >
-                                                        {item.name}
-                                                    </div>
-                                            }
-                                            <div
-                                                className={classes.fixturesAddButton}
-                                            >
-                                                <Icon
-                                                    color={colors.accent}
-                                                    name="trash"
-                                                    size={22}
-                                                />
-                                            </div>
-                                        </div>
-                                        <div
-                                            className={classes.fixtureImages}
-                                        >
-                                            {
-                                                item.images && item.images.map((pItem, pIndex) => {
-                                                    return <div
-                                                        key={pIndex}
-                                                        className={classes.fixtureImage}
-                                                    >
-                                                        <img
-                                                            height={75}
-                                                            src={"data:image/png;base64, " + pItem.imageBase64}
-                                                            width={75}
-                                                            style={{
-                                                                objectFit: "contain"
-                                                            }}
-                                                            className={classes.fixtureImage}
-                                                        />
-                                                        <div
-                                                            className={classes.fixtureRemoveImage}
-                                                        >
-                                                            <Icon
-                                                                color={colors.accent}
-                                                                name="times-circle"
-                                                                size={22}
-                                                            />
-                                                        </div>
-                                                    </div>;
-                                                })
-                                            }
-                                        </div>
-                                        <div
-                                            className={classes.fixtureCounter}
-                                            style={{
-                                                color: colors.hideText
-                                            }}
-                                        >
-                                            7 / 8
-                                        </div>
-                                    </div>;
-                                })
-                            }
-                        </div>
-                    </div>
+                    <FixtureCard
+                        datas={fixtureDatas}
+                        setDatas={(val) => setFixtureDatas(val)}
+                    />
                     <Button
                         value="Emlağı Sil"
                         color={colors.accent}
