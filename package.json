@@ -31,7 +31,8 @@
     "react-electron-contextmenu": "1.0.0",
     "react-jss": "10.5.0",
     "react-router-dom": "5.1.2",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "validator": "^13.5.2"
   },
   "main": "public/electron.js",
   "homepage": "./",
