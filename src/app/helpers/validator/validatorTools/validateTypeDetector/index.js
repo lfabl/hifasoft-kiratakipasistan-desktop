@@ -33,7 +33,7 @@ const validateTypeDetector = async (props = interfaces) => {
         }
 
         else if (index + 1 === triedValidations.length) {
-            return true;
+            return false;
         }
     }
 };

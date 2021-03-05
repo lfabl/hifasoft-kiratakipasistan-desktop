@@ -14,3 +14,7 @@ export const hover = {
 export const focus = {
     border: "1px solid #e97900 !important"
 };
+
+export const focusError = {
+    border: "1px solid #cb4343 !important"
+};

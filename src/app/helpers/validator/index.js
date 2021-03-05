@@ -29,7 +29,7 @@ export const validator = async (validations = [interfaces]) => {
             return validateResult;
         }
         else if (index + 1 === validations.length) {
-            return true;
+            return false;
         }
     }
 };

@@ -174,6 +174,7 @@ const Login = ({
                             title="Kullanıcı Adınız veya E-Posta"
                             className={classes.userName}
                             referance={emailRef}
+                            validateType={"mailOrUserName"}
                         />
                         <div
                             className={classes.passwordContainer}
