@@ -1,6 +1,7 @@
 import {
     objectSpacing,
-    focus
+    focusError,
+    focus,
 } from "../../theme/tokens";
 
 export const styleMain = {
@@ -24,8 +25,15 @@ export const styleMain = {
         "&:hover": {
             cursor: "text"
         },
+    },
+    inputSuccess: {
         "&:focus": {
             ...focus
+        }
+    },
+    inputError: {
+        "&:focus": {
+            ...focusError
         }
     }
 };

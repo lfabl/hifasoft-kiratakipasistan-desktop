@@ -10,10 +10,7 @@ import {
 import {
     validator
 } from "../../helpers";
-import {
-    focusError,
-    focus,
-} from "../../theme/tokens";
+
 const TextInput = ({
     wrap = "no-wrap",
     validateType,
@@ -29,7 +26,6 @@ const TextInput = ({
 }) => {
     const [globalState, setGlobalState] = useGlobalState();
     const [validateResult, setValidateResult] = useState(true);
-    const [isHighlighted, setIsHighlighted] = useState(false);
     const {
         colors
     } = globalState.theme;
@@ -56,11 +52,6 @@ const TextInput = ({
     }, [value]);
 
     const borderColor = validateResult === true ? colors.seperator : colors.accent;
-    const focusColor = validateResult ? {
-        ...focus
-    } : {
-        ...focusError
-    };
 
     return <div
         className={classes.container}
@@ -83,12 +74,12 @@ const TextInput = ({
             }}
             className={[
                 classes.input,
+                validateResult ? classes.inputSuccess : classes.inputError,
                 className
             ].join(" ")}
             style={{
                 alignSelf: wrap === "no-wrap" ? "stretch" : wrap === "wrap" ? "baseline" : null,
                 border: "1px solid " + borderColor,
-                "&:focus": focusColor + "!important"
             }}
             {...props}
         />

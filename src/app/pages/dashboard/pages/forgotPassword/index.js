@@ -127,6 +127,7 @@ const ForgotPassword = ({
                             onChangeText={e => setEMail(e)}
                             title="E - Posta Adresiniz"
                             className={classes.eMail}
+                            validateType={"mail"}
                         />
                         <Button
                             value="Parolamı Sıfırla"
