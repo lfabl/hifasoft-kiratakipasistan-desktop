@@ -335,6 +335,7 @@ const RealEstateDetail = ({
                     >
                         Genel Bilgiler
                     </div>
+        
                     {
                         selectedType === "other" ? <SelectBox
                             datas={usageTypes}
@@ -350,6 +351,11 @@ const RealEstateDetail = ({
                         title="Başlık"
                         className={classes.input}
                         value={title}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 4,
+                            max: 40
+                        }}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? electricityRef.current.focus() : null}
@@ -358,6 +364,11 @@ const RealEstateDetail = ({
                         referance={addressRef}
                         title="Adres"
                         value={adress}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 5,
+                            max: 85
+                        }}
                     />
 
                     {
@@ -383,6 +394,12 @@ const RealEstateDetail = ({
                                 referance={electricityRef}
                                 onKeyUp={() => { }}
                                 value={electricity}
+                                type={"number"}
+                                validateType={"length"}
+                                validateObject={{
+                                    min: 5,
+                                    max: 150
+                                }}
                             />
                             <TextInput
                                 onKeyUp={e => e.keyCode === 13 ? naturalGasRef.current.focus() : null}
@@ -392,6 +409,12 @@ const RealEstateDetail = ({
                                 referance={waterRef}
                                 onKeyUp={() => { }}
                                 value={water}
+                                type={"number"}
+                                validateType={"length"}
+                                validateObject={{
+                                    min: 5,
+                                    max: 150
+                                }}
                             />
                             <TextInput
                                 onKeyUp={e => e.keyCode === 13 ? TCIPNoRef.current.focus() : null}
@@ -401,6 +424,12 @@ const RealEstateDetail = ({
                                 referance={naturalGasRef}
                                 onKeyUp={() => { }}
                                 value={naturalGas}
+                                type={"number"}
+                                validateType={"length"}
+                                validateObject={{
+                                    min: 5,
+                                    max: 150
+                                }}
                             />
                             <TextInput
                                 onKeyUp={e => e.keyCode === 13 ? ownerNameSurnameRef.current.focus() : null}
@@ -410,6 +439,12 @@ const RealEstateDetail = ({
                                 referance={TCIPNoRef}
                                 onKeyUp={() => { }}
                                 value={TCIPNo}
+                                type={"number"}
+                                validateType={"length"}
+                                validateObject={{
+                                    min: 5,
+                                    max: 150
+                                }}
                             />
                         </div> : null
                     }
@@ -433,6 +468,11 @@ const RealEstateDetail = ({
                         referance={ownerNameSurnameRef}
                         onKeyUp={() => { }}
                         value={ownerNameSurname}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 5,
+                            max: 150
+                        }}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? ownerTcIdentityRef.current.focus() : null}
@@ -442,6 +482,8 @@ const RealEstateDetail = ({
                         className={classes.input}
                         value={ownerManagerPhoneNumber}
                         onKeyUp={() => { }}
+                        validateType={"phoneNumber"}
+                        type={"number"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? ownerIbanRef.current.focus() : null}
@@ -451,6 +493,8 @@ const RealEstateDetail = ({
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={ownerTcIdentity}
+                        validateType={"tcIndenity"}
+                        type={"number"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? detailDuesRef.current.focus() : null}
@@ -460,6 +504,7 @@ const RealEstateDetail = ({
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={ownerIban}
+                        validateType={"iban"}
                     />
                     <div
                         className={classes.seperator}
@@ -481,6 +526,7 @@ const RealEstateDetail = ({
                             className={classes.input}
                             onKeyUp={() => { }}
                             value={detailDues}
+                            type={"number"}
                         /> : null
                     }
                     <TextInput
@@ -491,6 +537,7 @@ const RealEstateDetail = ({
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={deposit}
+                        type={"number"}
                     />
                     {
                         selectedType !== "other" ? <TextInput
@@ -501,6 +548,9 @@ const RealEstateDetail = ({
                             className={classes.input}
                             onKeyUp={() => { }}
                             value={detailManagerPhoneNumber}
+                            validateType={"phoneNumber"}
+                            type={"number"}
+
                         /> : null
                     }
                     <TextInput
@@ -511,6 +561,11 @@ const RealEstateDetail = ({
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={detailAdditionalInformation}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 3,
+                            max: 720
+                        }}
                     />
                     {
                         selectedType === "apartment" ? <SelectBox
@@ -519,6 +574,7 @@ const RealEstateDetail = ({
                             onChangeValue={(type) => setNumberOfRoom(type)}
                             title={"Oda Sayısı"}
                             className={classes.roomCount}
+                            type={"number"}
                         /> : null
                     }
                     {
@@ -540,6 +596,7 @@ const RealEstateDetail = ({
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={detailRent}
+                        type={"number"}
                     />
                     <div
                         className={classes.switchContainer}

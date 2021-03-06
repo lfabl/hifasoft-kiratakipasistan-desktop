@@ -13,6 +13,7 @@ import {
 
 const TextInput = ({
     wrap = "no-wrap",
+    validateObject,
     validateType,
     onChangeText,
     placeholder,
@@ -35,7 +36,8 @@ const TextInput = ({
         const _validateResult = await validator([
             {
                 value: value,
-                validateType: validateType
+                validateType: validateType,
+                validateObject: validateObject
             }
         ]);
         console.log(_validateResult);
