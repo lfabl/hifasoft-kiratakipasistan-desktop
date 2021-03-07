@@ -224,7 +224,6 @@ const TenantContract = ({
                         onSubmit: {
                             text: "Tamam",
                             action: () => {
-                                console.log("Tamama basıldı");
                                 deteContract();
                             }
                         },

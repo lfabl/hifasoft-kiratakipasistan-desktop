@@ -283,6 +283,11 @@ const TenantDetail = ({
                         title="Ad ve Soyad"
                         className={classes.input}
                         value={fullName}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 4,
+                            max: 50
+                        }}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? phoneRef.current.focus() : null}
@@ -292,6 +297,7 @@ const TenantDetail = ({
                         title="TC No"
                         value={tcIdentity}
                         type={"number"}
+                        validateType={"tcIndenity"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? phoneTwoRef.current.focus() : null}
@@ -302,6 +308,7 @@ const TenantDetail = ({
                         onKeyUp={() => { }}
                         value={phoneNumber}
                         type={"number"}
+                        validateType={"phoneNumber"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? addressRef.current.focus() : null}
@@ -312,6 +319,7 @@ const TenantDetail = ({
                         onKeyUp={() => { }}
                         value={phoneNumberTwo}
                         type={"number"}
+                        validateType={"phoneNumber"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyFullNameRef.current.focus() : null}
@@ -321,6 +329,10 @@ const TenantDetail = ({
                         referance={addressRef}
                         onKeyUp={() => { }}
                         value={tenantAdress}
+                        validateObject={{
+                            min: 5,
+                            max: 50
+                        }}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyTcIdentityRef.current.focus() : null}
@@ -330,6 +342,11 @@ const TenantDetail = ({
                         title="Kefil Adı"
                         value={suretyFullName}
                         onKeyUp={() => { }}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 5,
+                            max: 50
+                        }}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyPhoneNumberRef.current.focus() : null}
@@ -340,6 +357,7 @@ const TenantDetail = ({
                         onKeyUp={() => { }}
                         value={suretyTcIdentity}
                         type={"number"}
+                        validateType={"tcIndenity"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? suretyAdressRef.current.focus() : null}
@@ -350,6 +368,7 @@ const TenantDetail = ({
                         onKeyUp={() => { }}
                         value={suretyPhoneNumber}
                         type={"number"}
+                        validateType={"phoneNumber"}
                     />
                     <TextInput
                         onKeyUp={e => e.keyCode === 13 ? update() : null}
@@ -359,13 +378,11 @@ const TenantDetail = ({
                         className={classes.input}
                         onKeyUp={() => { }}
                         value={suretyAdress}
-                    />
-                    <Button
-                        value="Kiracıyı Sil"
-                        color={colors.accent}
-                        onClick={() => deleteTenantData()}
-                        textColor={colors.contrastBody}
-                        className={classes.deleteTenant}
+                        validateType={"length"}
+                        validateObject={{
+                            min: 3,
+                            max: 50
+                        }}
                     />
                     <Button
                         value="Bilgileri Değiştir"

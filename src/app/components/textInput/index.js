@@ -40,7 +40,6 @@ const TextInput = ({
                 validateObject: validateObject
             }
         ]);
-        console.log(_validateResult);
         setValidateResult(_validateResult);
     };
 
