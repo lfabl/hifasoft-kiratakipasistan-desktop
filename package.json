@@ -1,11 +1,11 @@
 {
-  "name": "karala",
+  "name": "kiratakipasistan",
   "version": "1.0.0",
   "private": true,
   "author": {
     "name": "NİBGAT®",
     "email": "contact@nibgat.com",
-    "url": "https://nibgat.com/app/karala"
+    "url": "https://www.nibgat.com/"
   },
   "dependencies": {
     "@apollo/react-hooks": "^4.0.0",
@@ -41,7 +41,7 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "build": "yarn react-build && yarn electron-build",
+    "build": "yarn react-build && yarn electron-builder",
     "electron-dev": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "desktop": "npm run electron-dev"
   },
@@ -64,12 +64,13 @@
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
     "electron": "5.0.1",
+    "electron-build": "0.0.3",
     "electron-is-dev": "1.1.0",
     "wait-on": "3.2.0"
   },
   "build": {
-    "appId": "com.nibgat.karala",
-    "productName": "Karala",
+    "appId": "com.hifasoft.kiratakipasistan",
+    "productName": "Kira Takip Asistan",
     "copyright": "Copyright © 2020 ${author}",
     "mac": {
       "category": "public.app-category.utilities"

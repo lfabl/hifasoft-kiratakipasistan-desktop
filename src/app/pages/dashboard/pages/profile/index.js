@@ -313,6 +313,20 @@ const Profile = ({
                             value="Kayıt Et"
                         />
                     </div>
+                    <Button
+                        className={classes.logout}
+                        onClick={() => {
+                            setGlobalState({
+                                user: {
+                                    loginData: null
+                                }
+                            });
+                        }}
+                        textColor={colors.contrastBody}
+                        wrap={false}
+                        color={colors.accent}
+                        value="Çıkış Yap"
+                    />
                 </div>
                 :
                 <div

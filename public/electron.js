@@ -3,8 +3,10 @@ const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 const path = require('path');
 const url = require('url');
-const isDev = require('electron-is-dev');
-const { ipcMain, shell } = require('electron');
+// const isDev = require('electron-is-dev');
+const {
+    ipcMain, shell 
+} = require('electron');
 var fs = require("fs");
 let mainWindow;
 function createWindow() {
@@ -19,27 +21,27 @@ function createWindow() {
             //devTools: false
         }
     });
-    mainWindow.setOverlayIcon(`${path.join(__dirname, '/logo.png')}`, 'Kira Takip Asistan')
-    //mainWindow.setMenuBarVisibility(false);
-    mainWindow.loadURL(isDev ? "http://localhost:3000" : `file://${path.join(__dirname, '../build/index.html')}`);
+    mainWindow.setOverlayIcon(`${path.join(__dirname, '/logo.png')}`, 'Kira Takip Asistan');
+    mainWindow.setMenuBarVisibility(false);
+    mainWindow.loadURL(/*isDev ? "http://localhost:3000" : */`file://${path.join(__dirname, '../build/index.html')}`);
     mainWindow.webContents.openDevTools();
     mainWindow.on('closed', function () {
-        mainWindow = null
-    })
+        mainWindow = null;
+    });
 }
 app.on('ready', createWindow);
 app.on('window-all-closed', function () {
     if (process.platform !== 'darwin') {
-        app.quit()
+        app.quit();
     }
 });
 app.on('activate', function () {
     if (mainWindow === null) {
-        createWindow()
+        createWindow();
     }
 });
 ipcMain.on('openExternalUrl', (event, args) => {
-  shell.openExternal(args.url);
+    shell.openExternal(args.url);
 });
 ipcMain.on('getUserData', (event, args) => {
     var contents = fs.readFileSync(__dirname + "/userData.json", "utf8");

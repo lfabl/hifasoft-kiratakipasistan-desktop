@@ -81,6 +81,10 @@ const stylesheet = {
     },
     submit: {
         marginTop: objectSpacing * 1.5
+    },
+    logout: {
+        marginTop: objectSpacing * 1.5,
+        width: "100%"
     }
 };
 export default stylesheet;

@@ -1,3 +1,5 @@
+export const environment = "desktop";
+
 const DEFAULT_GLOBAL_STATE = {
     user: {
     },

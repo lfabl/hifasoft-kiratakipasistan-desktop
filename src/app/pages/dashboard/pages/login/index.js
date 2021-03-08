@@ -18,7 +18,7 @@ import {
 } from 'react-router-dom';
 import md5 from "js-md5";
 import signin from "../../../../server/fetchs/signin";
-var ipcRenderer = window.require("electron").ipcRenderer;
+// var ipcRenderer = window.require("electron").ipcRenderer;
 
 const Login = ({
     classes,

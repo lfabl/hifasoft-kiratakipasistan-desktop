@@ -11,7 +11,7 @@ import Menu from './components/menu';
 import {
     objectSpacing
 } from '../../theme/tokens';
-var ipcRenderer = window.require("electron").ipcRenderer;
+// var ipcRenderer = window.require("electron").ipcRenderer;
 
 const DASHBOARD_MENU = [
     {
