@@ -8,6 +8,7 @@ const {
     ipcMain, shell 
 } = require('electron');
 var fs = require("fs");
+
 let mainWindow;
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -18,7 +19,7 @@ function createWindow() {
         icon: path.join(__dirname, '/logo.png'),
         webPreferences: {
             nodeIntegration: true,
-            //devTools: false
+            devTools: false
         }
     });
     mainWindow.setOverlayIcon(`${path.join(__dirname, '/logo.png')}`, 'Kira Takip Asistan');

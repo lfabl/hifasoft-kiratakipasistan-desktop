@@ -9,3 +9,5 @@ Proje Electron + React içermektedir. Sunucu tarafında RethinkDB - NodeJS - Exp
 2 komuttan birisini kullanarak geliştirici modunda proje başlatabilirsiniz.
 #### * yarn build || npm run build
 2 komuttan birisini kullanarak ürün modunda proje çıktısı alabilirsiniz.
+
+https://drive.google.com/file/d/1YR9NiOitNpl7TUdn9PyeHywiEq1eIAQZ/view?usp=sharing

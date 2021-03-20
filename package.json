@@ -41,7 +41,7 @@
     "react-build": "react-scripts build",
     "react-test": "react-scripts test --env=jsdom",
     "react-eject": "react-scripts eject",
-    "build": "yarn react-build && yarn electron-builder",
+    "build": "yarn react-build && electron-builder --publish=always",
     "electron-dev": "concurrently \"cross-env BROWSER=none npm run react-start\" \"wait-on http://localhost:3000 && electron .\"",
     "desktop": "npm run electron-dev"
   },
@@ -75,12 +75,13 @@
     "mac": {
       "category": "public.app-category.utilities"
     },
+    "asar": false,
     "files": [
       "build/**/*",
       "node_modules/**/*"
     ],
     "directories": {
-      "buildResources": "assets"
+      "buildResources": "public"
     }
   }
 }
